@@ -1,8 +1,9 @@
 # TranslatorGo
 Translator from Go to assembler
 
-
-```C++ 
+:white_check_mark:
+<br>
+```Go
 if 
 else 
 else if
