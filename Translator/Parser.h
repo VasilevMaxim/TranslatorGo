@@ -8,7 +8,8 @@ private:
 
 	int _indexCurrentToken = 0;
 	std::vector<Token*> _tokens;
-	
+	bool _isBlockVars;
+
 	Token* GetCurrentToken();
 	void SetNextToken();
 	

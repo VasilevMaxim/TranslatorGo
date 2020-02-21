@@ -33,10 +33,10 @@ Node* Parser::Statement()
 		node->Operand2 = Statement();
 
 		Node* nodeActiveIfElse = node;
-		while(GetCurrentToken()->GetType() == TokenType::IF)
+		while(GetCurrentToken()->GetType() == TokenType::ELSE)
 		{
 			SetNextToken();
-			if (GetCurrentToken()->GetType() == TokenType::ELSE)
+			if (GetCurrentToken()->GetType() == TokenType::IF)
 			{
 				SetNextToken();
 				Node* newNodeIfElse = new Node(NodeType::IF_ELSE);
@@ -94,23 +94,28 @@ Node* Parser::Statement()
 		{
 			SetNextToken();
 			SetNextToken();
+
 			node = new Node(NodeType::VAR, GetCurrentToken()->GetValue());
 			SetNextToken();
 			SetNextToken();
 			node = new Node(NodeType::SET, "", node, Expr());
-			_tokens[_indexCurrentToken];
+			_isBlockVars = true;
 		}
 		else if (GetCurrentToken()->GetType() == TokenType::LITERAL)
 		{
-			
+			node = new Node(NodeType::VAR, GetCurrentToken()->GetValue());
+			SetNextToken();
+			node->Operand1 = new Node(NodeType::VAR_TYPE, GetCurrentToken()->GetValue());
+			SetNextToken();
+			SetNextToken();
+			node = new Node(NodeType::SET, "", node, Expr());
 		}
-
-		node = new Node(NodeType::VAR, GetCurrentToken()->GetValue());
+	}
+	else if (_isBlockVars == true && GetCurrentToken()->GetType() == TokenType::RPAR)
+	{
+		_isBlockVars == false;
 		SetNextToken();
-		node->Operand1 = new Node(NodeType::VAR_TYPE, GetCurrentToken()->GetValue());
 		SetNextToken();
-		SetNextToken();
-		node = new Node(NodeType::SET, "", node, Expr());
 	}
 	else if (GetCurrentToken()->GetType() == TokenType::LBRA)
 	{
@@ -138,7 +143,15 @@ Node* Parser::Statement()
 
 Node* Parser::ParentExpr()
 {
+	if (GetCurrentToken()->GetType() == TokenType::LPAR)
+	{
+		SetNextToken();
+	}
 	Node* node = Expr();
+	if (GetCurrentToken()->GetType() == TokenType::RPAR)
+	{
+		SetNextToken();
+	}
 	return node;
 }
 
@@ -277,7 +290,7 @@ void Parser::ShowTree(Node* sub, size_t level)
 
 	for (size_t i = 0; i < level; i++)
 	{
-		std::cout << "  ";
+		std::cout << "|  ";
 	}
 
 	switch (sub->GetType())
@@ -286,27 +299,27 @@ void Parser::ShowTree(Node* sub, size_t level)
 		std::cout << "NewVar ";
 		break;
 	case NodeType::VAR:
-		std::cout << "Var ";
+		std::cout << "+-Var ";
 		break;
 	case NodeType::VAR_TYPE:
-		std::cout << "VarType ";
+		std::cout << "+-VarType ";
 		break;
 	case NodeType::NEW_CONST:
 		break;
 	case NodeType::CONST:
-		std::cout << "Const ";
+		std::cout << "+-Const ";
 		break;
 	case NodeType::ADD:
-		std::cout << "Add ";
+		std::cout << "+-Add ";
 		break;
 	case NodeType::SUB:
-		std::cout << "Sub ";
+		std::cout << "+-Sub ";
 		break;
 	case NodeType::MUL:
-		std::cout << "Mul ";
+		std::cout << "+-Mul ";
 		break;
 	case NodeType::DVS:
-		std::cout << "Dvs ";
+		std::cout << "+-Dvs ";
 		break;
 	case NodeType::FOR:
 		std::cout << "For ";
@@ -318,10 +331,10 @@ void Parser::ShowTree(Node* sub, size_t level)
 		std::cout << "IfElse ";
 		break;
 	case NodeType::LESS:
-		std::cout << "Less ";
+		std::cout << "+-Less ";
 		break;
 	case NodeType::MORE:
-		std::cout << "More ";
+		std::cout << "+-More ";
 		break;
 	case NodeType::EQUAL:
 		std::cout << "Equal ";
@@ -336,7 +349,7 @@ void Parser::ShowTree(Node* sub, size_t level)
 	case NodeType::LT:
 		break;
 	case NodeType::SET:
-		std::cout << "Set ";
+		std::cout << "+-Set ";
 		break;
 	case NodeType::EMPTY:
 		std::cout << "Empty ";

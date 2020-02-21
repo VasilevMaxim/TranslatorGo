@@ -19,6 +19,7 @@ private:
 	Token* GetToken(std::string lexeme);
 	void SplitIntoTokens();
 	bool IsCompositesToken(char sym1, char sym2);
+	bool IsCompositesSeparator(char sym1, char sym2);
 
 public:
 	TokenBreaking(std::string text);

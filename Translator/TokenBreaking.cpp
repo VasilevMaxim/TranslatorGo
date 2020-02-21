@@ -12,10 +12,7 @@ void TokenBreaking::SplitIntoTokens()
 	std::string tempLexems;
 	for(int index = 0; index < _text.length(); index++)
 	{
-		if (index < _text.length() && _text[index] == '\n' && _text[index] == _text[index + 1])
-		{
-			continue;
-		}
+		
 
 		if (isFixed == false)
 		{
@@ -24,13 +21,18 @@ void TokenBreaking::SplitIntoTokens()
 				if (tempLexems.length() > 0)
 				{
 					_tokens.push_back(GetToken(tempLexems));
-				}
+				} 
 				tempLexems.clear();
 				continue;
 			}
 
 			if (_znaks.find(_text[index]) != std::string::npos)
 			{
+				if (index > 0 && (IsCompositesSeparator(_text[index], _tokens[_tokens.size() - 1]->GetValue()[0]) == true))
+				{
+					tempLexems.clear();
+					continue;
+				}
 				std::string forSym;
 				forSym += _text[index];
 
@@ -56,6 +58,7 @@ void TokenBreaking::SplitIntoTokens()
 		{
 			isFixed = !isFixed;
 		}
+
 
 		tempLexems += _text[index];
 	}
@@ -142,6 +145,15 @@ bool TokenBreaking::IsCompositesToken(char sym1, char sym2)
 			break;
 	}
 
+	return false;
+}
+
+bool TokenBreaking::IsCompositesSeparator(char sym1, char sym2)
+{
+	if ((sym1 == '\n' || sym1 == ';') && (sym2 == '\n' || sym2 == ';'))
+	{
+		return true;
+	}
 	return false;
 }
 
