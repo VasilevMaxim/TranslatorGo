@@ -1,0 +1,50 @@
+#pragma once
+enum class NodeType 
+{
+	NEW_VAR,
+
+	VAR,
+	VAR_TYPE,
+
+
+	NEW_CONST,
+	CONST,
+
+	ADD,
+	SUB,
+	MUL,
+	DVS,
+
+	FOR,
+	IF,
+	IF_ELSE,
+
+	LESS, // <
+	MORE, // >
+	EQUAL, // ==
+	NOT_EQUAL, // !=
+	LESS_EQUAL, // <=
+	GREATER_EQUAL, // >=
+
+	LT,
+
+	SET,
+	EMPTY,
+	EXPR,
+	PROG,
+	SEQ,
+
+	STMT,
+
+
+	FUNC,
+	FUNC_ARGS,
+	FUNC_ARG,
+
+	FUNCTION_IMPL,
+	FUNCTION_IMPL_ARGS,
+	FUNCTION_IMPL_ARG,
+	FUNCTION_IMPL_TYPE,
+
+	RETURN
+};

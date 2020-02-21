@@ -1,0 +1,45 @@
+#pragma once
+
+enum class TokenType
+{
+	CONST,
+	VAR,
+	INT,
+	FLOAT,
+	DOUBLE,
+	STRING,
+	BOOL,
+	TRUE,
+	FALSE,
+	FOR,
+	IF,
+	ELSE,
+	IF_ELSE,
+	LBRA,
+	RBRA,
+	LPAR,
+	RPAR,
+	ASSIGN,
+	PLUS,
+	MINUS,
+	STAR,
+	SLASH,
+	EQUAL,
+	NOT_EQUAL,
+	MORE,
+	LESS,
+	LESS_EQUAL,
+	GREATER_EQUAL,
+	SEMICOLON,
+	NEW_LINE,
+	COLON,
+	COMMA,
+	NUMBER,
+	RETURN,
+	LITERAL,
+	
+	INCREMENT,
+	DECREMENT,
+
+	NON
+};
