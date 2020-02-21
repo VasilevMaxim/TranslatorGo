@@ -2,7 +2,7 @@
 Translator from Go to assembler
 
 
-:white_check_mark: ```C++ 
+```C++ 
 if 
 else 
 else if
