@@ -35,9 +35,9 @@ Node* Parser::Statement()
 		Node* nodeActiveIfElse = node;
 		while(GetCurrentToken()->GetType() == TokenType::ELSE)
 		{
-			SetNextToken();
 			if (GetCurrentToken()->GetType() == TokenType::IF)
 			{
+				SetNextToken();
 				SetNextToken();
 				Node* newNodeIfElse = new Node(NodeType::IF_ELSE);
 				newNodeIfElse->Operand1 = ParentExpr();
@@ -48,7 +48,6 @@ Node* Parser::Statement()
 			}
 			else 
 			{
-				SetNextToken();
 				break;
 			}
 		}
