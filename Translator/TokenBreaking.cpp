@@ -28,7 +28,7 @@ void TokenBreaking::SplitIntoTokens()
 
 			if (_znaks.find(_text[index]) != std::string::npos)
 			{
-				if (index > 0 && (IsCompositesSeparator(_text[index], _tokens[_tokens.size() - 1]->GetValue()[0]) == true))
+				if (_tokens.size() > 0 && (IsCompositesSeparator(_text[index], _tokens[_tokens.size() - 1]->GetValue()[0]) == true))
 				{
 					tempLexems.clear();
 					continue;
