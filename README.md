@@ -1,4 +1,4 @@
-# TranslatorGo
+# Translator Go
 Translator from Go to assembler
 
 ## Already done
