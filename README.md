@@ -1,4 +1,4 @@
-![Best](https://img.shields.io/badge/Translator%20GO-Best-blue)
+![Best](https://img.shields.io/badge/The%20best%20TRANSLATOR-GO-blue)
 ![C#](https://img.shields.io/badge/Code%20Style-C%23-blueviolet)
 # Translator from Go to Assembler language.   
 
