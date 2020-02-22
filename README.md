@@ -1,4 +1,4 @@
-# Translator from Go language to Assembler language.   
+# Translator from Go to Assembler language.   
 
 ![Translator](https://sun9-37.userapi.com/c858032/v858032731/1890f7/F0RMRY0Npr4.jpg "GO")
 Consists of 4 main stages.    
