@@ -20,10 +20,10 @@ In order to translate the code, specify the path to the file in the main functio
 
 
 ## Need to do.
-:black_square_button: var (,)    
-:black_square_button: error in tree 
-:black_square_button: comments  
-:black_square_button: array    
+:black_square_button: var (,)     
+:black_square_button: error in tree    
+:black_square_button: comments   
+:black_square_button: array     
 :black_square_button: function    
 :black_square_button: function (args)    
 
