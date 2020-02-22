@@ -20,10 +20,10 @@ In order to translate the code, specify the path to the file in the main functio
 
 ## Need to do
 :black_square_button: var (,)    
-:black_square_button: else   
-:black_square_button: else if    
-:black_square_button: for (multi)    
-:black_square_button: var    
+:black_square_button: error in tree   
+:black_square_button: array
+:black_square_button: function
+:black_square_button: function (args)
 
 Based on an article from Habr: https://habr.com/en/post/133780/
 Thanks so much for helping Peter, i582: https://github.com/i582
