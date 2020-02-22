@@ -1,3 +1,5 @@
+![Best](https://img.shields.io/badge/Translator%20GO-Best-blue)
+![C#](https://img.shields.io/badge/Code%20Style-C%23-blueviolet)
 # Translator from Go to Assembler language.   
 
 ![Translator](https://sun9-37.userapi.com/c858032/v858032731/1890f7/F0RMRY0Npr4.jpg "GO")
