@@ -3,28 +3,30 @@
 #include <vector>
 #include "Token.h"
 
+using std::vector;
+using std::cout;
+using std::endl;
+
 class TokenBreaking
 {
 private:
-	std::string _text;
+	string _text;
 
-	std::string _separators = " \t\r";
-	std::string _znaks = ",()[]{}:=+-*/!;.<>&|\n";
-	std::string _fixedZnaks = "\"\'";
+	string _separators = " \t\r";
+	string _znaks = ",()[]{}:=+-*/!;.<>&|\n";
+	string _fixedZnaks = "\"\'";
 
-	std::vector<Token*> _tokens;
+	vector<Token*> _tokens;
 
-	bool isFixed = false;
-
-	Token* GetToken(std::string lexeme);
+	Token* GetToken(string lexeme);
 	void SplitIntoTokens();
 	bool IsCompositesToken(char sym1, char sym2);
 	bool IsCompositesSeparator(char sym1, char sym2);
 
 public:
-	TokenBreaking(std::string text);
+	TokenBreaking(string text);
 
-	std::vector<Token*>* GetTokens();
+	vector<Token*>* GetTokens();
 	void ShowTokens();
 };
 

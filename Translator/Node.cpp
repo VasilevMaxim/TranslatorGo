@@ -1,6 +1,6 @@
 #include "Node.h"
 
-Node::Node(NodeType type, std::string value, Node* operand1, Node* operand2, Node* operand3, Node* operand4)
+Node::Node(NodeType type, string value, Node* operand1, Node* operand2, Node* operand3, Node* operand4)
 {
 	_type = type;
 	_value = value;
@@ -10,7 +10,7 @@ Node::Node(NodeType type, std::string value, Node* operand1, Node* operand2, Nod
 	Operand4 = operand4;
 }
 
-std::string Node::GetValue()
+string Node::GetValue()
 {
 	return _value;
 }

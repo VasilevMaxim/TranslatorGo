@@ -1,27 +1,45 @@
 ﻿#include <iostream>
+#include <fstream>
+
 #include "TokenBreaking.h"
 #include "Parser.h"
+#include "AbstractSyntaxTree.h"
 
-#include <fstream>
-#include <string>
+using std::ifstream;
+using std::getline;
+
+void OnCompilation(string pathFile);
+string GetAllTextInFile(string pathFile);
 
 int main()
 {
-	std::string rezult;
-	std::string line;
-	std::ifstream in("E:\\github\\Translator\\Translator\\Translator\\programGo.go"); 
+	OnCompilation("progGo.go");
 
-	while (std::getline(in, line))
-	{
-		rezult += line + '\n';
-	}
+	return 0;
+}
 
-	TokenBreaking tb(rezult);
-	in.close();
+void OnCompilation(string pathFile)
+{
+	string textInFile = GetAllTextInFile(pathFile);
 
+	TokenBreaking tb(textInFile);
 	tb.ShowTokens();
 
-	Parser parser(*tb.GetTokens());
-	parser.ShowTree(parser.head,0);
-	
+	Parser parser(tb.GetTokens());
+	AbstractSyntaxTree tree(parser.GetNodeHead());
+	tree.ShowTree();
+}
+
+string GetAllTextInFile(string pathFile)
+{
+	string textInFile;
+	string tempLineText;
+	ifstream in(pathFile);
+	while (getline(in, tempLineText))
+	{
+		textInFile += tempLineText + '\n';
+	}
+	in.close();
+
+	return textInFile;
 }

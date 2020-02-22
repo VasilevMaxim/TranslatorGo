@@ -3,13 +3,16 @@
 #include <string>
 #include "TokenType.h"
 
+using std::string;
+using std::map;
+
 class BaseTokenTypes
 {
 private:
-	static std::map<std::string, TokenType> _baseTokenTypes;
-	static bool IsNumberToken(std::string token);
+	static map<string, TokenType> _baseTokenTypes;
+	static bool IsNumberToken(string token);
 public:
 	static bool IsTypeVar(TokenType type);
-	static TokenType GetTypeToken(std::string token);
+	static TokenType GetTypeToken(string token);
 };
 

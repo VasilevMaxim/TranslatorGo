@@ -2,15 +2,17 @@
 #include <iostream>
 #include "TokenType.h"
 
+using std::string;
+
 class Token
 {
 private:
-	std::string _value;
+	string _value;
 	TokenType _type;
 	
 public:
-	Token(std::string value);
+	Token(string value);
 
-	std::string GetValue();
+	string GetValue();
 	TokenType GetType();
 };

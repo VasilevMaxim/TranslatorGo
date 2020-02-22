@@ -2,21 +2,20 @@
 #include "TokenType.h"
 #include <string>
 
-Token* TokenBreaking::GetToken(std::string lexeme)
+Token* TokenBreaking::GetToken(string lexeme)
 {
 	return new Token(lexeme);
 }
 
 void TokenBreaking::SplitIntoTokens()
 {
-	std::string tempLexems;
+	bool isFixed = false;
+	string tempLexems;
 	for(int index = 0; index < _text.length(); index++)
 	{
-		
-
 		if (isFixed == false)
 		{
-			if (_separators.find(_text[index]) != std::string::npos)
+			if (_separators.find(_text[index]) != string::npos)
 			{
 				if (tempLexems.length() > 0)
 				{
@@ -26,14 +25,14 @@ void TokenBreaking::SplitIntoTokens()
 				continue;
 			}
 
-			if (_znaks.find(_text[index]) != std::string::npos)
+			if (_znaks.find(_text[index]) != string::npos)
 			{
 				if (_tokens.size() > 0 && (IsCompositesSeparator(_text[index], _tokens[_tokens.size() - 1]->GetValue()[0]) == true))
 				{
 					tempLexems.clear();
 					continue;
 				}
-				std::string forSym;
+				string forSym;
 				forSym += _text[index];
 
 				bool isComposites = IsCompositesToken(_text[index], _text[index + 1]);
@@ -43,7 +42,7 @@ void TokenBreaking::SplitIntoTokens()
 					index++;
 				}
 
-				if (tempLexems.length() > 0)
+				if (tempLexems.empty() == false)
 				{
 					_tokens.push_back(GetToken(tempLexems));
 				}
@@ -54,7 +53,7 @@ void TokenBreaking::SplitIntoTokens()
 			}
 		}
 
-		if (_fixedZnaks.find(_text[index]) != std::string::npos)
+		if (_fixedZnaks.find(_text[index]) != string::npos)
 		{
 			isFixed = !isFixed;
 		}
@@ -157,13 +156,13 @@ bool TokenBreaking::IsCompositesSeparator(char sym1, char sym2)
 	return false;
 }
 
-TokenBreaking::TokenBreaking(std::string text)
+TokenBreaking::TokenBreaking(string text)
 {
 	_text = text;
 	SplitIntoTokens();
 }
 
-std::vector<Token*>* TokenBreaking::GetTokens()
+vector<Token*>* TokenBreaking::GetTokens()
 {
 	return &_tokens;
 }
@@ -174,11 +173,11 @@ void TokenBreaking::ShowTokens()
 	{
 		if (token->GetValue() == "\n" || token->GetValue() == "\r")
 		{
-			std::cout << "\\n" << std::endl;
+			cout << "\\n" << endl;
 		}
 		else
 		{
-			std::cout << token->GetValue() << std::endl;
+			cout << token->GetValue() << endl;
 		}
 	}
 }

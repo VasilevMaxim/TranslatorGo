@@ -11,6 +11,9 @@
     <Filter Include="Tokens">
       <UniqueIdentifier>{b61f0783-4a0d-4b7d-a9d4-7b47432ed5cc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="AST">
+      <UniqueIdentifier>{53ab9455-211b-4bdd-823a-34201ef40a3f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Translator.cpp">
@@ -30,6 +33,9 @@
     </ClCompile>
     <ClCompile Include="Parser.cpp">
       <Filter>Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="AbstractSyntaxTree.cpp">
+      <Filter>AST</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -54,5 +60,11 @@
     <ClInclude Include="Parser.h">
       <Filter>Parser</Filter>
     </ClInclude>
+    <ClInclude Include="AbstractSyntaxTree.h">
+      <Filter>AST</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="progGo.go" />
   </ItemGroup>
 </Project>

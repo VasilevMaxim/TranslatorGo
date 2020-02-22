@@ -29,7 +29,7 @@ enum class TokenType
 	MORE,
 	LESS,
 	LESS_EQUAL,
-	GREATER_EQUAL,
+	MORE_EQUAL,
 	SEMICOLON,
 	NEW_LINE,
 	COLON,

@@ -2,16 +2,20 @@
 #include "Node.h"
 #include "TokenBreaking.h"
 
+using std::vector;
+using std::cout;
+using std::endl;
+
 class Parser
 {
 private:
 
 	int _indexCurrentToken = 0;
-	std::vector<Token*> _tokens;
+	vector<Token*>* _tokens;
 	bool _isBlockVars;
 
 	Token* GetCurrentToken();
-	void SetNextToken();
+	void UseNextToken();
 	
 
 	Node* Parse();
@@ -24,12 +28,11 @@ private:
 	Node* Summa();
 	Node* GetNodeValue();
 
-	
-	void ShowLevelNode(std::string nodeType);
+	Node* _head;
 
 public:
-	Parser(std::vector<Token*> allTokens);
-	Node* head;
-	void ShowTree(Node* sub, size_t level);
+	Parser(vector<Token*>* allTokens);
+	
+	Node* GetNodeHead();
 };
 

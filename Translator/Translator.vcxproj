@@ -151,6 +151,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AbstractSyntaxTree.cpp" />
     <ClCompile Include="BaseTokenTypes.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="Parser.cpp" />
@@ -159,6 +160,7 @@
     <ClCompile Include="Translator.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AbstractSyntaxTree.h" />
     <ClInclude Include="BaseTokenTypes.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="NodeType.h" />
@@ -166,6 +168,9 @@
     <ClInclude Include="Token.h" />
     <ClInclude Include="TokenBreaking.h" />
     <ClInclude Include="TokenType.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="progGo.go" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

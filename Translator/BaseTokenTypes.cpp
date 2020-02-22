@@ -1,6 +1,7 @@
 #include "BaseTokenTypes.h"
+#include <stdexcept>
 
-std::map<std::string, TokenType> BaseTokenTypes::_baseTokenTypes =
+map<string, TokenType> BaseTokenTypes::_baseTokenTypes =
 {
 	{ "string", TokenType::STRING },
 	{ "const", TokenType::CONST },
@@ -24,7 +25,7 @@ std::map<std::string, TokenType> BaseTokenTypes::_baseTokenTypes =
 	{ ">", TokenType::MORE },
 	{ "<", TokenType::LESS },
 	{ "<=", TokenType::LESS_EQUAL },
-	{ ">=", TokenType::GREATER_EQUAL },
+	{ ">=", TokenType::MORE_EQUAL },
 	{ ";", TokenType::SEMICOLON },
 	{ ":", TokenType::COLON },
 	{ ",", TokenType::COMMA },
@@ -58,23 +59,24 @@ bool BaseTokenTypes::IsTypeVar(TokenType type)
 	return false;
 }
 
-bool BaseTokenTypes::IsNumberToken(std::string token)
+bool BaseTokenTypes::IsNumberToken(string token)
 {
-	bool point = false;
-	for (const char& s : token)
+	bool isPoint = false;
+
+	for (const char& sym : token)
 	{
-		if (s == '.' && !point)
+		if (sym == '.' && !isPoint)
 		{
-			point = true;
+			isPoint = true;
 			continue;
 		}
 
-		if (s == '.')
+		if (sym == '.')
 		{
 			return false;
 		}
 
-		if ((s < '0' || s > '9'))
+		if ((sym < '0' || sym > '9'))
 		{
 			return false;
 		}
@@ -83,12 +85,13 @@ bool BaseTokenTypes::IsNumberToken(std::string token)
 	return true;
 }
 
-TokenType BaseTokenTypes::GetTypeToken(std::string token)
+TokenType BaseTokenTypes::GetTypeToken(string token)
 {
-	std::map <std::string, TokenType> ::iterator it;
-	it = _baseTokenTypes.find(token);
-	
-	if (it == _baseTokenTypes.end())
+	try 
+	{
+		return _baseTokenTypes.at(token);
+	}
+	catch (std::out_of_range e)
 	{
 		if (IsNumberToken(token))
 		{
@@ -97,6 +100,4 @@ TokenType BaseTokenTypes::GetTypeToken(std::string token)
 
 		return TokenType::LITERAL;
 	}
-
-	return it->second;
 }

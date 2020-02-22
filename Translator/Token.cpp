@@ -1,7 +1,7 @@
 #include "Token.h"
 #include "BaseTokenTypes.h"
 
-Token::Token(std::string value)
+Token::Token(string value)
 {
 	_value = value;
 	_type = BaseTokenTypes::GetTypeToken(value);

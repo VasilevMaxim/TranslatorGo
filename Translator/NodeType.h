@@ -24,7 +24,7 @@ enum class NodeType
 	EQUAL, // ==
 	NOT_EQUAL, // !=
 	LESS_EQUAL, // <=
-	GREATER_EQUAL, // >=
+	MORE_EQUAL, // >=
 
 	LT,
 

@@ -3,22 +3,22 @@
 
 Token* Parser::GetCurrentToken()
 {
-	return _tokens[_indexCurrentToken];
+	return (*_tokens)[_indexCurrentToken];
 }
 
-void Parser::SetNextToken()
+void Parser::UseNextToken()
 {
 	_indexCurrentToken++;
 }
 
 Node* Parser::Parse()
 {
-	head = new Node(NodeType::PROG, "", Statement());
+	_head = new Node(NodeType::PROG, "", Statement());
 	if (GetCurrentToken()->GetValue()[0] != EOF)
 	{
 		// error("Invalid statement syntax")
 	}
-	return head;
+	return _head;
 }
 
 Node* Parser::Statement()
@@ -27,7 +27,7 @@ Node* Parser::Statement()
 	if (GetCurrentToken()->GetType() == TokenType::IF)
 	{
 		node = new Node(NodeType::IF); 
-		SetNextToken();
+		UseNextToken();
 
 		node->Operand1 = ParentExpr();
 		node->Operand2 = Statement();
@@ -37,14 +37,14 @@ Node* Parser::Statement()
 		{
 			if (GetCurrentToken()->GetType() == TokenType::IF)
 			{
-				SetNextToken();
-				SetNextToken();
+				UseNextToken();
+				UseNextToken();
 				Node* newNodeIfElse = new Node(NodeType::IF_ELSE);
 				newNodeIfElse->Operand1 = ParentExpr();
 				newNodeIfElse->Operand2 = Statement();
 				nodeActiveIfElse->Operand3 = newNodeIfElse;
 				nodeActiveIfElse = newNodeIfElse;
-				SetNextToken();
+				UseNextToken();
 			}
 			else 
 			{
@@ -55,7 +55,7 @@ Node* Parser::Statement()
 		if (GetCurrentToken()->GetType() == TokenType::ELSE)
 		{
 			Node* newNodeElse = new Node(NodeType::IF_ELSE);
-			SetNextToken();
+			UseNextToken();
 			newNodeElse->Operand1 = Statement();
 
 			nodeActiveIfElse->Operand3 = newNodeElse;
@@ -64,16 +64,16 @@ Node* Parser::Statement()
 	else if (GetCurrentToken()->GetType() == TokenType::FOR)
 	{
 		node = new Node(NodeType::FOR);
-		SetNextToken();
+		UseNextToken();
 		if (GetCurrentToken()->GetType() != TokenType::LBRA)
 		{
 			node->Operand1 = ParentExpr();
 			if (GetCurrentToken()->GetType() != TokenType::LBRA)
 			{
-				SetNextToken();
+				UseNextToken();
 				_tokens[_indexCurrentToken];
 				node->Operand2 = ParentExpr();
-				SetNextToken();
+				UseNextToken();
 				_tokens[_indexCurrentToken];
 				node->Operand3 = ParentExpr();
 			}
@@ -84,47 +84,47 @@ Node* Parser::Statement()
 	else if (GetCurrentToken()->GetType() == TokenType::SEMICOLON || GetCurrentToken()->GetType() == TokenType::NEW_LINE)
 	{
 		node = new Node(NodeType::EMPTY);
-		SetNextToken();
+		UseNextToken();
 	}
 	else if (GetCurrentToken()->GetType() == TokenType::VAR)
 	{
-		SetNextToken();
+		UseNextToken();
 		if (GetCurrentToken()->GetType() == TokenType::LPAR)
 		{
-			SetNextToken();
-			SetNextToken();
+			UseNextToken();
+			UseNextToken();
 
 			node = new Node(NodeType::VAR, GetCurrentToken()->GetValue());
-			SetNextToken();
-			SetNextToken();
+			UseNextToken();
+			UseNextToken();
 			node = new Node(NodeType::SET, "", node, Expr());
 			_isBlockVars = true;
 		}
 		else if (GetCurrentToken()->GetType() == TokenType::LITERAL)
 		{
 			node = new Node(NodeType::VAR, GetCurrentToken()->GetValue());
-			SetNextToken();
+			UseNextToken();
 			node->Operand1 = new Node(NodeType::VAR_TYPE, GetCurrentToken()->GetValue());
-			SetNextToken();
-			SetNextToken();
+			UseNextToken();
+			UseNextToken();
 			node = new Node(NodeType::SET, "", node, Expr());
 		}
 	}
 	else if (_isBlockVars == true && GetCurrentToken()->GetType() == TokenType::RPAR)
 	{
 		_isBlockVars == false;
-		SetNextToken();
-		SetNextToken();
+		UseNextToken();
+		UseNextToken();
 	}
 	else if (GetCurrentToken()->GetType() == TokenType::LBRA)
 	{
 		node = new Node(NodeType::EMPTY);
-		SetNextToken();
+		UseNextToken();
 		while (GetCurrentToken()->GetType() != TokenType::RBRA)
 		{
 			node = new Node(NodeType::SEQ, "", node, Statement());
 		}
-		SetNextToken();
+		UseNextToken();
 	}
 	else
 	{
@@ -134,7 +134,7 @@ Node* Parser::Statement()
 			// error
 		}
 
-		SetNextToken();
+		UseNextToken();
 	}
 	
 	return node;
@@ -144,13 +144,16 @@ Node* Parser::ParentExpr()
 {
 	if (GetCurrentToken()->GetType() == TokenType::LPAR)
 	{
-		SetNextToken();
+		UseNextToken();
 	}
+
 	Node* node = Expr();
+
 	if (GetCurrentToken()->GetType() == TokenType::RPAR)
 	{
-		SetNextToken();
+		UseNextToken();
 	}
+
 	return node;
 }
 
@@ -162,15 +165,15 @@ Node* Parser::Expr()
 
 	 if (BaseTokenTypes::IsTypeVar(GetCurrentToken()->GetType()) == true)
 	 {
-		 SetNextToken();
-		 SetNextToken();
+		 UseNextToken();
+		 UseNextToken();
 		 node = new Node(NodeType::SET, "", node, Expr());
 	 }
 
 	 node = Compare();
 	 if (node->GetType() == NodeType::VAR && GetCurrentToken()->GetType() == TokenType::ASSIGN)
 	 {
-		 SetNextToken(); 
+		 UseNextToken(); 
 		 node = new Node(NodeType::SET, "", node, Expr());
 	 }
 
@@ -183,12 +186,12 @@ Node* Parser::Compare()
 	Node* node = Summa();
 	if (GetCurrentToken()->GetType() == TokenType::LESS)
 	{
-		SetNextToken();
+		UseNextToken();
 		node = new Node(NodeType::LESS, "", node, Summa());
 	}
 	else if (GetCurrentToken()->GetType() == TokenType::MORE)
 	{
-		SetNextToken();
+		UseNextToken();
 		node = new Node(NodeType::MORE, "", node, Summa());
 	}
 	return node;
@@ -213,7 +216,7 @@ Node* Parser::Summa()
 			nodeType = NodeType::SUB;
 		}
 
-		SetNextToken();
+		UseNextToken();
 		node = new Node(nodeType, "", node, Ymnog());
 	}
 	return node;
@@ -234,7 +237,7 @@ Node* Parser::Ymnog()
 			nodeType = NodeType::MUL;
 		}
 
-		SetNextToken();
+		UseNextToken();
 		node = new Node(nodeType, "", node, Unar());
 	}
 	return node;
@@ -246,7 +249,7 @@ Node* Parser::Unar()
 	while (GetCurrentToken()->GetType() == TokenType::INCREMENT || GetCurrentToken()->GetType() == TokenType::DECREMENT)
 	{
 		node = new Node(NodeType::SUB, "", node, new Node(NodeType::CONST, "1"));
-		SetNextToken();
+		UseNextToken();
 	}
 	return node;
 }
@@ -259,13 +262,13 @@ Node* Parser::GetNodeValue()
 	if (GetCurrentToken()->GetType() == TokenType::LITERAL)
 	{
 		node = new Node(NodeType::VAR, GetCurrentToken()->GetValue());
-		SetNextToken();
+		UseNextToken();
 		return node;
 	}
 	else if (GetCurrentToken()->GetType() == TokenType::NUMBER)
 	{
 		node = new Node(NodeType::CONST, GetCurrentToken()->GetValue());
-		SetNextToken();
+		UseNextToken();
 		return node;
 	}
 	else
@@ -274,118 +277,13 @@ Node* Parser::GetNodeValue()
 	}
 }
 
-Parser::Parser(std::vector<Token*> allTokens)
+Parser::Parser(vector<Token*>* allTokens)
 {
 	_tokens = allTokens;
 	Parse();
 }
 
-void Parser::ShowTree(Node* sub, size_t level)
+Node* Parser::GetNodeHead()
 {
-	if (sub == nullptr)
-	{
-		return;
-	}
-
-	for (size_t i = 0; i < level; i++)
-	{
-		std::cout << "|  ";
-	}
-
-	switch (sub->GetType())
-	{
-	case NodeType::NEW_VAR:
-		std::cout << "NewVar ";
-		break;
-	case NodeType::VAR:
-		std::cout << "+-Var ";
-		break;
-	case NodeType::VAR_TYPE:
-		std::cout << "+-VarType ";
-		break;
-	case NodeType::NEW_CONST:
-		break;
-	case NodeType::CONST:
-		std::cout << "+-Const ";
-		break;
-	case NodeType::ADD:
-		std::cout << "+-Add ";
-		break;
-	case NodeType::SUB:
-		std::cout << "+-Sub ";
-		break;
-	case NodeType::MUL:
-		std::cout << "+-Mul ";
-		break;
-	case NodeType::DVS:
-		std::cout << "+-Dvs ";
-		break;
-	case NodeType::FOR:
-		std::cout << "For ";
-		break;
-	case NodeType::IF:
-		std::cout << "If ";
-		break;
-	case NodeType::IF_ELSE:
-		std::cout << "IfElse ";
-		break;
-	case NodeType::LESS:
-		std::cout << "+-Less ";
-		break;
-	case NodeType::MORE:
-		std::cout << "+-More ";
-		break;
-	case NodeType::EQUAL:
-		std::cout << "Equal ";
-		break;
-	case NodeType::NOT_EQUAL:
-		std::cout << "NotEqual ";
-		break;
-	case NodeType::LESS_EQUAL:
-		break;
-	case NodeType::GREATER_EQUAL:
-		break;
-	case NodeType::LT:
-		break;
-	case NodeType::SET:
-		std::cout << "+-Set ";
-		break;
-	case NodeType::EMPTY:
-		std::cout << "Empty ";
-		break;
-	case NodeType::EXPR:
-		std::cout << "Expr ";
-		break;
-	case NodeType::PROG:
-		std::cout << "Prog ";
-		break;
-	case NodeType::SEQ:
-		std::cout << "Seq ";
-		break;
-	case NodeType::STMT:
-		break;
-	case NodeType::FUNC:
-		break;
-	case NodeType::FUNC_ARGS:
-		break;
-	case NodeType::FUNC_ARG:
-		break;
-	case NodeType::FUNCTION_IMPL:
-		break;
-	case NodeType::FUNCTION_IMPL_ARGS:
-		break;
-	case NodeType::FUNCTION_IMPL_ARG:
-		break;
-	case NodeType::FUNCTION_IMPL_TYPE:
-		break;
-	case NodeType::RETURN:
-		break;
-	}
-
-	std::cout << sub->GetValue() << std::endl;
-
-	ShowTree(sub->Operand1, level + 1);
-	ShowTree(sub->Operand2, level + 1);
-	ShowTree(sub->Operand3, level + 1);
-	ShowTree(sub->Operand4, level + 1);
+	return _head;
 }
