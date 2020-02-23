@@ -17,12 +17,12 @@ In order to translate the code, specify the path to the file in the main functio
 :white_check_mark: else   
 :white_check_mark: else if    
 :white_check_mark: for (multi)    
-:white_check_mark: var (multi)       
-
+:white_check_mark: var (multi)         
+:white_check_mark: var (,)     
 
 
 ## Need to do.
-:black_square_button: var (,)     
+ 
 :black_square_button: error in tree    
 :black_square_button: comments   
 :black_square_button: array     
