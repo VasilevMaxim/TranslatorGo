@@ -2,6 +2,7 @@
 ![C#](https://img.shields.io/badge/Code%20Style-C%23-blueviolet)
 # Translator from Go to Assembler language.   
 
+
 ![Translator](https://sun9-37.userapi.com/c858032/v858032731/1890f7/F0RMRY0Npr4.jpg "GO")
 Consists of 4 main stages.    
 
@@ -19,11 +20,10 @@ In order to translate the code, specify the path to the file in the main functio
 :white_check_mark: for (multi)    
 :white_check_mark: var (multi)         
 :white_check_mark: var (,)     
-
+:white_check_mark: error in tree    
 
 ## Need to do.
- 
-:black_square_button: error in tree    
+
 :black_square_button: comments   
 :black_square_button: array     
 :black_square_button: function    
