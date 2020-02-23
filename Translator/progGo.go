@@ -1,21 +1,43 @@
- {
- 
-    var name, age, sss = 5, 27, 9000
+ { 
+   
+    x := ++a + b--
 
-	a := 8
-    b := 7
-    if a < b {
-        a = b;
+    for i := 1; i < 10; --i{
+        
+	    for j := 1; j < 10; j++{
+            
+            for k := 1; k < 10; k--{
+            
+                if a > b {
+                    if b > c{
+                            if c < d{
+                                    b = a;
+                            }
+                    }
+		        }
+            }
+	    }
+        
     }
+
 	if a > b{
-        b = a;
+    if b > c{
+           if c < d{
+            b = a;
+            }
+      }
     } else if b < a {
 		b = 1;
+	} else if b < m {
+		b = 2;
 	} else{
 		b = 0;
 	}
 
-    
+     var name, age, sss = 5, 27, 9000
+
+	a := 8
+    b := 7
 
 	var (
 
@@ -40,15 +62,8 @@
     }
 
     for {
-        
         break
     }
     
-	for i := 1; i < 10; i++{
-        
-		for j := 1; j < 10; j++{
-            
-		}
-        
-    }
+	
 }

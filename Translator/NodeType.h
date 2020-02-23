@@ -16,6 +16,8 @@ enum class NodeType
 	DVS,
 
 	FOR,
+	BREAK,
+	
 	IF,
 	IF_ELSE,
 
@@ -25,6 +27,12 @@ enum class NodeType
 	NOT_EQUAL, // !=
 	LESS_EQUAL, // <=
 	MORE_EQUAL, // >=
+
+	INCREMENT,
+	DECREMENT,
+
+	INCREMENT_AFTER,
+	DECREMENT_AFTER,
 
 	LT,
 

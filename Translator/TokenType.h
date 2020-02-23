@@ -12,6 +12,7 @@ enum class TokenType
 	TRUE,
 	FALSE,
 	FOR,
+	BREAK,
 	IF,
 	ELSE,
 	IF_ELSE,

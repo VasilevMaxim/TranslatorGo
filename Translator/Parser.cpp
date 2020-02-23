@@ -30,35 +30,38 @@ Node* Parser::Statement()
 		UseNextToken();
 
 		node->Operand1 = ParentExpr();
-		node->Operand2 = Statement();
-
-		Node* nodeActiveIfElse = node;
-		while(GetCurrentToken()->GetType() == TokenType::ELSE)
-		{
-			if (GetCurrentToken()->GetType() == TokenType::IF)
-			{
-				UseNextToken();
-				UseNextToken();
-				Node* newNodeIfElse = new Node(NodeType::IF_ELSE);
-				newNodeIfElse->Operand1 = ParentExpr();
-				newNodeIfElse->Operand2 = Statement();
-				nodeActiveIfElse->Operand3 = newNodeIfElse;
-				nodeActiveIfElse = newNodeIfElse;
-				UseNextToken();
-			}
-			else 
-			{
-				break;
-			}
-		}
+		node->Operand2 = Statement(); 
 	
 		if (GetCurrentToken()->GetType() == TokenType::ELSE)
 		{
-			Node* newNodeElse = new Node(NodeType::IF_ELSE);
-			UseNextToken();
-			newNodeElse->Operand1 = Statement();
+			Node* nodeActiveIfElse = node;
+			while (GetCurrentToken()->GetType() == TokenType::ELSE)
+			{
+				UseNextToken();
+				if (GetCurrentToken()->GetType() == TokenType::IF)
+				{
+					UseNextToken();
+					Node* newNodeIfElse = new Node(NodeType::IF_ELSE);
+					newNodeIfElse->Operand1 = ParentExpr();
+					newNodeIfElse->Operand2 = Statement();
 
-			nodeActiveIfElse->Operand3 = newNodeElse;
+					nodeActiveIfElse->Operand3 = newNodeIfElse;
+					nodeActiveIfElse = newNodeIfElse;
+				}
+				else
+				{
+					Node* newNodeElse = new Node(NodeType::IF_ELSE);
+
+					newNodeElse->Operand1 = Statement();
+					UseNextToken();
+					nodeActiveIfElse->Operand3 = newNodeElse;
+					break;
+				}
+			}
+		}
+		else
+		{
+			UseNextToken();
 		}
  	}
 	else if (GetCurrentToken()->GetType() == TokenType::FOR)
@@ -71,19 +74,22 @@ Node* Parser::Statement()
 			if (GetCurrentToken()->GetType() != TokenType::LBRA)
 			{
 				UseNextToken();
-				_tokens[_indexCurrentToken];
 				node->Operand2 = ParentExpr();
 				UseNextToken();
-				_tokens[_indexCurrentToken];
 				node->Operand3 = ParentExpr();
 			}
 		}
-		_tokens[_indexCurrentToken];
+
 		node->Operand4 = Statement();
+		UseNextToken();
+	}
+	else if (GetCurrentToken()->GetType() == TokenType::BREAK)
+	{
+		node = new Node(NodeType::BREAK);
+		UseNextToken();
 	}
 	else if (GetCurrentToken()->GetType() == TokenType::SEMICOLON || GetCurrentToken()->GetType() == TokenType::NEW_LINE)
 	{
-		node = new Node(NodeType::EMPTY);
 		UseNextToken();
 	}
 	else if (_nodesVar.empty() == false)
@@ -98,7 +104,6 @@ Node* Parser::Statement()
 		{
 			UseNextToken();
 			UseNextToken();
-
 			node = new Node(NodeType::VAR, GetCurrentToken()->GetValue());
 			UseNextToken();
 			UseNextToken();
@@ -148,8 +153,8 @@ Node* Parser::Statement()
 	}
 	else if (GetCurrentToken()->GetType() == TokenType::LBRA)
 	{
-		node = new Node(NodeType::EMPTY);
 		UseNextToken();
+		node = Statement();
 		while (GetCurrentToken()->GetType() != TokenType::RBRA)
 		{
 			node = new Node(NodeType::SEQ, "", node, Statement());
@@ -273,18 +278,42 @@ Node* Parser::Ymnog()
 	return node;
 }
 
+
 Node* Parser::Unar()
 {
-	Node* node = GetNodeValue();
-	while (GetCurrentToken()->GetType() == TokenType::INCREMENT || GetCurrentToken()->GetType() == TokenType::DECREMENT)
+	Node* node = nullptr;
+	if (GetCurrentToken()->GetType() == TokenType::INCREMENT)
 	{
-		node = new Node(NodeType::SUB, "", node, new Node(NodeType::CONST, "1"));
 		UseNextToken();
+		node = GetNodeValue();
+		node = new Node(NodeType::INCREMENT, "", node);
 	}
+	else if (GetCurrentToken()->GetType() == TokenType::DECREMENT)
+	{
+		UseNextToken();
+		node = GetNodeValue();
+		node = new Node(NodeType::DECREMENT, "", node);
+	}
+	else
+	{
+		node = GetNodeValue();
+		if (GetCurrentToken()->GetType() == TokenType::INCREMENT || GetCurrentToken()->GetType() == TokenType::DECREMENT)
+		{
+			if (GetCurrentToken()->GetType() == TokenType::INCREMENT)
+			{
+				node = new Node(NodeType::INCREMENT_AFTER, "", node);
+			}
+			else if (GetCurrentToken()->GetType() == TokenType::DECREMENT)
+			{
+				node = new Node(NodeType::DECREMENT_AFTER, "", node);
+			}
+			UseNextToken();
+		}
+	}
+
+
 	return node;
 }
-
-
 
 Node* Parser::GetNodeValue()
 {

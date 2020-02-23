@@ -14,6 +14,7 @@ private:
 	vector<Token*>* _tokens;
 	bool _isBlockVars;
 
+
 	Token* GetCurrentToken();
 	void UseNextToken();
 	vector<Node*> _nodesVar;
@@ -29,7 +30,6 @@ private:
 	Node* GetNodeValue();
 
 	Node* _head;
-
 public:
 	Parser(vector<Token*>* allTokens);
 	

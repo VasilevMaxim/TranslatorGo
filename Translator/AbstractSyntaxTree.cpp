@@ -48,6 +48,9 @@ void AbstractSyntaxTree::ShowPartTree(Node* sub, size_t level)
 	case NodeType::FOR:
 		cout << "For ";
 		break;
+	case NodeType::BREAK:
+		cout << "+-Break ";
+		break;
 	case NodeType::IF:
 		cout << "If ";
 		break;
@@ -86,6 +89,18 @@ void AbstractSyntaxTree::ShowPartTree(Node* sub, size_t level)
 		break;
 	case NodeType::SEQ:
 		cout << "Seq ";
+		break;
+	case NodeType::INCREMENT:
+		cout << "+-Inc ";
+		break;
+	case NodeType::DECREMENT:
+		cout << "+-Dec ";
+		break;
+	case NodeType::INCREMENT_AFTER:
+		cout << "+-IncAfter ";
+		break;
+	case NodeType::DECREMENT_AFTER:
+		cout << "+-DecAfter ";
 		break;
 	case NodeType::STMT:
 		break;

@@ -6,6 +6,7 @@ map<string, TokenType> BaseTokenTypes::_baseTokenTypes =
 	{ "string", TokenType::STRING },
 	{ "const", TokenType::CONST },
 	{ "for", TokenType::FOR },
+	{ "break", TokenType::BREAK },
 	{ "int", TokenType::INT },
 	{ "float", TokenType::FLOAT },
 	{ "if", TokenType::IF },
