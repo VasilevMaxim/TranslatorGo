@@ -1,5 +1,5 @@
-![Best](https://img.shields.io/badge/The%20best%20TRANSLATOR-GO-blue)
-![C#](https://img.shields.io/badge/Code%20Style-C%23-blueviolet)
+[![Best](https://img.shields.io/badge/The%20best%20TRANSLATOR-GO-blue)](https://github.com/VasilevMaxim/TranslatorGo)
+[![C#](https://img.shields.io/badge/Code%20Style-C%23-blueviolet)](https://docs.microsoft.com/en-us/dotnet/standard/design-guidelines/index?redirectedfrom=MSDN)
 # Translator from Go to Assembler language.   
 
 
