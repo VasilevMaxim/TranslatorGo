@@ -8,7 +8,7 @@ Consists of 4 main stages.
 
 :arrow_forward: Token splitting.   
 :arrow_forward: Tree building.    
-:arrow_forward: Parser.   
+:arrow_forward: Syntactic analyzer.   
 :arrow_forward: Code generation in Assembler.   
 
 In order to translate the code, specify the path to the file in the main function.
