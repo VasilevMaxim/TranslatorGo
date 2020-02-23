@@ -16,7 +16,7 @@ private:
 
 	Token* GetCurrentToken();
 	void UseNextToken();
-	
+	vector<Node*> _nodesVar;
 
 	Node* Parse();
 	Node* Statement();

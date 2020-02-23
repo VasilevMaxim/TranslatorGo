@@ -86,6 +86,11 @@ Node* Parser::Statement()
 		node = new Node(NodeType::EMPTY);
 		UseNextToken();
 	}
+	else if (_nodesVar.empty() == false)
+	{
+		node = _nodesVar.back();
+		_nodesVar.pop_back();
+	}
 	else if (GetCurrentToken()->GetType() == TokenType::VAR)
 	{
 		UseNextToken();
@@ -104,10 +109,35 @@ Node* Parser::Statement()
 		{
 			node = new Node(NodeType::VAR, GetCurrentToken()->GetValue());
 			UseNextToken();
-			node->Operand1 = new Node(NodeType::VAR_TYPE, GetCurrentToken()->GetValue());
-			UseNextToken();
-			UseNextToken();
-			node = new Node(NodeType::SET, "", node, Expr());
+
+			if (GetCurrentToken()->GetType() == TokenType::COMMA)
+			{
+				while (GetCurrentToken()->GetType() == TokenType::COMMA)
+				{
+					UseNextToken();
+					Node* nodeVar = new Node(NodeType::VAR, GetCurrentToken()->GetValue());
+					_nodesVar.push_back(nodeVar);
+
+					UseNextToken();
+				}
+
+				UseNextToken();
+
+				node = new Node(NodeType::SET, "", node, Expr());
+
+				for (int indexNodeVar = 0; GetCurrentToken()->GetType() == TokenType::COMMA; indexNodeVar++)
+				{
+					UseNextToken();
+					_nodesVar[indexNodeVar] = new Node(NodeType::SET, "", _nodesVar[indexNodeVar], Expr());
+				}
+			}
+			else
+			{
+				node->Operand1 = new Node(NodeType::VAR_TYPE, GetCurrentToken()->GetValue());
+				UseNextToken();
+				UseNextToken();
+				node = new Node(NodeType::SET, "", node, Expr());
+			}
 		}
 	}
 	else if (_isBlockVars == true && GetCurrentToken()->GetType() == TokenType::RPAR)

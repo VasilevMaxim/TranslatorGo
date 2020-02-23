@@ -1,4 +1,7 @@
  {
+ 
+    var name, age, sss = 5, 27, 9000
+
 	a := 8
     b := 7
     if a < b {
@@ -11,6 +14,8 @@
 	} else{
 		b = 0;
 	}
+
+    
 
 	var (
 
