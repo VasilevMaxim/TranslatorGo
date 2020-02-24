@@ -30,6 +30,9 @@ void AbstractSyntaxTree::ShowPartTree(Node* sub, size_t level)
 		break;
 	case NodeType::NEW_CONST:
 		break;
+	case NodeType::ARRAY:
+		cout << "+-Array ";
+		break;
 	case NodeType::CONST:
 		cout << "+-Const ";
 		break;

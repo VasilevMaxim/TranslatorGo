@@ -1,8 +1,12 @@
  { 
-   
-    x := ++a + b--
+    var numbers [5]int
+    var numbers [5]int = [5]int{1,2}
+    var numbers [5]int = [5]int{1,2,3,4,5}
+    
 
-    for i := 1; i < 10; --i{
+   x := ++a + b--
+
+   for i := 1; i < 10; --i{
         
 	    for j := 1; j < 10; j++{
             
@@ -18,7 +22,7 @@
             }
 	    }
         
-    }
+   }
 
 	if a > b{
     if b > c{
@@ -34,7 +38,14 @@
 		b = 0;
 	}
 
-     var name, age, sss = 5, 27, 9000
+
+   var numbers [5]int
+   var numbers [5]int = [5]int{1,2,3,4,5}
+
+
+
+
+   var name, age, sss = 5, 27, 9000
 
 	a := 8
     b := 7

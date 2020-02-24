@@ -10,6 +10,8 @@ enum class NodeType
 	NEW_CONST,
 	CONST,
 
+	ARRAY,
+
 	ADD,
 	SUB,
 	MUL,

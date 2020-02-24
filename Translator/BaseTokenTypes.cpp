@@ -11,10 +11,14 @@ map<string, TokenType> BaseTokenTypes::_baseTokenTypes =
 	{ "float", TokenType::FLOAT },
 	{ "if", TokenType::IF },
 	{ "else", TokenType::ELSE },
+
 	{ "{", TokenType::LBRA },
 	{ "}", TokenType::RBRA },
 	{ "(", TokenType::LPAR },
 	{ ")", TokenType::RPAR },
+	{ "[", TokenType::L_SBRA },
+	{ "]", TokenType::R_SBRA },
+
 	{ "=", TokenType::ASSIGN },
 	{ ":=", TokenType::ASSIGN },
 	{ "+", TokenType::PLUS },
@@ -84,6 +88,11 @@ bool BaseTokenTypes::IsNumberToken(string token)
 	}
 
 	return true;
+}
+
+bool BaseTokenTypes::IsTokenSeparator(TokenType token)
+{
+	return token == TokenType::SEMICOLON || token == TokenType::NEW_LINE;
 }
 
 TokenType BaseTokenTypes::GetTypeToken(string token)

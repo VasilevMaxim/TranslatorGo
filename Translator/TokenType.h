@@ -20,6 +20,8 @@ enum class TokenType
 	RBRA,
 	LPAR,
 	RPAR,
+	L_SBRA,
+	R_SBRA,
 	ASSIGN,
 	PLUS,
 	MINUS,

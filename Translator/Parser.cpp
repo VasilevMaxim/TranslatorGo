@@ -11,6 +11,11 @@ void Parser::UseNextToken()
 	_indexCurrentToken++;
 }
 
+void Parser::UseBackToken()
+{
+	_indexCurrentToken--;
+}
+
 Node* Parser::Parse()
 {
 	_head = new Node(NodeType::PROG, "", Statement());
@@ -115,7 +120,62 @@ Node* Parser::Statement()
 			node = new Node(NodeType::VAR, GetCurrentToken()->GetValue());
 			UseNextToken();
 
-			if (GetCurrentToken()->GetType() == TokenType::COMMA)
+			if (GetCurrentToken()->GetType() == TokenType::L_SBRA)
+			{
+				UseNextToken();
+				node = new Node(NodeType::ARRAY, GetCurrentToken()->GetValue());
+				int numArray = atoi(GetCurrentToken()->GetValue().c_str());
+
+				UseNextToken();
+				UseNextToken();
+
+				string tempType = GetCurrentToken()->GetValue();
+				node->Operand1 = new Node(NodeType::VAR_TYPE, GetCurrentToken()->GetValue());
+
+				
+				UseNextToken();
+				if (GetCurrentToken()->GetType() == TokenType::ASSIGN)
+				{
+					UseNextToken(); // [
+					UseNextToken(); // num
+					UseNextToken(); // ]
+					UseNextToken(); // type
+					UseNextToken(); // {
+					UseNextToken(); // value
+
+					Node* tempActiveElementArray = new Node(NodeType::VAR, GetCurrentToken()->GetValue());
+					tempActiveElementArray->Operand1 = new Node(NodeType::VAR_TYPE, tempType);
+					node->Operand2 = tempActiveElementArray;
+					--numArray;
+
+					bool isZeros = false;
+					while (numArray-- > 0)
+					{
+						if (isZeros == false)
+						{
+							UseNextToken(); // ,
+							UseNextToken(); // value
+						}
+						if (BaseTokenTypes::IsTokenSeparator(GetCurrentToken()->GetType()) == true)
+						{
+							isZeros = true;
+						}
+						
+						Node* newElementArray = new Node(NodeType::VAR, isZeros ? "0" : GetCurrentToken()->GetValue());
+						newElementArray->Operand1 = new Node(NodeType::VAR_TYPE, tempType);
+						
+						tempActiveElementArray->Operand2 = newElementArray;
+						tempActiveElementArray = newElementArray;
+					}
+					if (isZeros == false)
+					{
+						UseNextToken();
+						UseNextToken();
+					}
+					
+				}
+			}
+			else if (GetCurrentToken()->GetType() == TokenType::COMMA)
 			{
 				while (GetCurrentToken()->GetType() == TokenType::COMMA)
 				{
