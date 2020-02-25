@@ -29,11 +29,15 @@ private:
 	Node* Compare();
 	Node* Ymnog();
 	Node* Summa();
+	Node* LogOr();
+	Node* LogAnd();
+	Node* LogUnarOr();
+	Node* LogUnarAnd();
 	Node* GetNodeValue();
 
 	Node* _head;
 
-	void ss(Node* x, string type);
+	void InitializationArray(Node* x, string type);
 public:
 	Parser(vector<Token*>* allTokens);
 	

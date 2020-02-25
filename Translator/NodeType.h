@@ -1,4 +1,5 @@
 #pragma once
+
 enum class NodeType 
 {
 	NEW_VAR,
@@ -11,6 +12,7 @@ enum class NodeType
 	CONST,
 
 	ARRAY,
+	ARRAY_ACCESS,
 
 	ADD,
 	SUB,
@@ -29,6 +31,12 @@ enum class NodeType
 	NOT_EQUAL, // !=
 	LESS_EQUAL, // <=
 	MORE_EQUAL, // >=
+
+	AND,
+	OR,
+
+	AND_ONE,
+	OR_ONE,
 
 	INCREMENT,
 	DECREMENT,

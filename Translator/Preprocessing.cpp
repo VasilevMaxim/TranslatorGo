@@ -26,7 +26,7 @@ Preprocessing::Preprocessing(string* text)
 			{
 				if (_text[++indexSecond] == '*' && _text[indexSecond + 1] == '/')
 				{
-					indexSecond+=2;
+					indexSecond += 2;
 					break;
 				}
 			}

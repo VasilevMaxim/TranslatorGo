@@ -31,6 +31,13 @@ map<string, TokenType> BaseTokenTypes::_baseTokenTypes =
 	{ "<", TokenType::LESS },
 	{ "<=", TokenType::LESS_EQUAL },
 	{ ">=", TokenType::MORE_EQUAL },
+
+	{ "&&", TokenType::AND },
+	{ "||", TokenType::OR },
+	{ "&", TokenType::AND_ONE },
+	{ "|", TokenType::OR_ONE },
+
+
 	{ ";", TokenType::SEMICOLON },
 	{ ":", TokenType::COLON },
 	{ ",", TokenType::COMMA },

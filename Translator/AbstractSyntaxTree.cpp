@@ -33,6 +33,9 @@ void AbstractSyntaxTree::ShowPartTree(Node* sub, size_t level)
 	case NodeType::ARRAY:
 		cout << "+-Array ";
 		break;
+	case NodeType::ARRAY_ACCESS:
+		cout << "+-ArrayAccess ";
+		break;
 	case NodeType::CONST:
 		cout << "+-Const ";
 		break;
@@ -66,15 +69,29 @@ void AbstractSyntaxTree::ShowPartTree(Node* sub, size_t level)
 	case NodeType::MORE:
 		cout << "+-More ";
 		break;
-	case NodeType::EQUAL:
-		cout << "Equal ";
-		break;
-	case NodeType::NOT_EQUAL:
-		cout << "NotEqual ";
+	case NodeType::MORE_EQUAL:
+		cout << "+-MoreEqual ";
 		break;
 	case NodeType::LESS_EQUAL:
+		cout << "+-LessEqual ";
 		break;
-	case NodeType::MORE_EQUAL:
+	case NodeType::EQUAL:
+		cout << "+-Equal ";
+		break;
+	case NodeType::NOT_EQUAL:
+		cout << "+-NotEqual ";
+		break;
+	case NodeType::AND:
+		cout << "+-And ";
+		break;
+	case NodeType::OR:
+		cout << "+-Or ";
+		break;
+	case NodeType::AND_ONE:
+		cout << "+-AndOne ";
+		break;
+	case NodeType::OR_ONE:
+		cout << "+-OrOne ";
 		break;
 	case NodeType::LT:
 		break;

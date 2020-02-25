@@ -147,7 +147,7 @@ Node* Parser::Statement()
 
 					UseNextToken(); // {
 					UseNextToken(); // value
-					ss(node, tempType);
+					InitializationArray(node, tempType);
 					
 				}
 			}
@@ -211,7 +211,7 @@ Node* Parser::Statement()
 	return node;
 }
 
-void Parser::ss(Node* node, string type)
+void Parser::InitializationArray(Node* node, string type)
 {
 	Node* tempActiveElementArray = new Node(NodeType::VAR, GetCurrentToken()->GetValue());
 	tempActiveElementArray->Operand1 = new Node(NodeType::VAR_TYPE, type);
@@ -294,7 +294,7 @@ Node* Parser::Expr()
 {
 	 Node* node = nullptr;
 	 if (GetCurrentToken()->GetType() == TokenType::NUMBER)
-		 return Compare();
+		 return LogOr();
 
 	 if (BaseTokenTypes::IsTypeVar(GetCurrentToken()->GetType()) == true)
 	 {
@@ -303,7 +303,7 @@ Node* Parser::Expr()
 		 node = new Node(NodeType::SET, "", node, Expr());
 	 }
 
-	 node = Compare();
+	 node = LogOr();
 	 if (node->GetType() == NodeType::VAR && GetCurrentToken()->GetType() == TokenType::ASSIGN)
 	 {
 		 UseNextToken(); 
@@ -314,7 +314,7 @@ Node* Parser::Expr()
 			 string tempType = GetCurrentToken()->GetValue();
 			 UseNextToken();
 			 UseNextToken();
-			 ss(node, tempType);
+			 InitializationArray(node, tempType);
 		 }
 		 else
 		 {
@@ -322,29 +322,101 @@ Node* Parser::Expr()
 		 }
 	 }
 
-
 	 return node;
 }
 
-Node* Parser::Compare()
+Node* Parser::LogOr()
 {
-	Node* node = Summa();
-	if (GetCurrentToken()->GetType() == TokenType::LESS)
+	Node* node = LogAnd();
+
+	while (GetCurrentToken()->GetType() == TokenType::OR)
 	{
 		UseNextToken();
-		node = new Node(NodeType::LESS, "", node, Summa());
+		node = new Node(NodeType::OR, "", node, LogAnd());
 	}
-	else if (GetCurrentToken()->GetType() == TokenType::MORE)
+	return node;
+}
+
+Node* Parser::LogAnd()
+{
+	Node* node = LogUnarOr();
+
+	while (GetCurrentToken()->GetType() == TokenType::AND)
 	{
 		UseNextToken();
-		node = new Node(NodeType::MORE, "", node, Summa());
+		node = new Node(NodeType::AND, "", node, LogUnarOr());
 	}
 	return node;
 }
 
 
+Node* Parser::LogUnarOr()
+{
+	Node* node = LogUnarAnd();
 
- 
+	while (GetCurrentToken()->GetType() == TokenType::OR_ONE)
+	{
+		UseNextToken();
+		node = new Node(NodeType::OR_ONE, "", node, LogUnarAnd());
+	}
+	return node;
+}
+
+Node* Parser::LogUnarAnd()
+{
+	Node* node = Compare();
+
+	while (GetCurrentToken()->GetType() == TokenType::AND_ONE)
+	{
+		UseNextToken();
+		node = new Node(NodeType::AND_ONE, "", node, Compare());
+	}
+	return node;
+}
+
+
+Node* Parser::Compare()
+{
+	Node* node = Summa();
+	NodeType typeCompare;
+
+	
+	if (GetCurrentToken()->GetType() == TokenType::LESS)
+	{
+		typeCompare = NodeType::LESS;
+	}
+	else if (GetCurrentToken()->GetType() == TokenType::MORE)
+	{
+		typeCompare = NodeType::MORE;
+	}
+	else if (GetCurrentToken()->GetType() == TokenType::LESS_EQUAL)
+	{
+		typeCompare = NodeType::LESS_EQUAL;
+	}
+	else if (GetCurrentToken()->GetType() == TokenType::MORE_EQUAL)
+	{
+		typeCompare = NodeType::MORE_EQUAL;
+	}
+	else if (GetCurrentToken()->GetType() == TokenType::EQUAL)
+	{
+		typeCompare = NodeType::EQUAL;
+	}
+	else if (GetCurrentToken()->GetType() == TokenType::NOT_EQUAL)
+	{
+		typeCompare = NodeType::NOT_EQUAL;
+	}
+
+	if (GetCurrentToken()->GetType() == TokenType::LESS || GetCurrentToken()->GetType() == TokenType::MORE
+		|| GetCurrentToken()->GetType() == TokenType::LESS_EQUAL || GetCurrentToken()->GetType() == TokenType::MORE_EQUAL 
+		|| GetCurrentToken()->GetType() == TokenType::EQUAL || GetCurrentToken()->GetType() == TokenType::NOT_EQUAL)
+	{
+		UseNextToken();
+		node = new Node(typeCompare, "", node, Summa());
+	}
+	
+	return node;
+}
+
 
 Node* Parser::Summa()
 {
@@ -430,8 +502,18 @@ Node* Parser::GetNodeValue()
 	Node* node = nullptr;
 	if (GetCurrentToken()->GetType() == TokenType::LITERAL)
 	{
+		string nameVar = GetCurrentToken()->GetValue();
 		node = new Node(NodeType::VAR, GetCurrentToken()->GetValue());
 		UseNextToken();
+
+
+		if (GetCurrentToken()->GetType() == TokenType::L_SBRA)
+		{
+			node = new Node(NodeType::ARRAY_ACCESS, nameVar, ParentExpr());
+			UseNextToken();
+			node = new Node(NodeType::SET, "", node, ParentExpr());
+		}
+
 		return node;
 	}
 	else if (GetCurrentToken()->GetType() == TokenType::NUMBER)

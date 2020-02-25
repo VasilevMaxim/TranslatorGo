@@ -33,6 +33,13 @@ enum class TokenType
 	LESS,
 	LESS_EQUAL,
 	MORE_EQUAL,
+	
+	AND,
+	OR,
+
+	AND_ONE,
+	OR_ONE,
+	
 	SEMICOLON,
 	NEW_LINE,
 	COLON,

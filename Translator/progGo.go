@@ -1,16 +1,31 @@
  { 
 	a := 8
+	numbers[5] = 1 + 5 * g + 6 / y;
+	if a >= b || c > b && k > o{
+    if b <= c{
+           if c == d{
+            b = a;
+            }
+      }
+    } else if b != a {
+		b = 1;
+	} else if b < m {
+		b = 2;
+	} else{
+		b = 0;
+	}
 	
 	/* g := 1.9823 * 23213.424
 
     var numbers [5]int
     var numbers [1 + 5 * g + 6 / y]int = [5]int{1,2}
     var numbers [5]int = [5]int{1,2,3,4,5}*/
-   var numbers [1 + 5 * g + 6 / y]float = [5]int{1,2}
+    var numbers [1 + 5 * g + 6 / y]float = [5]int{1,2}
     numbers := [5]int{1,2,3,4,5}
    x := ++a + b--
    var numbers [5]int
 
+   
 
    for i := 1; i < 10; --i{
         
@@ -30,19 +45,7 @@
         
    }
 
-	if a > b{
-    if b > c{
-           if c < d{
-            b = a;
-            }
-      }
-    } else if b < a {
-		b = 1;
-	} else if b < m {
-		b = 2;
-	} else{
-		b = 0;
-	}
+
 
 
    var numbers [5]int
