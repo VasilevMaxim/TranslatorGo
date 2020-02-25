@@ -34,7 +34,7 @@ Node* Parser::Statement()
 		node = new Node(NodeType::IF); 
 		UseNextToken();
 
-		node->Operand1 = ParentExpr();
+		node->Operand1 = ParentExprSBra();
 		node->Operand2 = Statement(); 
 	
 		if (GetCurrentToken()->GetType() == TokenType::ELSE)
@@ -47,7 +47,7 @@ Node* Parser::Statement()
 				{
 					UseNextToken();
 					Node* newNodeIfElse = new Node(NodeType::IF_ELSE);
-					newNodeIfElse->Operand1 = ParentExpr();
+					newNodeIfElse->Operand1 = ParentExprSBra();
 					newNodeIfElse->Operand2 = Statement();
 
 					nodeActiveIfElse->Operand3 = newNodeIfElse;
@@ -75,13 +75,13 @@ Node* Parser::Statement()
 		UseNextToken();
 		if (GetCurrentToken()->GetType() != TokenType::LBRA)
 		{
-			node->Operand1 = ParentExpr();
+			node->Operand1 = ParentExprSBra();
 			if (GetCurrentToken()->GetType() != TokenType::LBRA)
 			{
 				UseNextToken();
-				node->Operand2 = ParentExpr();
+				node->Operand2 = ParentExprSBra();
 				UseNextToken();
-				node->Operand3 = ParentExpr();
+				node->Operand3 = ParentExprSBra();
 			}
 		}
 
@@ -123,55 +123,31 @@ Node* Parser::Statement()
 			if (GetCurrentToken()->GetType() == TokenType::L_SBRA)
 			{
 				UseNextToken();
-				node = new Node(NodeType::ARRAY, GetCurrentToken()->GetValue());
-				int numArray = atoi(GetCurrentToken()->GetValue().c_str());
+				Node* exprNumNodeArray = new Node(NodeType::EXPR, "", Expr());
+				node = new Node(NodeType::ARRAY, "");
 
-				UseNextToken();
-				UseNextToken();
+				UseNextToken(); // type
 
 				string tempType = GetCurrentToken()->GetValue();
 				node->Operand1 = new Node(NodeType::VAR_TYPE, GetCurrentToken()->GetValue());
-
+				node->Operand2 = exprNumNodeArray;
 				
 				UseNextToken();
 				if (GetCurrentToken()->GetType() == TokenType::ASSIGN)
 				{
 					UseNextToken(); // [
 					UseNextToken(); // num
-					UseNextToken(); // ]
+					Node* tempNodeAmount = new Node(NodeType::EXPR, "", Expr());
+					node->Operand3 = tempNodeAmount;
 					UseNextToken(); // type
+					if (GetCurrentToken()->GetValue() != tempType)
+					{
+						// error
+					}
+
 					UseNextToken(); // {
 					UseNextToken(); // value
-
-					Node* tempActiveElementArray = new Node(NodeType::VAR, GetCurrentToken()->GetValue());
-					tempActiveElementArray->Operand1 = new Node(NodeType::VAR_TYPE, tempType);
-					node->Operand2 = tempActiveElementArray;
-					--numArray;
-
-					bool isZeros = false;
-					while (numArray-- > 0)
-					{
-						if (isZeros == false)
-						{
-							UseNextToken(); // ,
-							UseNextToken(); // value
-						}
-						if (BaseTokenTypes::IsTokenSeparator(GetCurrentToken()->GetType()) == true)
-						{
-							isZeros = true;
-						}
-						
-						Node* newElementArray = new Node(NodeType::VAR, isZeros ? "0" : GetCurrentToken()->GetValue());
-						newElementArray->Operand1 = new Node(NodeType::VAR_TYPE, tempType);
-						
-						tempActiveElementArray->Operand2 = newElementArray;
-						tempActiveElementArray = newElementArray;
-					}
-					if (isZeros == false)
-					{
-						UseNextToken();
-						UseNextToken();
-					}
+					ss(node, tempType);
 					
 				}
 			}
@@ -235,6 +211,66 @@ Node* Parser::Statement()
 	return node;
 }
 
+void Parser::ss(Node* node, string type)
+{
+	Node* tempActiveElementArray = new Node(NodeType::VAR, GetCurrentToken()->GetValue());
+	tempActiveElementArray->Operand1 = new Node(NodeType::VAR_TYPE, type);
+	node->Operand4 = tempActiveElementArray;
+
+	while (true)
+	{
+		UseNextToken();
+		if (GetCurrentToken()->GetType() == TokenType::COMMA)
+		{
+			UseNextToken();
+			if (GetCurrentToken()->GetType() == TokenType::RBRA)
+			{
+				UseNextToken();
+				break;
+			}
+			else if (GetCurrentToken()->GetType() == TokenType::NEW_LINE)
+			{
+				UseNextToken();
+				if (GetCurrentToken()->GetType() == TokenType::RBRA)
+				{
+					UseNextToken();
+					break;
+				}
+			}
+		}
+		else if (GetCurrentToken()->GetType() == TokenType::RBRA)
+		{
+			UseNextToken();
+			break;
+		}
+
+
+		Node* newElementArray = new Node(NodeType::VAR, GetCurrentToken()->GetValue());
+		newElementArray->Operand1 = new Node(NodeType::VAR_TYPE, type);
+
+		tempActiveElementArray->Operand2 = newElementArray;
+		tempActiveElementArray = newElementArray;
+	}
+}
+
+Node* Parser::ParentExprSBra()
+{
+	if (GetCurrentToken()->GetType() == TokenType::L_SBRA)
+	{
+		UseNextToken();
+	}
+
+	Node* node = ParentExpr();
+
+	if (GetCurrentToken()->GetType() == TokenType::R_SBRA)
+	{
+		UseNextToken();
+
+	}
+
+	return node;
+}
+
 Node* Parser::ParentExpr()
 {
 	if (GetCurrentToken()->GetType() == TokenType::LPAR)
@@ -251,6 +287,8 @@ Node* Parser::ParentExpr()
 
 	return node;
 }
+
+
 
 Node* Parser::Expr()
 {
@@ -269,7 +307,19 @@ Node* Parser::Expr()
 	 if (node->GetType() == NodeType::VAR && GetCurrentToken()->GetType() == TokenType::ASSIGN)
 	 {
 		 UseNextToken(); 
-		 node = new Node(NodeType::SET, "", node, Expr());
+		 if (GetCurrentToken()->GetType() == TokenType::L_SBRA)
+		 {
+			 node->Operand2 = ParentExprSBra();
+			 node->Operand1 = new Node(NodeType::VAR_TYPE, GetCurrentToken()->GetValue());
+			 string tempType = GetCurrentToken()->GetValue();
+			 UseNextToken();
+			 UseNextToken();
+			 ss(node, tempType);
+		 }
+		 else
+		 {
+			 node = new Node(NodeType::SET, "", node, ParentExprSBra());
+		 }
 	 }
 
 
@@ -392,7 +442,7 @@ Node* Parser::GetNodeValue()
 	}
 	else
 	{
-		return ParentExpr();
+		return ParentExprSBra();
 	}
 }
 

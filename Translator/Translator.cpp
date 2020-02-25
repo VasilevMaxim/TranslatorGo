@@ -4,6 +4,7 @@
 #include "TokenBreaking.h"
 #include "Parser.h"
 #include "AbstractSyntaxTree.h"
+#include "Preprocessing.h"
 
 using std::ifstream;
 using std::getline;
@@ -21,11 +22,12 @@ int main()
 void OnCompilation(string pathFile)
 {
 	string textInFile = GetAllTextInFile(pathFile);
+	Preprocessing preprocessing(&textInFile);
 
-	TokenBreaking tb(textInFile);
-	tb.ShowTokens();
+	TokenBreaking tokenBreaking(preprocessing.GetText());
+	tokenBreaking.ShowTokens();
 
-	Parser parser(tb.GetTokens());
+	Parser parser(tokenBreaking.GetTokens());
 	AbstractSyntaxTree tree(parser.GetNodeHead());
 	tree.ShowTree();
 }

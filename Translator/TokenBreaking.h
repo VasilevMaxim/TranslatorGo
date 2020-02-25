@@ -13,7 +13,7 @@ private:
 	string _text;
 
 	string _separators = " \t\r";
-	string _znaks = ",()[]{}:=+-*/!;.<>&|\n";
+	string _znaks = ",()[]{}:=+-*/!;<>&|\n";
 	string _fixedZnaks = "\"\'";
 
 	vector<Token*> _tokens;

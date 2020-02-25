@@ -155,6 +155,7 @@
     <ClCompile Include="BaseTokenTypes.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="Parser.cpp" />
+    <ClCompile Include="Preprocessing.cpp" />
     <ClCompile Include="Token.cpp" />
     <ClCompile Include="TokenBreaking.cpp" />
     <ClCompile Include="Translator.cpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="Node.h" />
     <ClInclude Include="NodeType.h" />
     <ClInclude Include="Parser.h" />
+    <ClInclude Include="Preprocessing.h" />
     <ClInclude Include="Token.h" />
     <ClInclude Include="TokenBreaking.h" />
     <ClInclude Include="TokenType.h" />

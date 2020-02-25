@@ -1,10 +1,16 @@
  { 
-    var numbers [5]int
-    var numbers [5]int = [5]int{1,2}
-    var numbers [5]int = [5]int{1,2,3,4,5}
-    
+	a := 8
+	
+	/* g := 1.9823 * 23213.424
 
+    var numbers [5]int
+    var numbers [1 + 5 * g + 6 / y]int = [5]int{1,2}
+    var numbers [5]int = [5]int{1,2,3,4,5}*/
+   var numbers [1 + 5 * g + 6 / y]float = [5]int{1,2}
+    numbers := [5]int{1,2,3,4,5}
    x := ++a + b--
+   var numbers [5]int
+
 
    for i := 1; i < 10; --i{
         
@@ -63,7 +69,7 @@
         age = 27
 	)
 
-	g := 1
+	
 	var hello int = 1 + 5 * g + 6 / y
 	
 

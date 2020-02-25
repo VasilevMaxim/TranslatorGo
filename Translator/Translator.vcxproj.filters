@@ -14,6 +14,9 @@
     <Filter Include="AST">
       <UniqueIdentifier>{53ab9455-211b-4bdd-823a-34201ef40a3f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Preprocessing">
+      <UniqueIdentifier>{7e24f5cc-2b9b-47d5-84f6-3881db271fd8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Translator.cpp">
@@ -36,6 +39,9 @@
     </ClCompile>
     <ClCompile Include="AbstractSyntaxTree.cpp">
       <Filter>AST</Filter>
+    </ClCompile>
+    <ClCompile Include="Preprocessing.cpp">
+      <Filter>Main</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -63,6 +69,7 @@
     <ClInclude Include="AbstractSyntaxTree.h">
       <Filter>AST</Filter>
     </ClInclude>
+    <ClInclude Include="Preprocessing.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="progGo.go" />

@@ -22,6 +22,7 @@ private:
 
 	Node* Parse();
 	Node* Statement();
+	Node* ParentExprSBra();
 	Node* ParentExpr();
 	Node* Expr();
 	Node* Unar();
@@ -31,6 +32,8 @@ private:
 	Node* GetNodeValue();
 
 	Node* _head;
+
+	void ss(Node* x, string type);
 public:
 	Parser(vector<Token*>* allTokens);
 	
