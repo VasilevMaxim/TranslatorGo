@@ -22,11 +22,12 @@ In order to translate the code, specify the path to the file in the main functio
 :white_check_mark: var (,)     
 :white_check_mark: error in tree    
 :white_check_mark: array    
-:white_check_mark: array(expr)    
+:white_check_mark: array(expr)
+:white_check_mark: accessing a element array
 :white_check_mark: comments    
+:white_check_mark: comparisons operator    
 
 ## Need to do.
-:black_square_button: comparisons operator          
 :black_square_button: function    
 :black_square_button: function (args)      
 :black_square_button: editing code building tree     
