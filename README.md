@@ -25,12 +25,14 @@ In order to translate the code, specify the path to the file in the main functio
 :white_check_mark: array(expr)     
 :white_check_mark: accessing a element array     
 :white_check_mark: comments       
-:white_check_mark: comparisons operator    
+:white_check_mark: comparisons operator      
+:white_check_mark: function       
+:white_check_mark: function (args)      
 
 ## Need to do.
-:black_square_button: function    
-:black_square_button: function (args)      
-:black_square_button: editing code building tree     
+
+:black_square_button: func return       
+:black_square_button: editing code building tree      
 
 Based on an article from Habr: https://habr.com/en/post/133780/     
 Thanks so much for helping Peter, i582: https://github.com/i582
