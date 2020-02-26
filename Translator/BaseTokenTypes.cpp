@@ -12,6 +12,8 @@ map<string, TokenType> BaseTokenTypes::_baseTokenTypes =
 	{ "if", TokenType::IF },
 	{ "else", TokenType::ELSE },
 
+	{ "func", TokenType::FUNC },
+
 	{ "{", TokenType::LBRA },
 	{ "}", TokenType::RBRA },
 	{ "(", TokenType::LPAR },

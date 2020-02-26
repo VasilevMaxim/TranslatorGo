@@ -125,16 +125,22 @@ void AbstractSyntaxTree::ShowPartTree(Node* sub, size_t level)
 	case NodeType::STMT:
 		break;
 	case NodeType::FUNC:
+		cout << "+-Func ";
 		break;
 	case NodeType::FUNC_ARGS:
+		cout << "+-FuncArgs ";
 		break;
 	case NodeType::FUNC_ARG:
+		cout << "+-FuncArg ";
 		break;
 	case NodeType::FUNCTION_IMPL:
+		cout << "+-FuncImpl ";
 		break;
 	case NodeType::FUNCTION_IMPL_ARGS:
+		cout << "+-FuncImplArgs ";
 		break;
 	case NodeType::FUNCTION_IMPL_ARG:
+		cout << "+-FuncImplArg ";
 		break;
 	case NodeType::FUNCTION_IMPL_TYPE:
 		break;

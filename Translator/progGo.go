@@ -1,4 +1,10 @@
  { 
+
+     func main() {
+        // add(4, 5)   // x + y = 9
+       //  add(20, 6)  // x + y = 26
+    }
+
 	a := 8
 	numbers[5] = 1 + 5 * g + 6 / y;
 	if a >= b || c > b && k > o{
@@ -51,7 +57,7 @@
    var numbers [5]int
    var numbers [5]int = [5]int{1,2,3,4,5}
 
-
+   var hello int
 
 
    var name, age, sss = 5, 27, 9000

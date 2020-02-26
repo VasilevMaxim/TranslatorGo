@@ -97,6 +97,27 @@ Node* Parser::Statement()
 	{
 		UseNextToken();
 	}
+	else if (GetCurrentToken()->GetType() == TokenType::FUNC)
+	{
+		UseNextToken();
+		string nameFunc = GetCurrentToken()->GetValue();
+		UseNextToken();
+		if (GetCurrentToken()->GetType() != TokenType::LPAR)
+		{
+			// error
+		}
+
+		UseNextToken();
+		if (GetCurrentToken()->GetType() == TokenType::RPAR)
+		{
+			node = new Node(NodeType::FUNC, nameFunc);
+			UseNextToken();
+			node->Operand1 = Statement();
+			UseNextToken();
+		}
+
+	}
+	
 	else if (_nodesVar.empty() == false)
 	{
 		node = _nodesVar.back();
@@ -176,8 +197,11 @@ Node* Parser::Statement()
 			{
 				node->Operand1 = new Node(NodeType::VAR_TYPE, GetCurrentToken()->GetValue());
 				UseNextToken();
-				UseNextToken();
-				node = new Node(NodeType::SET, "", node, Expr());
+				if (GetCurrentToken()->GetType() == TokenType::ASSIGN)
+				{
+					UseNextToken();
+					node = new Node(NodeType::SET, "", node, Expr());
+				}
 			}
 		}
 	}

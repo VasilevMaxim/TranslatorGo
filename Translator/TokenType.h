@@ -51,5 +51,7 @@ enum class TokenType
 	INCREMENT,
 	DECREMENT,
 
+	FUNC,
+
 	NON
 };
