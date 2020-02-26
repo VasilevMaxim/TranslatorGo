@@ -1,0 +1,1 @@
+package main;import "fmt";func main(){fmt.Println(factorial(21))}; func factorial(x int) int{if x == 0{return 1} else if x <= 20{return x*factorial(x - 1)} else {fmt.Print("ERROR!\nCode Of Error: ");return -1}}
