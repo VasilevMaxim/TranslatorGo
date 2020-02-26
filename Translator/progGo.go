@@ -13,7 +13,7 @@
            if c == d{
             b = a;
             }
-      }
+    }
     } else if b != a {
 		b = 1;
 	} else if b < m {
