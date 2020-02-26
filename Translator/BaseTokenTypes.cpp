@@ -9,6 +9,7 @@ map<string, TokenType> BaseTokenTypes::_baseTokenTypes =
 	{ "break", TokenType::BREAK },
 	{ "int", TokenType::INT },
 	{ "float", TokenType::FLOAT },
+	{ "double", TokenType::DOUBLE },
 	{ "if", TokenType::IF },
 	{ "else", TokenType::ELSE },
 

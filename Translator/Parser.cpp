@@ -112,10 +112,50 @@ Node* Parser::Statement()
 		{
 			node = new Node(NodeType::FUNC, nameFunc);
 			UseNextToken();
-			node->Operand1 = Statement();
-			UseNextToken();
+		}
+		else
+		{
+			node = new Node(NodeType::FUNC_ARG, nameFunc);
+
+			Node* _tempActiveParam;
+			vector<Node*> paramsPull;
+			paramsPull.push_back(new Node(NodeType::VAR, GetCurrentToken()->GetValue()));
+			node->Operand1 = paramsPull.back();
+			_tempActiveParam = paramsPull.back();
+			while (true)
+			{
+				UseNextToken(); // , or type
+
+				if (BaseTokenTypes::IsTypeVar(GetCurrentToken()->GetType()) == true)
+				{
+					_tempActiveParam->Operand1 = paramsPull[0];
+					for(int indexParam = 0; indexParam < paramsPull.size() - 1; indexParam++)
+					{
+						paramsPull[indexParam]->Operand1 = new Node(NodeType::VAR_TYPE, GetCurrentToken()->GetValue());
+						paramsPull[indexParam]->Operand2 = paramsPull[indexParam + 1];
+					}
+					paramsPull[paramsPull.size() - 1]->Operand1 = new Node(NodeType::VAR_TYPE, GetCurrentToken()->GetValue());
+
+					UseNextToken();
+					if (GetCurrentToken()->GetType() == TokenType::RPAR)
+					{
+						UseNextToken();
+						break;
+					}
+
+					_tempActiveParam = paramsPull.back();
+					paramsPull.clear();
+				}
+				
+				UseNextToken(); // name
+
+				paramsPull.push_back(new Node(NodeType::VAR, GetCurrentToken()->GetValue()));
+
+			}
 		}
 
+		node->Operand2 = Statement();
+		UseNextToken();
 	}
 	
 	else if (_nodesVar.empty() == false)

@@ -1,9 +1,10 @@
  { 
-
      func main() {
-        // add(4, 5)   // x + y = 9
-       //  add(20, 6)  // x + y = 26
-    }
+        var numbers [5]int
+     }
+     func testFunc(x, y, z int, a, b float, r, g, b double) {
+       x := ++a + b--
+     }
 
 	a := 8
 	numbers[5] = 1 + 5 * g + 6 / y;
