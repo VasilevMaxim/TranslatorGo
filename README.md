@@ -32,7 +32,6 @@ In order to translate the code, specify the path to the file in the main functio
 ## Need to do.
 
 :black_square_button: func (args arrays)       
-:black_square_button: func (args arrays)       
 :black_square_button: func return       
 :black_square_button: editing code building tree in https://golang.org/ref/spec           
 :black_square_button: editing code in classes           
