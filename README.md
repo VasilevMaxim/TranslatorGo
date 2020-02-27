@@ -31,8 +31,11 @@ In order to translate the code, specify the path to the file in the main functio
 
 ## Need to do.
 
+:black_square_button: func (args arrays)       
+:black_square_button: func (args arrays)       
 :black_square_button: func return       
-:black_square_button: editing code building tree      
+:black_square_button: editing code building tree in https://golang.org/ref/spec           
+:black_square_button: editing code in classes           
 
 Based on an article from Habr: https://habr.com/en/post/133780/     
-Thanks so much for helping Peter, i582: https://github.com/i582
+Thanks so much for helping Peter, I582: https://github.com/i582
