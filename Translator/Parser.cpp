@@ -1,5 +1,8 @@
 #include "Parser.h"
 #include "BaseTokenTypes.h"
+#include <queue>
+
+using std::queue;
 
 Token* Parser::GetCurrentToken()
 {
@@ -11,10 +14,6 @@ void Parser::UseNextToken()
 	_indexCurrentToken++;
 }
 
-void Parser::UseBackToken()
-{
-	_indexCurrentToken--;
-}
 
 Node* Parser::Parse()
 {
@@ -117,44 +116,140 @@ Node* Parser::Statement()
 		{
 			node = new Node(NodeType::FUNC_ARG, nameFunc);
 
-			Node* _tempActiveParam;
-			vector<Node*> paramsPull;
-			paramsPull.push_back(new Node(NodeType::VAR, GetCurrentToken()->GetValue()));
-			node->Operand1 = paramsPull.back();
-			_tempActiveParam = paramsPull.back();
+			Node* _tempActiveParam = nullptr;
+			queue<string> paramsPull;
+			string nameParam;
+			bool isLPAR = false;
+
 			while (true)
 			{
-				UseNextToken(); // , or type
-
-				if (BaseTokenTypes::IsTypeVar(GetCurrentToken()->GetType()) == true)
+				if (GetCurrentToken()->GetType() == TokenType::LITERAL)
 				{
-					_tempActiveParam->Operand1 = paramsPull[0];
-					for(int indexParam = 0; indexParam < paramsPull.size() - 1; indexParam++)
-					{
-						paramsPull[indexParam]->Operand1 = new Node(NodeType::VAR_TYPE, GetCurrentToken()->GetValue());
-						paramsPull[indexParam]->Operand2 = paramsPull[indexParam + 1];
-					}
-					paramsPull[paramsPull.size() - 1]->Operand1 = new Node(NodeType::VAR_TYPE, GetCurrentToken()->GetValue());
-
+					paramsPull.push(GetCurrentToken()->GetValue());
 					UseNextToken();
-					if (GetCurrentToken()->GetType() == TokenType::RPAR)
+					if (GetCurrentToken()->GetType() == TokenType::COMMA)
 					{
 						UseNextToken();
-						break;
+					}
+				}
+				else if (GetCurrentToken()->GetType() == TokenType::L_SBRA)
+				{
+					UseNextToken();
+					Node* exprNumNodeArray = new Node(NodeType::EXPR, "", Expr());
+					UseNextToken();
+					string typeArrays = GetCurrentToken()->GetValue();
+
+					while (paramsPull.empty() == false) 
+					{
+						Node* newParam = new Node(NodeType::ARRAY, paramsPull.front());
+						paramsPull.pop();
+						newParam->Operand1 = new Node(NodeType::VAR_TYPE, typeArrays);
+						newParam->Operand2 = exprNumNodeArray;
+
+						if (_tempActiveParam == nullptr)
+						{
+							node->Operand1 = newParam;
+						}
+						else
+						{
+							_tempActiveParam->Operand3 = newParam;
+						}
+
+						_tempActiveParam = newParam;
+					}
+					
+					UseNextToken(); // 
+					if (GetCurrentToken()->GetType() == TokenType::LPAR)
+					{
+						isLPAR = true;
+					}
+					UseNextToken(); // param
+				}
+				else if(BaseTokenTypes::IsTypeVar(GetCurrentToken()->GetType()) == true && isLPAR == false)
+				{
+					string typeArrays = GetCurrentToken()->GetValue();
+
+					while (paramsPull.empty() == false)
+					{
+						Node* newParam = new Node(NodeType::VAR, paramsPull.front());
+						paramsPull.pop();
+						newParam->Operand1 = new Node(NodeType::VAR_TYPE, typeArrays);
+
+						if (_tempActiveParam == nullptr)
+						{
+							node->Operand1 = newParam;
+						}
+						else
+						{
+							_tempActiveParam->Operand3 = newParam;
+						}
+
+						_tempActiveParam = newParam;
 					}
 
-					_tempActiveParam = paramsPull.back();
-					paramsPull.clear();
+					UseNextToken(); // ,
+
+					if (GetCurrentToken()->GetType() == TokenType::LPAR)
+					{
+						isLPAR = true;
+					}
+					UseNextToken(); // param
 				}
-				
-				UseNextToken(); // name
+				else if (BaseTokenTypes::IsTypeVar(GetCurrentToken()->GetType()) == true || GetCurrentToken()->GetType() == TokenType::L_SBRA)
+				{
+					Node* _tempActiveParam2 = nullptr;
+					string typeReturn = nullptr;
+					Node* nodeTypeReturn = nullptr;
+					Node* exprNumNodeArray = nullptr;
 
-				paramsPull.push_back(new Node(NodeType::VAR, GetCurrentToken()->GetValue()));
+					while (BaseTokenTypes::IsTypeVar(GetCurrentToken()->GetType()) == true || GetCurrentToken()->GetType() == TokenType::L_SBRA)
+					{
+						if (GetCurrentToken()->GetType() == TokenType::L_SBRA)
+						{
+							UseNextToken();
+							exprNumNodeArray = new Node(NodeType::EXPR, "", Expr());
+							UseNextToken();
+							typeReturn = GetCurrentToken()->GetValue();
+						}
+						else
+						{
+							exprNumNodeArray = nullptr;
+							typeReturn = GetCurrentToken()->GetValue();
+						}
 
+						nodeTypeReturn = new Node(NodeType::VAR_TYPE, typeReturn, exprNumNodeArray);
+						if (_tempActiveParam2 == nullptr)
+						{
+							node->Operand2 = nodeTypeReturn;
+						}
+						else
+						{
+							_tempActiveParam2->Operand3 = nodeTypeReturn;
+						}
+
+						_tempActiveParam2 = nodeTypeReturn;
+
+						UseNextToken();
+						if (GetCurrentToken()->GetType() == TokenType::LBRA)
+						{
+							break;
+						}
+						UseNextToken();
+					}
+
+				}
+				else if (GetCurrentToken()->GetType() == TokenType::LBRA)
+				{
+					break;
+				}
+				else 
+				{
+					// error
+				}
 			}
 		}
 
-		node->Operand2 = Statement();
+		node->Operand3 = Statement();
 		UseNextToken();
 	}
 	
@@ -179,13 +274,15 @@ Node* Parser::Statement()
 		else if (GetCurrentToken()->GetType() == TokenType::LITERAL)
 		{
 			node = new Node(NodeType::VAR, GetCurrentToken()->GetValue());
-			UseNextToken();
+			string nameArray = GetCurrentToken()->GetValue();
 
+			UseNextToken();
 			if (GetCurrentToken()->GetType() == TokenType::L_SBRA)
 			{
+				
 				UseNextToken();
 				Node* exprNumNodeArray = new Node(NodeType::EXPR, "", Expr());
-				node = new Node(NodeType::ARRAY, "");
+				node = new Node(NodeType::ARRAY, nameArray);
 
 				UseNextToken(); // type
 

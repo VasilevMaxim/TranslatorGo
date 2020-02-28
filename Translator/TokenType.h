@@ -20,8 +20,9 @@ enum class TokenType
 	RBRA,
 	LPAR,
 	RPAR,
-	L_SBRA,
-	R_SBRA,
+	
+	L_SBRA, // sym = [
+	R_SBRA, // sym = ]
 	ASSIGN,
 	PLUS,
 	MINUS,

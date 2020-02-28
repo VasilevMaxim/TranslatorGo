@@ -1,6 +1,7 @@
  { 
-     func main() {
+     func main(x,b [5]int, x, y, z int, y [6]float)int, [5]int {
         var numbers [5]int
+		x := ++a + b--
      }
      func testFunc(x, y, z int, a, b float, r, g, b double) {
        x := ++a + b--
