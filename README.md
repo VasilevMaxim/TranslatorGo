@@ -28,11 +28,11 @@ In order to translate the code, specify the path to the file in the main functio
 :white_check_mark: comparisons operator      
 :white_check_mark: function       
 :white_check_mark: function (args)      
+:white_check_mark: func (args arrays)       
+:white_check_mark: func return     
 
 ## Need to do.
 
-:black_square_button: func (args arrays)       
-:black_square_button: func return       
 :black_square_button: editing code building tree in https://golang.org/ref/spec           
 :black_square_button: editing code in classes           
 
