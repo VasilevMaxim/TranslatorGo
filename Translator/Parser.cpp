@@ -100,6 +100,13 @@ Node* Parser::Statement()
 	{
 		UseNextToken();
 		string nameFunc = GetCurrentToken()->GetValue();
+		node = new Node(NodeType::FUNC, nameFunc);
+		UseNextToken();
+		UseNextToken();
+		node->Operand1 = GetListParameters(); 
+		UseNextToken();
+		node->Operand2 = Statement();
+		/*
 		UseNextToken();
 		if (GetCurrentToken()->GetType() != TokenType::LPAR)
 		{
@@ -251,6 +258,8 @@ Node* Parser::Statement()
 
 		node->Operand3 = Statement();
 		UseNextToken();
+
+		*/
 	}
 	
 	else if (_nodesVar.empty() == false)
@@ -370,6 +379,107 @@ Node* Parser::Statement()
 	}
 	
 	return node;
+}
+
+Node* Parser::GetNodeArray()
+{
+	return nullptr;
+}
+
+Node* Parser::GetListParameters()
+{
+	Node* headListOtherTypesParams = ArrayParameters();
+	Node* temp = headListOtherTypesParams;
+
+	UseNextToken();
+
+	while (GetCurrentToken()->GetType() != TokenType::RPAR)
+	{
+		temp->Operand3 = ArrayParameters();
+		temp = temp->Operand3;
+	}
+	
+	return headListOtherTypesParams;
+}
+
+Node* Parser::ArrayParameters()
+{
+	Node* headListParams = RezultParameters();
+	Node* temp = headListParams;
+
+	if (GetCurrentToken()->GetType() == TokenType::L_SBRA)
+	{
+		UseNextToken();
+		Node* expr = Expr();
+		UseNextToken();
+
+		headListParams = RezultParameters();
+		temp = headListParams;
+
+		while (temp != nullptr)
+		{
+			Node* tempArray = new Node(NodeType::ARRAY, temp->GetValue());
+			tempArray->Operand4 = temp->Operand4;
+			tempArray->Operand2 = expr;
+			temp = tempArray;
+			temp = temp->Operand4;
+		}
+	}
+
+	Node* type = GetTypeParams();
+
+	temp = headListParams;
+	while (temp != nullptr)
+	{
+		temp->Operand1 = type;
+		temp = temp->Operand4;
+	}
+	
+	UseNextToken();
+
+	return headListParams;
+}
+
+
+Node* Parser::RezultParameters()
+{
+	Node* temp = Parameters();
+	Node* begin = temp;
+	Node* pastTemp = temp;
+
+	UseNextToken();
+
+	while (true)
+	{
+		temp = Parameters();
+
+		// Create List.
+		pastTemp->Operand4 = temp;
+		pastTemp = temp;
+
+		if (GetCurrentToken()->GetType() == TokenType::L_SBRA || BaseTokenTypes::IsTypeVar(GetCurrentToken()->GetType()) == true)
+		{
+			break;
+		}
+
+		UseNextToken();
+	}
+
+	return begin;
+}
+
+
+Node* Parser::Parameters()
+{
+	Node* node = new Node(NodeType::VAR, GetCurrentToken()->GetValue());
+	UseNextToken();
+	
+	return node;
+}
+
+Node* Parser::GetTypeParams()
+{
+	return new Node(NodeType::VAR_TYPE, GetCurrentToken()->GetValue());
 }
 
 void Parser::InitializationArray(Node* node, string type)

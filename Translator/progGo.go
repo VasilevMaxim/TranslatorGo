@@ -1,10 +1,8 @@
  { 
-    func testFunc(x, y, z [5]int, a, b float, r, g, b [6]double)[5]int, double {
+    func testFunc(x, y, z [5]int, a, b float, r, g, b [6]double) {
        x := ++a + b--
      }
-     func testFunc(x, y, z int, a, b float, r, g, b double) {
-       x := ++a + b--
-     }
+
 
 	a := 8
 	numbers[5] = 1 + 5 * g + 6 / y;

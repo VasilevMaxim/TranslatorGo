@@ -19,6 +19,13 @@ private:
 	void UseNextToken();
 	vector<Node*> _nodesVar;
 
+	Node* GetNodeArray();
+	Node* GetListParameters();
+	Node* RezultParameters();
+	Node* ArrayParameters();
+	Node* Parameters();
+	Node* GetTypeParams();
+
 	Node* Parse();
 	Node* Statement();
 	Node* ParentExprSBra();
