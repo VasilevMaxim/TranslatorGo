@@ -28,8 +28,8 @@ In order to translate the code, specify the path to the file in the main functio
 :white_check_mark: comparisons operator      
 :white_check_mark: function       
 :white_check_mark: function (args)      
-:black_square_button: func (args arrays)       
-:black_square_button: func return     
+:white_check_mark: func (args arrays)       
+:white_check_mark: func return     
 
 ## Need to do.
 
