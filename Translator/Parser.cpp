@@ -159,7 +159,7 @@ Node* Parser::Statement()
 					}
 					
 					UseNextToken(); // 
-					if (GetCurrentToken()->GetType() == TokenType::LPAR)
+					if (GetCurrentToken()->GetType() == TokenType::RPAR)
 					{
 						isLPAR = true;
 					}
@@ -189,7 +189,7 @@ Node* Parser::Statement()
 
 					UseNextToken(); // ,
 
-					if (GetCurrentToken()->GetType() == TokenType::LPAR)
+					if (GetCurrentToken()->GetType() == TokenType::RPAR)
 					{
 						isLPAR = true;
 					}
@@ -198,7 +198,7 @@ Node* Parser::Statement()
 				else if (BaseTokenTypes::IsTypeVar(GetCurrentToken()->GetType()) == true || GetCurrentToken()->GetType() == TokenType::L_SBRA)
 				{
 					Node* _tempActiveParam2 = nullptr;
-					string typeReturn = nullptr;
+					string typeReturn;
 					Node* nodeTypeReturn = nullptr;
 					Node* exprNumNodeArray = nullptr;
 
