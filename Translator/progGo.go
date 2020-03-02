@@ -1,12 +1,13 @@
  { 
-    func testFunc(x, y, z [5]int, a, b float, r, g, b [6]double) {
+    func testFunc(x, y, z [5]int, a, b float, r, g, b [6]double)[5]int, [6]int, double {
        x := ++a + b--
      }
 
 
 	a := 8
 	numbers[5] = 1 + 5 * g + 6 / y;
-	if a >= b || c > b && k > o{
+
+    	if numbers[5] >= b || c > b && k > o{
     if b <= c{
            if c == d{
             b = a;
@@ -24,7 +25,7 @@
 
     var numbers [5]int
     var numbers [1 + 5 * g + 6 / y]int = [5]int{1,2}
-    var numbers [5]int = [5]int{1,2,3,4,5}*/
+    var numbers [5]int = [5]int{1,2,3,4,5}
     var numbers [1 + 5 * g + 6 / y]float = [5]int{1,2}
     numbers := [5]int{1,2,3,4,5}
    x := ++a + b--
@@ -89,6 +90,6 @@
     for {
         break
     }
-    
+    */
 	
 }

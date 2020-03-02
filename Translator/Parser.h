@@ -19,6 +19,8 @@ private:
 	void UseNextToken();
 	vector<Node*> _nodesVar;
 
+	Node* GetSignatureFunc();
+	Node* GetResultFunc();
 	Node* GetNodeArray();
 	Node* GetListParameters();
 	Node* RezultParameters();

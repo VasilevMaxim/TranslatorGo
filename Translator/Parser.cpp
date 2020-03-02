@@ -99,13 +99,10 @@ Node* Parser::Statement()
 	else if (GetCurrentToken()->GetType() == TokenType::FUNC)
 	{
 		UseNextToken();
-		string nameFunc = GetCurrentToken()->GetValue();
-		node = new Node(NodeType::FUNC, nameFunc);
-		UseNextToken();
-		UseNextToken();
-		node->Operand1 = GetListParameters(); 
-		UseNextToken();
+		node = new Node(NodeType::FUNC, GetCurrentToken()->GetValue());
+		node->Operand1 = GetSignatureFunc();
 		node->Operand2 = Statement();
+
 		/*
 		UseNextToken();
 		if (GetCurrentToken()->GetType() != TokenType::LPAR)
@@ -381,6 +378,46 @@ Node* Parser::Statement()
 	return node;
 }
 
+Node* Parser::GetSignatureFunc()
+{
+	UseNextToken();
+	UseNextToken();
+	Node* node = GetListParameters();
+	UseNextToken();
+
+	if (GetCurrentToken()->GetType() == TokenType::LBRA)
+	{
+		return node;
+	}
+
+	node->Operand4 = GetResultFunc();
+
+	return node;
+}
+
+Node* Parser::GetResultFunc()
+{
+	Node* tempRezult = GetTypeParams();
+	Node* headRezult = tempRezult;
+	UseNextToken();
+
+	while (true)
+	{
+		UseNextToken();
+		tempRezult->Operand2 = GetTypeParams();
+		tempRezult = tempRezult->Operand2;
+
+		UseNextToken();
+
+		if (GetCurrentToken()->GetType() == TokenType::LBRA)
+		{
+			break;
+		}
+	}
+
+	return headRezult;
+}
+
 Node* Parser::GetNodeArray()
 {
 	return nullptr;
@@ -393,10 +430,17 @@ Node* Parser::GetListParameters()
 
 	UseNextToken();
 
-	while (GetCurrentToken()->GetType() != TokenType::RPAR)
+	while (true)
 	{
 		temp->Operand3 = ArrayParameters();
 		temp = temp->Operand3;
+
+		if (GetCurrentToken()->GetType() == TokenType::RPAR)
+		{
+			break;
+		}
+
+		UseNextToken();
 	}
 	
 	return headListOtherTypesParams;
@@ -406,35 +450,41 @@ Node* Parser::ArrayParameters()
 {
 	Node* headListParams = RezultParameters();
 	Node* temp = headListParams;
-
-	if (GetCurrentToken()->GetType() == TokenType::L_SBRA)
-	{
-		UseNextToken();
-		Node* expr = Expr();
-		UseNextToken();
-
-		headListParams = RezultParameters();
-		temp = headListParams;
-
-		while (temp != nullptr)
-		{
-			Node* tempArray = new Node(NodeType::ARRAY, temp->GetValue());
-			tempArray->Operand4 = temp->Operand4;
-			tempArray->Operand2 = expr;
-			temp = tempArray;
-			temp = temp->Operand4;
-		}
-	}
+	bool isArray = false;
 
 	Node* type = GetTypeParams();
 
-	temp = headListParams;
+	if (type->Operand1 != nullptr)
+	{
+		isArray = true;
+	}
+
 	while (temp != nullptr)
 	{
 		temp->Operand1 = type;
-		temp = temp->Operand4;
+		temp = temp->Operand2;
 	}
-	
+
+	temp = headListParams;
+	if (isArray == true)
+	{
+		Node* tempArray = new Node(NodeType::ARRAY, temp->GetValue());
+		tempArray->Operand1 = temp->Operand1;
+		headListParams = tempArray;
+		temp = temp->Operand2;
+
+		while (temp != nullptr)
+		{
+			Node* newArray = new Node(NodeType::ARRAY, temp->GetValue());
+			newArray->Operand1 = temp->Operand1;
+
+			tempArray->Operand2 = newArray;
+
+			tempArray = tempArray->Operand2;
+			temp = temp->Operand2;
+		}
+	}
+
 	UseNextToken();
 
 	return headListParams;
@@ -454,7 +504,7 @@ Node* Parser::RezultParameters()
 		temp = Parameters();
 
 		// Create List.
-		pastTemp->Operand4 = temp;
+		pastTemp->Operand2 = temp;
 		pastTemp = temp;
 
 		if (GetCurrentToken()->GetType() == TokenType::L_SBRA || BaseTokenTypes::IsTypeVar(GetCurrentToken()->GetType()) == true)
@@ -479,7 +529,19 @@ Node* Parser::Parameters()
 
 Node* Parser::GetTypeParams()
 {
-	return new Node(NodeType::VAR_TYPE, GetCurrentToken()->GetValue());
+	Node* type = nullptr;
+	Node* expr = nullptr;
+
+	if (GetCurrentToken()->GetType() == TokenType::L_SBRA)
+	{
+		UseNextToken();
+		expr = Expr();
+		UseNextToken();
+	}
+	
+	type = new Node(NodeType::VAR_TYPE, GetCurrentToken()->GetValue(), expr);
+	
+	return type;
 }
 
 void Parser::InitializationArray(Node* node, string type)
@@ -781,8 +843,6 @@ Node* Parser::GetNodeValue()
 		if (GetCurrentToken()->GetType() == TokenType::L_SBRA)
 		{
 			node = new Node(NodeType::ARRAY_ACCESS, nameVar, ParentExpr());
-			UseNextToken();
-			node = new Node(NodeType::SET, "", node, ParentExpr());
 		}
 
 		return node;

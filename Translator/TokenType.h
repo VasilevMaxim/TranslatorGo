@@ -16,10 +16,10 @@ enum class TokenType
 	IF,
 	ELSE,
 	IF_ELSE,
-	LBRA,
-	RBRA,
-	LPAR,
-	RPAR,
+	LBRA, // sym = {
+	RBRA, // sym = }
+	LPAR, // sym = (
+	RPAR, // sym = )
 	
 	L_SBRA, // sym = [
 	R_SBRA, // sym = ]
