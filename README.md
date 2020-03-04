@@ -17,26 +17,27 @@ In order to translate the code, specify the path to the file in the main functio
 
 ## Already done.
 :white_check_mark: expr       
-:white_check_mark: func
+:white_check_mark: function       
+:white_check_mark: function (args)      
+:white_check_mark: func (args arrays)        
+:white_check_mark: func return   
+:white_check_mark: if   
+:white_check_mark: else   
+:white_check_mark: else if    
+:white_check_mark: for (multi)    
+:white_check_mark: error in tree    
+:white_check_mark: comments       
+:white_check_mark: comparisons operator  
 
 ## Need to do.
-
-:black_square_button: if   
-:black_square_button: else   
-:black_square_button: else if    
-:black_square_button: for (multi)    
+   
 :black_square_button: var (multi)         
 :black_square_button: var (,)     
-:black_square_button: error in tree    
+
 :black_square_button: array    
 :black_square_button: array(expr)     
 :black_square_button: accessing a element array     
-:black_square_button: comments       
-:black_square_button: comparisons operator      
-:black_square_button: function       
-:black_square_button: function (args)      
-:black_square_button: func (args arrays)       
-:black_square_button: func return    
+       
 :black_square_button: editing code building tree in https://golang.org/ref/spec           
 :black_square_button: editing code in classes           
 
