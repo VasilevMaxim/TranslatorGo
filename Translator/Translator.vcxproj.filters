@@ -17,6 +17,9 @@
     <Filter Include="Preprocessing">
       <UniqueIdentifier>{7e24f5cc-2b9b-47d5-84f6-3881db271fd8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Singleton">
+      <UniqueIdentifier>{6e6de11d-bd08-469b-9bf9-89d962dd257e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Translator.cpp">
@@ -41,6 +44,15 @@
       <Filter>AST</Filter>
     </ClCompile>
     <ClCompile Include="Preprocessing.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="VariableInit.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="ListTokens.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Singleton.cpp">
       <Filter>Main</Filter>
     </ClCompile>
   </ItemGroup>
@@ -70,6 +82,9 @@
       <Filter>AST</Filter>
     </ClInclude>
     <ClInclude Include="Preprocessing.h" />
+    <ClInclude Include="VariableInit.h" />
+    <ClInclude Include="ListTokens.h" />
+    <ClInclude Include="Singleton.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="progGo.go" />

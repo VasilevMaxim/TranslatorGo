@@ -14,6 +14,8 @@ string GetAllTextInFile(string pathFile);
 
 int main()
 {
+	setlocale(LC_ALL, "Rus");
+
 	OnCompilation("progGo.go");
 
 	return 0;

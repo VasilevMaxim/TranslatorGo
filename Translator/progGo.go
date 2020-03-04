@@ -1,13 +1,18 @@
  { 
     func testFunc(x, y, z [5]int, a, b float, r, g, b [6]double)[5]int, [6]int, double {
        x := ++a + b--
-     }
-
+    }
+    var  n [999*7/i]double = [999*7/i]double{90.2, 40.1, 22.3}
+    var (
+    x = 4
+    y = 5
+    n = [900*7/i]double{90.2, 40.1, 22.3}
+    )
 
 	a := 8
 	numbers[5] = 1 + 5 * g + 6 / y;
 
-    	if numbers[5] >= b || c > b && k > o{
+    /*	if numbers[5] >= b || c > b && k > o{
     if b <= c{
            if c == d{
             b = a;
@@ -19,7 +24,7 @@
 		b = 2;
 	} else{
 		b = 0; 
-	}
+	}*/
 	
 	/* g := 1.9823 * 23213.424
 

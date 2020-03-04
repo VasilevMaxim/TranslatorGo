@@ -15,4 +15,7 @@ public:
 
 	string GetValue();
 	TokenType GetType();
+
+	bool IsSeporator();
+	bool IsVar();
 };
