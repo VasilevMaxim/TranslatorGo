@@ -29,16 +29,17 @@ In order to translate the code, specify the path to the file in the main functio
 :white_check_mark: comments       
 :white_check_mark: comparisons operator  
 
+:white_check_mark: var (multi)         
+:white_check_mark: var (,)     
+
+:white_check_mark: array    
+:white_check_mark: array(expr)     
+:white_check_mark: accessing a element array     
+       
+:black_square_button: editing code building tree in https://golang.org/ref/spec        
 ## Need to do.
    
-:black_square_button: var (multi)         
-:black_square_button: var (,)     
-
-:black_square_button: array    
-:black_square_button: array(expr)     
-:black_square_button: accessing a element array     
-       
-:black_square_button: editing code building tree in https://golang.org/ref/spec           
+   
 :black_square_button: editing code in classes           
 
 Based on an article from Habr: https://habr.com/en/post/133780/     
