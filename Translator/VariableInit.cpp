@@ -106,7 +106,7 @@ void QueueVariableNode::InitializationVariables()
 
 Node* QueueVariableNode::InitializationArray()
 {
-	Node* tempArray;
+	Node* tempArray; 
 	Node* headArray;
 	GetType();
 	_tokens->UseNextToken();

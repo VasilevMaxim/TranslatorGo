@@ -5,6 +5,7 @@
 #include "Parser.h"
 #include "AbstractSyntaxTree.h"
 #include "Preprocessing.h"
+#include "RecursiveTraversal.h"
 
 using std::ifstream;
 using std::getline;
@@ -32,6 +33,9 @@ void OnCompilation(string pathFile)
 	Parser parser(tokenBreaking.GetTokens());
 	AbstractSyntaxTree tree(parser.GetNodeHead());
 	tree.ShowTree();
+
+	RecursiveTraversal recursiveTraversal;
+	recursiveTraversal.Traversal(parser.GetNodeHead());
 }
 
 string GetAllTextInFile(string pathFile)

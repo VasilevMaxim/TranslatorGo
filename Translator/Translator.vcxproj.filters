@@ -20,6 +20,9 @@
     <Filter Include="Singleton">
       <UniqueIdentifier>{6e6de11d-bd08-469b-9bf9-89d962dd257e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Parser\NodeFilter">
+      <UniqueIdentifier>{0f294958-f98a-4f66-aa21-752d26ed12bc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Translator.cpp">
@@ -46,14 +49,26 @@
     <ClCompile Include="Preprocessing.cpp">
       <Filter>Main</Filter>
     </ClCompile>
-    <ClCompile Include="VariableInit.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
     <ClCompile Include="ListTokens.cpp">
       <Filter>Main</Filter>
     </ClCompile>
     <ClCompile Include="Singleton.cpp">
       <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Expression.cpp">
+      <Filter>Parser\NodeFilter</Filter>
+    </ClCompile>
+    <ClCompile Include="VariableInit.cpp">
+      <Filter>Parser</Filter>
+    </ClCompile>
+    <ClCompile Include="Variable.cpp">
+      <Filter>AST</Filter>
+    </ClCompile>
+    <ClCompile Include="TableVariable.cpp">
+      <Filter>AST</Filter>
+    </ClCompile>
+    <ClCompile Include="RecursiveTraversal.cpp">
+      <Filter>AST</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +100,22 @@
     <ClInclude Include="VariableInit.h" />
     <ClInclude Include="ListTokens.h" />
     <ClInclude Include="Singleton.h" />
+    <ClInclude Include="Expression.h" />
+    <ClInclude Include="IControl.h">
+      <Filter>Parser\NodeFilter</Filter>
+    </ClInclude>
+    <ClInclude Include="VariableType.h">
+      <Filter>AST</Filter>
+    </ClInclude>
+    <ClInclude Include="Variable.h">
+      <Filter>AST</Filter>
+    </ClInclude>
+    <ClInclude Include="TableVariable.h">
+      <Filter>AST</Filter>
+    </ClInclude>
+    <ClInclude Include="RecursiveTraversal.h">
+      <Filter>AST</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="progGo.go" />
