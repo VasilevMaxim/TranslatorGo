@@ -36,7 +36,7 @@ In order to translate the code, specify the path to the file in the main functio
 :white_check_mark: array(expr)     
 :white_check_mark: accessing a element array     
        
-:black_square_button: editing code building tree in https://golang.org/ref/spec        
+:white_check_mark: editing code building tree     
 ## Need to do.
    
    
