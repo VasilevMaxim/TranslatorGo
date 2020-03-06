@@ -40,7 +40,9 @@ In order to translate the code, specify the path to the file in the main functio
 ## Need to do.
    
    
-:black_square_button: editing code in classes           
+:black_square_button: editing code in classes     
+:black_square_button: table of correspondence   
+:black_square_button: function call
 
 Based on an article from Habr: https://habr.com/en/post/133780/     
 Thanks so much for helping Peter, I582: https://github.com/i582
