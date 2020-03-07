@@ -1,4 +1,5 @@
  { 
+    
     a += 8
     func testFunc(x, y, z [5]int, a, b float64, r, g, b [6]float64)[5]int, [6]int, float64 {
        x := ++a + b--
@@ -10,8 +11,8 @@
     n = [900*7/i]float64{90.2, 40.1, 22.3}
     )
 
-	i%=8;
-	numbers[5] = 1 + 5 % g + 6 / y;
+	i %= -8;
+	numbers[5] = -1 -5 % g + 6 / y;
 
     	if numbers[5] >= b || c > b && k > o{
     if b <= c{

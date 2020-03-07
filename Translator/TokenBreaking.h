@@ -16,6 +16,8 @@ private:
 	string _znaks = ",()[]{}:=+-*%/!;<>&|\n";
 	string _fixedZnaks = "\"\'";
 	
+	bool _delayMinus = false;
+
 	vector<Token*> _tokens;
 
 	Token* GetToken(string lexeme);

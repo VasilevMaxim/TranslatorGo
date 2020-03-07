@@ -23,6 +23,9 @@
     <Filter Include="Parser\NodeFilter">
       <UniqueIdentifier>{0f294958-f98a-4f66-aa21-752d26ed12bc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Errors">
+      <UniqueIdentifier>{52c4a639-96d4-4f43-a0a4-34c5e3eadd7c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Translator.cpp">

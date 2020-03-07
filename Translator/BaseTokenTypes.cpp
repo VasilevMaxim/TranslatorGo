@@ -86,7 +86,10 @@ bool BaseTokenTypes::IsTypeVar(TokenType type)
 bool BaseTokenTypes::IsNumberToken(string token)
 {
 	bool isPoint = false;
-
+	if (token[0] == '-')
+	{
+		token.erase(0, 1);
+	}
 	for (const char& sym : token)
 	{
 		if (sym == '.' && !isPoint)

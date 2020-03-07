@@ -5,7 +5,22 @@
 
 Token* TokenBreaking::GetToken(string lexeme)
 {
-	return new Token(lexeme);
+	Token* newToken = new Token(lexeme);
+
+	if (_delayMinus == true)
+	{
+		if (newToken->GetType() == TokenType::LITERAL || newToken->GetType() == TokenType::NUMBER)
+		{
+			newToken = new Token("-" + lexeme);
+		}
+		else
+		{
+			Error("WL002",true);
+		}
+		_delayMinus = false;
+	}
+	
+	return newToken;
 }
 
 void TokenBreaking::SplitIntoTokens()
@@ -28,10 +43,17 @@ void TokenBreaking::SplitIntoTokens()
 
 			if (_znaks.find(_text[index]) != string::npos)
 			{
-				if (_tokens.size() > 0 && (IsCompositesSeparator(_text[index], _tokens[_tokens.size() - 1]->GetValue()[0]) == true))
+				if (_tokens.size() > 0 && (IsCompositesSeparator(_text[index], _tokens.back()->GetValue()[0]) == true))
 				{
 					continue;
 				}
+
+				if (_text[index] == '-' && (_tokens.back()->GetType() != TokenType::LITERAL && _tokens.back()->GetType() != TokenType::NUMBER))
+				{
+					tempLexems += _text[index];
+					continue;
+				}
+
 				string forSym;
 				forSym += _text[index];
 
@@ -65,7 +87,7 @@ void TokenBreaking::SplitIntoTokens()
 		{
 			if (IsSymLit(_text[index]) == true)
 			{
-				Error("<< Wrong name variable at lexic analyzer >>", true);
+				Error("WL001", true);
 			}
 		}
 	}
