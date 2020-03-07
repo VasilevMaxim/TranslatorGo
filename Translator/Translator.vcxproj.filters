@@ -70,6 +70,9 @@
     <ClCompile Include="RecursiveTraversal.cpp">
       <Filter>AST</Filter>
     </ClCompile>
+    <ClCompile Include="Error.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TokenType.h">
@@ -116,6 +119,7 @@
     <ClInclude Include="RecursiveTraversal.h">
       <Filter>AST</Filter>
     </ClInclude>
+    <ClInclude Include="Error.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="progGo.go" />

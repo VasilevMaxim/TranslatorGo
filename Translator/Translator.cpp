@@ -34,8 +34,8 @@ void OnCompilation(string pathFile)
 	AbstractSyntaxTree tree(parser.GetNodeHead());
 	tree.ShowTree();
 
-	RecursiveTraversal recursiveTraversal;
-	recursiveTraversal.Traversal(parser.GetNodeHead());
+	// RecursiveTraversal recursiveTraversal;
+	// recursiveTraversal.Traversal(parser.GetNodeHead());
 }
 
 string GetAllTextInFile(string pathFile)

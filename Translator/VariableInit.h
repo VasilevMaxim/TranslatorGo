@@ -6,6 +6,7 @@
 #include "ListTokens.h"
 #include "Singleton.h"
 #include "Parser.h"
+#include "Error.h"
 
 using std::vector;
 using std::queue;

@@ -30,9 +30,9 @@ VariableType RecursiveTraversal::GetTypeVariable(string type)
     {
         return VariableType::BOOLEAN;
     }
-    else  if (type == "float")
+    else  if (type == "float64")
     {
-        return VariableType::DOUBLE;
+        return VariableType::FLOAT64;
     }
     else  if (type == "double")
     {

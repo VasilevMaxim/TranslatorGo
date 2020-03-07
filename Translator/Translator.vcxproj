@@ -153,6 +153,7 @@
   <ItemGroup>
     <ClCompile Include="AbstractSyntaxTree.cpp" />
     <ClCompile Include="BaseTokenTypes.cpp" />
+    <ClCompile Include="Error.cpp" />
     <ClCompile Include="Expression.cpp" />
     <ClCompile Include="ListTokens.cpp" />
     <ClCompile Include="Node.cpp" />
@@ -170,6 +171,7 @@
   <ItemGroup>
     <ClInclude Include="AbstractSyntaxTree.h" />
     <ClInclude Include="BaseTokenTypes.h" />
+    <ClInclude Include="Error.h" />
     <ClInclude Include="Expression.h" />
     <ClInclude Include="IControl.h" />
     <ClInclude Include="ListTokens.h" />

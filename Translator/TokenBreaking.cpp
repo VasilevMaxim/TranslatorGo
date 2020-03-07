@@ -1,6 +1,7 @@
 #include "TokenBreaking.h"
 #include "TokenType.h"
 #include <string>
+#include "Error.h"
 
 Token* TokenBreaking::GetToken(string lexeme)
 {
@@ -59,6 +60,14 @@ void TokenBreaking::SplitIntoTokens()
 
 
 		tempLexems += _text[index];
+
+		if (index > 0 && IsSymNumber(_text[index - 1]) == true)
+		{
+			if (IsSymLit(_text[index]) == true)
+			{
+				Error("<< Wrong name variable at lexic analyzer >>", true);
+			}
+		}
 	}
 	
 }
@@ -179,4 +188,46 @@ void TokenBreaking::ShowTokens()
 			cout << token->GetValue() << endl;
 		}
 	}
+}
+
+string TokenBreaking::GetLineCurrentToken(int numCurrentLine)
+{
+	int currentNewLine = 0;
+	int column = 0;
+	while (column != numCurrentLine)
+	{
+		currentNewLine = _text.find("\n", currentNewLine);
+		column++;
+	}
+
+	return "";
+}
+
+bool TokenBreaking::IsSymNumber(char sym)
+{
+	if (sym >= 48 && sym <= 57)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool TokenBreaking::IsSymLit(char sym)
+{
+	// UNICODE
+
+	// Eng (a-z, A-Z)
+	if ((sym >= 65 && sym <= 90) || (sym >= 97 && sym <= 122))
+	{
+		return true;
+	}
+
+	// Rus (a-ß)
+	if (sym >= 192 && sym <= 255)
+	{
+		return true;
+	}
+
+	return false;
 }

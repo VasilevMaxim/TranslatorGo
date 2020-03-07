@@ -1,5 +1,6 @@
 #include "Parser.h"
 #include "BaseTokenTypes.h"
+
 #include <queue>
 
 using std::queue;
@@ -252,14 +253,14 @@ Node* Parser::ArrayParameters()
 	temp = headListParams;
 	if (isArray == true)
 	{
-		Node* tempArray = new Node(NodeType::ARRAY, temp->GetValue());
+		Node* tempArray = new Node(NodeType::NEW_VAR, temp->GetValue());
 		tempArray->Operand1 = temp->Operand1;
 		headListParams = tempArray;
 		temp = temp->Operand2;
 
 		while (temp != nullptr)
 		{
-			Node* newArray = new Node(NodeType::ARRAY, temp->GetValue());
+			Node* newArray = new Node(NodeType::NEW_VAR, temp->GetValue());
 			newArray->Operand1 = temp->Operand1;
 
 			tempArray->Operand2 = newArray;
@@ -421,21 +422,55 @@ Node* Parser::Expr()
 	 }
 
 	 node = LogOr();
-	 if (node->GetType() == NodeType::VAR && _tokens->GetCurrentToken()->GetType() == TokenType::ASSIGN)
+
+
+	 if (node->GetType() == NodeType::VAR && _tokens->GetCurrentToken()->IsWithAssing())
 	 {
-		 _tokens->UseNextToken(); 
-		 if (_tokens->GetCurrentToken()->GetType() == TokenType::L_SBRA)
+		 if (_tokens->GetCurrentToken()->GetType() == TokenType::ASSIGN_DECLARATION)
 		 {
-			 node->Operand2 = ParentExprSBra();
-			 node->Operand1 = new Node(NodeType::VAR_TYPE, _tokens->GetCurrentToken()->GetValue());
-			 string tempType = _tokens->GetCurrentToken()->GetValue();
-			 _tokens->UseNextToken();
-			 _tokens->UseNextToken();
-			 InitializationArray(node, tempType);
+			 node = new Node(NodeType::NEW_VAR, node->GetValue());
 		 }
-		 else
+
+		 switch (_tokens->GetCurrentToken()->GetType())
 		 {
-			 node = new Node(NodeType::SET, "", node, ParentExprSBra());
+			 case TokenType::PLUS_EQUAL:
+				 _tokens->UseNextToken();
+				 node = new Node(NodeType::SET, "", node, new Node(NodeType::ADD, "", node, ParentExprSBra()));
+				break;
+			 case TokenType::MINUS_EQUAL:
+				 _tokens->UseNextToken();
+				 node = new Node(NodeType::SET, "", node, new Node(NodeType::SUB, "", node, ParentExprSBra()));
+				 break;
+			 case TokenType::STAR_EQUAL:
+				 _tokens->UseNextToken();
+				 node = new Node(NodeType::SET, "", node, new Node(NodeType::MUL, "", node, ParentExprSBra()));
+				 break;
+			 case TokenType::SLASH_EQUAL:
+				 _tokens->UseNextToken();
+				 node = new Node(NodeType::SET, "", node, new Node(NodeType::DIV, "", node, ParentExprSBra()));
+				 break;
+			 case TokenType::PROCENT_EQUAL:
+				 _tokens->UseNextToken();
+				 node = new Node(NodeType::SET, "", node, new Node(NodeType::REM_OF_DIV, "", node, ParentExprSBra()));
+				 break;
+			 default:
+			 {
+				 _tokens->UseNextToken();
+				 if (_tokens->GetCurrentToken()->GetType() == TokenType::L_SBRA)
+				 {
+					 node->Operand2 = ParentExprSBra();
+					 node->Operand1 = new Node(NodeType::VAR_TYPE, _tokens->GetCurrentToken()->GetValue());
+					 string tempType = _tokens->GetCurrentToken()->GetValue();
+					 _tokens->UseNextToken();
+					 _tokens->UseNextToken();
+					 InitializationArray(node, tempType);
+				 }
+				 else
+				 {
+					 node = new Node(NodeType::SET, "", node, ParentExprSBra());
+				 }
+			 }
+
 		 }
 	 }
 
@@ -560,15 +595,19 @@ Node* Parser::Ymnog()
 {
 	Node* node = Unar();
 	NodeType nodeType;
-	while (_tokens->GetCurrentToken()->GetType() == TokenType::SLASH || _tokens->GetCurrentToken()->GetType() == TokenType::STAR)
+	while (_tokens->GetCurrentToken()->GetType() == TokenType::SLASH || _tokens->GetCurrentToken()->GetType() == TokenType::STAR || _tokens->GetCurrentToken()->GetType() == TokenType::PROCENT)
 	{
 		if (_tokens->GetCurrentToken()->GetType() == TokenType::SLASH)
 		{
-			nodeType = NodeType::DVS;
+			nodeType = NodeType::DIV;
 		}
 		else if (_tokens->GetCurrentToken()->GetType() == TokenType::STAR)
 		{
 			nodeType = NodeType::MUL;
+		}
+		else if (_tokens->GetCurrentToken()->GetType() == TokenType::PROCENT)
+		{
+			nodeType = NodeType::REM_OF_DIV;
 		}
 
 		_tokens->UseNextToken();

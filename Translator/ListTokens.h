@@ -13,9 +13,14 @@ private:
 	int _indexCurrentToken;
 	vector<Token*>* _tokens;
 
+	int _numCurrentLine = 1;
+	int _indexFirstSymLine = 0;
 public:
 	void Initialization(vector<Token*>* tokens);
 
 	Token* GetCurrentToken();
 	void UseNextToken();
+
+	string GetLineCurrentToken();
+	int GetNumLine();
 };

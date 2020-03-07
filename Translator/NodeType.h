@@ -17,7 +17,8 @@ enum class NodeType
 	ADD,
 	SUB,
 	MUL,
-	DVS,
+	DIV,
+	REM_OF_DIV,
 
 	FOR,
 	BREAK,
@@ -63,6 +64,8 @@ enum class NodeType
 	FUNCTION_IMPL_ARGS,
 	FUNCTION_IMPL_ARG,
 	FUNCTION_IMPL_TYPE,
+	FUNC_ACCESS,
+
 
 	RETURN
 };

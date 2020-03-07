@@ -5,8 +5,8 @@ enum class TokenType
 	CONST,
 	VAR,
 	INT,
-	FLOAT,
-	DOUBLE,
+	FLOAT64,
+	FLOAT32,
 	STRING,
 	BOOL,
 	TRUE,
@@ -24,10 +24,20 @@ enum class TokenType
 	L_SBRA, // sym = [
 	R_SBRA, // sym = ]
 	ASSIGN,
+	ASSIGN_DECLARATION,
+	
 	PLUS,
 	MINUS,
 	STAR,
 	SLASH,
+	PROCENT,
+
+	PLUS_EQUAL,
+	MINUS_EQUAL,
+	STAR_EQUAL,
+	SLASH_EQUAL,
+	PROCENT_EQUAL,
+
 	EQUAL,
 	NOT_EQUAL,
 	MORE,
@@ -35,6 +45,8 @@ enum class TokenType
 	LESS_EQUAL,
 	MORE_EQUAL,
 	
+
+
 	AND,
 	OR,
 

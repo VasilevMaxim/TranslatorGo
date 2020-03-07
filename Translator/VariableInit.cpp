@@ -18,7 +18,10 @@ void QueueVariableNode::PlacedUnderControl(Parser* parser)
 
 		return;
 	}
-
+	else if (_tokens->GetCurrentToken()->GetType() != TokenType::LITERAL)
+	{
+		Error("name || var");
+	}
 	PushingVariables();
 	
 	if (_tokens->GetCurrentToken()->GetType() == TokenType::ASSIGN)
@@ -45,7 +48,7 @@ void QueueVariableNode::PushingVariables()
 {
 	while (true)
 	{
-		_vars.push(new Node(NodeType::VAR, _tokens->GetCurrentToken()->GetValue()));
+		_vars.push(new Node(NodeType::NEW_VAR, _tokens->GetCurrentToken()->GetValue()));
 		_tokens->UseNextToken();
 
 		if (_tokens->GetCurrentToken()->GetType() != TokenType::COMMA)
@@ -62,7 +65,7 @@ void QueueVariableNode::PushingVariables()
 			}
 			else if (_tokens->GetCurrentToken()->GetType() != TokenType::ASSIGN)
 			{
-				// error
+				Error("Not Assign");
 			}
 
 			break;
@@ -137,7 +140,10 @@ Node* QueueVariableNode::GetType()
 		expr = _parser->Expr();
 		_tokens->UseNextToken();
 	}
-
+	if (_tokens->GetCurrentToken()->IsVar() == false)
+	{
+		Error("Not type");
+	}
 	type = new Node(NodeType::VAR_TYPE, _tokens->GetCurrentToken()->GetValue(), expr);
 
 	return type;
