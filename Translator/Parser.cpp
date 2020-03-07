@@ -1,24 +1,29 @@
 #include "Parser.h"
 #include "BaseTokenTypes.h"
+#include "ErrorParser.h"
 #include <queue>
 
 using std::queue;
 
-Token* Parser::GetCurrentToken()
+Parser::Parser(vector<Token*>* allTokens)
 {
-	return (*_tokens)[_indexCurrentToken];
+	_tokens = ListTokens::GetInstance();
+	_tokens->Initialization(allTokens);
+	_variableNodes = new QueueVariableNode();
+
+	Parse();
 }
 
-void Parser::UseNextToken()
+Node* Parser::GetNodeHead()
 {
-	_indexCurrentToken++;
+	return _head;
 }
 
 
 Node* Parser::Parse()
 {
 	_head = new Node(NodeType::PROG, "", Statement());
-	if (GetCurrentToken()->GetValue()[0] != EOF)
+	if (_tokens->GetCurrentToken()->GetValue()[0] != EOF)
 	{
 		// error("Invalid statement syntax")
 	}
@@ -28,23 +33,23 @@ Node* Parser::Parse()
 Node* Parser::Statement()
 {
 	Node* node = nullptr;
-	if (GetCurrentToken()->GetType() == TokenType::IF)
+	if (_tokens->GetCurrentToken()->GetType() == TokenType::IF)
 	{
 		node = new Node(NodeType::IF); 
-		UseNextToken();
+		_tokens->UseNextToken();
 
 		node->Operand1 = ParentExprSBra();
 		node->Operand2 = Statement(); 
 	
-		if (GetCurrentToken()->GetType() == TokenType::ELSE)
+		if (_tokens->GetCurrentToken()->GetType() == TokenType::ELSE)
 		{
 			Node* nodeActiveIfElse = node;
-			while (GetCurrentToken()->GetType() == TokenType::ELSE)
+			while (_tokens->GetCurrentToken()->GetType() == TokenType::ELSE)
 			{
-				UseNextToken();
-				if (GetCurrentToken()->GetType() == TokenType::IF)
+				_tokens->UseNextToken();
+				if (_tokens->GetCurrentToken()->GetType() == TokenType::IF)
 				{
-					UseNextToken();
+					_tokens->UseNextToken();
 					Node* newNodeIfElse = new Node(NodeType::IF_ELSE);
 					newNodeIfElse->Operand1 = ParentExprSBra();
 					newNodeIfElse->Operand2 = Statement();
@@ -57,7 +62,7 @@ Node* Parser::Statement()
 					Node* newNodeElse = new Node(NodeType::IF_ELSE);
 
 					newNodeElse->Operand1 = Statement();
-					UseNextToken();
+					_tokens->UseNextToken();
 					nodeActiveIfElse->Operand3 = newNodeElse;
 					break;
 				}
@@ -65,320 +70,145 @@ Node* Parser::Statement()
 		}
 		else
 		{
-			UseNextToken();
+			_tokens->UseNextToken();
 		}
  	}
-	else if (GetCurrentToken()->GetType() == TokenType::FOR)
+	else if (_tokens->GetCurrentToken()->GetType() == TokenType::FOR)
 	{
 		node = new Node(NodeType::FOR);
-		UseNextToken();
-		if (GetCurrentToken()->GetType() != TokenType::LBRA)
+		_tokens->UseNextToken();
+		if (_tokens->GetCurrentToken()->GetType() != TokenType::LBRA)
 		{
 			node->Operand1 = ParentExprSBra();
-			if (GetCurrentToken()->GetType() != TokenType::LBRA)
+			if (_tokens->GetCurrentToken()->GetType() != TokenType::LBRA)
 			{
-				UseNextToken();
+				_tokens->UseNextToken();
 				node->Operand2 = ParentExprSBra();
-				UseNextToken();
+				_tokens->UseNextToken();
 				node->Operand3 = ParentExprSBra();
 			}
 		}
 
 		node->Operand4 = Statement();
-		UseNextToken();
+		_tokens->UseNextToken();
 	}
-	else if (GetCurrentToken()->GetType() == TokenType::BREAK)
+	else if (_variableNodes->IsLPAR() == true)
+	{
+		if (_tokens->GetCurrentToken()->GetType() == TokenType::LITERAL)
+		{
+			_variableNodes->PlacedUnderControl(this);
+		}
+		node = _variableNodes->Pop();
+		_tokens->UseNextToken();
+
+		if (_tokens->GetCurrentToken()->GetType() == TokenType::RPAR)
+		{
+			_variableNodes->SetLPAR(false);
+			_tokens->UseNextToken();
+			_tokens->UseNextToken();
+		}
+	}
+	else if (_variableNodes->IsEmpty() == false)
+	{
+		node = _variableNodes->Pop();
+	}
+	else if (_tokens->GetCurrentToken()->GetType() == TokenType::BREAK)
 	{
 		node = new Node(NodeType::BREAK);
-		UseNextToken();
+		_tokens->UseNextToken();
 	}
-	else if (GetCurrentToken()->GetType() == TokenType::SEMICOLON || GetCurrentToken()->GetType() == TokenType::NEW_LINE)
+	else if (_tokens->GetCurrentToken()->GetType() == TokenType::SEMICOLON || _tokens->GetCurrentToken()->GetType() == TokenType::NEW_LINE)
 	{
-		UseNextToken();
+		_tokens->UseNextToken();
 	}
-	else if (GetCurrentToken()->GetType() == TokenType::FUNC)
+	else if (_tokens->GetCurrentToken()->GetType() == TokenType::FUNC)
 	{
-		UseNextToken();
-		string nameFunc = GetCurrentToken()->GetValue();
-		node = new Node(NodeType::FUNC, nameFunc);
-		UseNextToken();
-		UseNextToken();
-		node->Operand1 = GetListParameters(); 
-		UseNextToken();
+		_tokens->UseNextToken();
+
+		if (_tokens->GetCurrentToken()->GetType() != TokenType::LITERAL)
+			ErrorParser("001");
+
+		node = new Node(NodeType::FUNC, _tokens->GetCurrentToken()->GetValue());
+		node->Operand1 = GetSignatureFunc();
 		node->Operand2 = Statement();
-		/*
-		UseNextToken();
-		if (GetCurrentToken()->GetType() != TokenType::LPAR)
-		{
-			// error
-		}
-
-		UseNextToken();
-		if (GetCurrentToken()->GetType() == TokenType::RPAR)
-		{
-			node = new Node(NodeType::FUNC, nameFunc);
-			UseNextToken();
-		}
-		else
-		{
-			node = new Node(NodeType::FUNC_ARG, nameFunc);
-
-			Node* _tempActiveParam = nullptr;
-			queue<string> paramsPull;
-			string nameParam;
-			bool isLPAR = false;
-
-			while (true)
-			{
-				if (GetCurrentToken()->GetType() == TokenType::LITERAL)
-				{
-					paramsPull.push(GetCurrentToken()->GetValue());
-					UseNextToken();
-					if (GetCurrentToken()->GetType() == TokenType::COMMA)
-					{
-						UseNextToken();
-					}
-				}
-				else if (GetCurrentToken()->GetType() == TokenType::L_SBRA)
-				{
-					UseNextToken();
-					Node* exprNumNodeArray = new Node(NodeType::EXPR, "", Expr());
-					UseNextToken();
-					string typeArrays = GetCurrentToken()->GetValue();
-
-					while (paramsPull.empty() == false) 
-					{
-						Node* newParam = new Node(NodeType::ARRAY, paramsPull.front());
-						paramsPull.pop();
-						newParam->Operand1 = new Node(NodeType::VAR_TYPE, typeArrays);
-						newParam->Operand2 = exprNumNodeArray;
-
-						if (_tempActiveParam == nullptr)
-						{
-							node->Operand1 = newParam;
-						}
-						else
-						{
-							_tempActiveParam->Operand3 = newParam;
-						}
-
-						_tempActiveParam = newParam;
-					}
-					
-					UseNextToken(); // 
-					if (GetCurrentToken()->GetType() == TokenType::RPAR)
-					{
-						isLPAR = true;
-					}
-					UseNextToken(); // param
-				}
-				else if(BaseTokenTypes::IsTypeVar(GetCurrentToken()->GetType()) == true && isLPAR == false)
-				{
-					string typeArrays = GetCurrentToken()->GetValue();
-
-					while (paramsPull.empty() == false)
-					{
-						Node* newParam = new Node(NodeType::VAR, paramsPull.front());
-						paramsPull.pop();
-						newParam->Operand1 = new Node(NodeType::VAR_TYPE, typeArrays);
-
-						if (_tempActiveParam == nullptr)
-						{
-							node->Operand1 = newParam;
-						}
-						else
-						{
-							_tempActiveParam->Operand3 = newParam;
-						}
-
-						_tempActiveParam = newParam;
-					}
-
-					UseNextToken(); // ,
-
-					if (GetCurrentToken()->GetType() == TokenType::RPAR)
-					{
-						isLPAR = true;
-					}
-					UseNextToken(); // param
-				}
-				else if (BaseTokenTypes::IsTypeVar(GetCurrentToken()->GetType()) == true || GetCurrentToken()->GetType() == TokenType::L_SBRA)
-				{
-					Node* _tempActiveParam2 = nullptr;
-					string typeReturn;
-					Node* nodeTypeReturn = nullptr;
-					Node* exprNumNodeArray = nullptr;
-
-					while (BaseTokenTypes::IsTypeVar(GetCurrentToken()->GetType()) == true || GetCurrentToken()->GetType() == TokenType::L_SBRA)
-					{
-						if (GetCurrentToken()->GetType() == TokenType::L_SBRA)
-						{
-							UseNextToken();
-							exprNumNodeArray = new Node(NodeType::EXPR, "", Expr());
-							UseNextToken();
-							typeReturn = GetCurrentToken()->GetValue();
-						}
-						else
-						{
-							exprNumNodeArray = nullptr;
-							typeReturn = GetCurrentToken()->GetValue();
-						}
-
-						nodeTypeReturn = new Node(NodeType::VAR_TYPE, typeReturn, exprNumNodeArray);
-						if (_tempActiveParam2 == nullptr)
-						{
-							node->Operand2 = nodeTypeReturn;
-						}
-						else
-						{
-							_tempActiveParam2->Operand3 = nodeTypeReturn;
-						}
-
-						_tempActiveParam2 = nodeTypeReturn;
-
-						UseNextToken();
-						if (GetCurrentToken()->GetType() == TokenType::LBRA)
-						{
-							break;
-						}
-						UseNextToken();
-					}
-
-				}
-				else if (GetCurrentToken()->GetType() == TokenType::LBRA)
-				{
-					break;
-				}
-				else 
-				{
-					// error
-				}
-			}
-		}
-
-		node->Operand3 = Statement();
-		UseNextToken();
-
-		*/
 	}
-	
-	else if (_nodesVar.empty() == false)
+	else if (_tokens->GetCurrentToken()->GetType() == TokenType::VAR)
 	{
-		node = _nodesVar.back();
-		_nodesVar.pop_back();
+		_tokens->UseNextToken();
+		_variableNodes->PlacedUnderControl(this);
 	}
-	else if (GetCurrentToken()->GetType() == TokenType::VAR)
-	{
-		UseNextToken();
-		if (GetCurrentToken()->GetType() == TokenType::LPAR)
-		{
-			UseNextToken();
-			UseNextToken();
-			node = new Node(NodeType::VAR, GetCurrentToken()->GetValue());
-			UseNextToken();
-			UseNextToken();
-			node = new Node(NodeType::SET, "", node, Expr());
-			_isBlockVars = true;
-		}
-		else if (GetCurrentToken()->GetType() == TokenType::LITERAL)
-		{
-			node = new Node(NodeType::VAR, GetCurrentToken()->GetValue());
-			string nameArray = GetCurrentToken()->GetValue();
-
-			UseNextToken();
-			if (GetCurrentToken()->GetType() == TokenType::L_SBRA)
-			{
-				
-				UseNextToken();
-				Node* exprNumNodeArray = new Node(NodeType::EXPR, "", Expr());
-				node = new Node(NodeType::ARRAY, nameArray);
-
-				UseNextToken(); // type
-
-				string tempType = GetCurrentToken()->GetValue();
-				node->Operand1 = new Node(NodeType::VAR_TYPE, GetCurrentToken()->GetValue());
-				node->Operand2 = exprNumNodeArray;
-				
-				UseNextToken();
-				if (GetCurrentToken()->GetType() == TokenType::ASSIGN)
-				{
-					UseNextToken(); // [
-					UseNextToken(); // num
-					Node* tempNodeAmount = new Node(NodeType::EXPR, "", Expr());
-					node->Operand3 = tempNodeAmount;
-					UseNextToken(); // type
-					if (GetCurrentToken()->GetValue() != tempType)
-					{
-						// error
-					}
-
-					UseNextToken(); // {
-					UseNextToken(); // value
-					InitializationArray(node, tempType);
-					
-				}
-			}
-			else if (GetCurrentToken()->GetType() == TokenType::COMMA)
-			{
-				while (GetCurrentToken()->GetType() == TokenType::COMMA)
-				{
-					UseNextToken();
-					Node* nodeVar = new Node(NodeType::VAR, GetCurrentToken()->GetValue());
-					_nodesVar.push_back(nodeVar);
-
-					UseNextToken();
-				}
-
-				UseNextToken();
-
-				node = new Node(NodeType::SET, "", node, Expr());
-
-				for (int indexNodeVar = 0; GetCurrentToken()->GetType() == TokenType::COMMA; indexNodeVar++)
-				{
-					UseNextToken();
-					_nodesVar[indexNodeVar] = new Node(NodeType::SET, "", _nodesVar[indexNodeVar], Expr());
-				}
-			}
-			else
-			{
-				node->Operand1 = new Node(NodeType::VAR_TYPE, GetCurrentToken()->GetValue());
-				UseNextToken();
-				if (GetCurrentToken()->GetType() == TokenType::ASSIGN)
-				{
-					UseNextToken();
-					node = new Node(NodeType::SET, "", node, Expr());
-				}
-			}
-		}
-	}
-	else if (_isBlockVars == true && GetCurrentToken()->GetType() == TokenType::RPAR)
+	else if (_isBlockVars == true && _tokens->GetCurrentToken()->GetType() == TokenType::RPAR)
 	{
 		_isBlockVars == false;
-		UseNextToken();
-		UseNextToken();
+		_tokens->UseNextToken();
+		_tokens->UseNextToken();
 	}
-	else if (GetCurrentToken()->GetType() == TokenType::LBRA)
+	else if (_tokens->GetCurrentToken()->GetType() == TokenType::LBRA)
 	{
-		UseNextToken();
+		_tokens->UseNextToken();
 		node = Statement();
-		while (GetCurrentToken()->GetType() != TokenType::RBRA)
+		while (_tokens->GetCurrentToken()->GetType() != TokenType::RBRA)
 		{
 			node = new Node(NodeType::SEQ, "", node, Statement());
 		}
-		UseNextToken();
+		_tokens->UseNextToken();
 	}
 	else
 	{
 		node = new Node(NodeType::EXPR, "", Expr());
-		if (GetCurrentToken()->GetType() != TokenType::SEMICOLON && GetCurrentToken()->GetType() != TokenType::NEW_LINE)
+		if (_tokens->GetCurrentToken()->GetType() != TokenType::SEMICOLON && _tokens->GetCurrentToken()->GetType() != TokenType::NEW_LINE)
 		{
 			// error
 		}
 
-		UseNextToken();
+		_tokens->UseNextToken();
 	}
 	
 	return node;
+}
+
+Node* Parser::GetSignatureFunc()
+{
+	_tokens->UseNextToken();
+
+	if (_tokens->GetCurrentToken()->GetType() != TokenType::LPAR)
+		ErrorParser("002");
+
+	_tokens->UseNextToken();
+	Node* node = GetListParameters();
+	_tokens->UseNextToken();
+
+	if (_tokens->GetCurrentToken()->GetType() == TokenType::LBRA)
+	{
+		return node;
+	}
+
+	node->Operand4 = GetResultFunc();
+
+	return node;
+}
+
+Node* Parser::GetResultFunc()
+{
+	Node* tempRezult = GetTypeParams();
+	Node* headRezult = tempRezult;
+	_tokens->UseNextToken();
+
+	while (true)
+	{
+		_tokens->UseNextToken();
+		tempRezult->Operand2 = GetTypeParams();
+		tempRezult = tempRezult->Operand2;
+
+		_tokens->UseNextToken();
+
+		if (_tokens->GetCurrentToken()->GetType() == TokenType::LBRA)
+		{
+			break;
+		}
+	}
+
+	return headRezult;
 }
 
 Node* Parser::GetNodeArray()
@@ -391,12 +221,19 @@ Node* Parser::GetListParameters()
 	Node* headListOtherTypesParams = ArrayParameters();
 	Node* temp = headListOtherTypesParams;
 
-	UseNextToken();
+	_tokens->UseNextToken();
 
-	while (GetCurrentToken()->GetType() != TokenType::RPAR)
+	while (true)
 	{
 		temp->Operand3 = ArrayParameters();
 		temp = temp->Operand3;
+
+		if (_tokens->GetCurrentToken()->GetType() == TokenType::RPAR)
+		{
+			break;
+		}
+
+		_tokens->UseNextToken();
 	}
 	
 	return headListOtherTypesParams;
@@ -406,36 +243,42 @@ Node* Parser::ArrayParameters()
 {
 	Node* headListParams = RezultParameters();
 	Node* temp = headListParams;
-
-	if (GetCurrentToken()->GetType() == TokenType::L_SBRA)
-	{
-		UseNextToken();
-		Node* expr = Expr();
-		UseNextToken();
-
-		headListParams = RezultParameters();
-		temp = headListParams;
-
-		while (temp != nullptr)
-		{
-			Node* tempArray = new Node(NodeType::ARRAY, temp->GetValue());
-			tempArray->Operand4 = temp->Operand4;
-			tempArray->Operand2 = expr;
-			temp = tempArray;
-			temp = temp->Operand4;
-		}
-	}
+	bool isArray = false;
 
 	Node* type = GetTypeParams();
 
-	temp = headListParams;
+	if (type->Operand1 != nullptr)
+	{
+		isArray = true;
+	}
+
 	while (temp != nullptr)
 	{
 		temp->Operand1 = type;
-		temp = temp->Operand4;
+		temp = temp->Operand2;
 	}
-	
-	UseNextToken();
+
+	temp = headListParams;
+	if (isArray == true)
+	{
+		Node* tempArray = new Node(NodeType::NEW_VAR, temp->GetValue());
+		tempArray->Operand1 = temp->Operand1;
+		headListParams = tempArray;
+		temp = temp->Operand2;
+
+		while (temp != nullptr)
+		{
+			Node* newArray = new Node(NodeType::NEW_VAR, temp->GetValue());
+			newArray->Operand1 = temp->Operand1;
+
+			tempArray->Operand2 = newArray;
+
+			tempArray = tempArray->Operand2;
+			temp = temp->Operand2;
+		}
+	}
+
+	_tokens->UseNextToken();
 
 	return headListParams;
 }
@@ -447,22 +290,22 @@ Node* Parser::RezultParameters()
 	Node* begin = temp;
 	Node* pastTemp = temp;
 
-	UseNextToken();
+	_tokens->UseNextToken();
 
 	while (true)
 	{
 		temp = Parameters();
 
 		// Create List.
-		pastTemp->Operand4 = temp;
+		pastTemp->Operand2 = temp;
 		pastTemp = temp;
 
-		if (GetCurrentToken()->GetType() == TokenType::L_SBRA || BaseTokenTypes::IsTypeVar(GetCurrentToken()->GetType()) == true)
+		if (_tokens->GetCurrentToken()->GetType() == TokenType::L_SBRA || BaseTokenTypes::IsTypeVar(_tokens->GetCurrentToken()->GetType()) == true)
 		{
 			break;
 		}
 
-		UseNextToken();
+		_tokens->UseNextToken();
 	}
 
 	return begin;
@@ -471,52 +314,67 @@ Node* Parser::RezultParameters()
 
 Node* Parser::Parameters()
 {
-	Node* node = new Node(NodeType::VAR, GetCurrentToken()->GetValue());
-	UseNextToken();
-	
+	if (_tokens->GetCurrentToken()->GetType() != TokenType::LITERAL)
+		ErrorParser("003");
+
+	Node* node = new Node(NodeType::VAR, _tokens->GetCurrentToken()->GetValue());
+	_tokens->UseNextToken();
+
 	return node;
 }
 
 Node* Parser::GetTypeParams()
 {
-	return new Node(NodeType::VAR_TYPE, GetCurrentToken()->GetValue());
+	Node* type = nullptr;
+	Node* expr = nullptr;
+
+	if (_tokens->GetCurrentToken()->GetType() == TokenType::L_SBRA)
+	{
+		_tokens->UseNextToken();
+		expr = Expr();
+		_tokens->UseNextToken();
+	}
+	
+	type = new Node(NodeType::VAR_TYPE, _tokens->GetCurrentToken()->GetValue(), expr);
+	
+	return type;
 }
 
 void Parser::InitializationArray(Node* node, string type)
 {
-	Node* tempActiveElementArray = new Node(NodeType::VAR, GetCurrentToken()->GetValue());
+	Node* tempActiveElementArray = new Node(NodeType::VAR, _tokens->GetCurrentToken()->GetValue());
 	tempActiveElementArray->Operand1 = new Node(NodeType::VAR_TYPE, type);
 	node->Operand4 = tempActiveElementArray;
 
 	while (true)
 	{
-		UseNextToken();
-		if (GetCurrentToken()->GetType() == TokenType::COMMA)
+		_tokens->UseNextToken();
+		if (_tokens->GetCurrentToken()->GetType() == TokenType::COMMA)
 		{
-			UseNextToken();
-			if (GetCurrentToken()->GetType() == TokenType::RBRA)
+			_tokens->UseNextToken();
+			if (_tokens->GetCurrentToken()->GetType() == TokenType::RBRA)
 			{
-				UseNextToken();
+				_tokens->UseNextToken();
 				break;
 			}
-			else if (GetCurrentToken()->GetType() == TokenType::NEW_LINE)
+			else if (_tokens->GetCurrentToken()->GetType() == TokenType::NEW_LINE)
 			{
-				UseNextToken();
-				if (GetCurrentToken()->GetType() == TokenType::RBRA)
+				_tokens->UseNextToken();
+				if (_tokens->GetCurrentToken()->GetType() == TokenType::RBRA)
 				{
-					UseNextToken();
+					_tokens->UseNextToken();
 					break;
 				}
 			}
 		}
-		else if (GetCurrentToken()->GetType() == TokenType::RBRA)
+		else if (_tokens->GetCurrentToken()->GetType() == TokenType::RBRA)
 		{
-			UseNextToken();
+			_tokens->UseNextToken();
 			break;
 		}
 
 
-		Node* newElementArray = new Node(NodeType::VAR, GetCurrentToken()->GetValue());
+		Node* newElementArray = new Node(NodeType::VAR, _tokens->GetCurrentToken()->GetValue());
 		newElementArray->Operand1 = new Node(NodeType::VAR_TYPE, type);
 
 		tempActiveElementArray->Operand2 = newElementArray;
@@ -526,16 +384,16 @@ void Parser::InitializationArray(Node* node, string type)
 
 Node* Parser::ParentExprSBra()
 {
-	if (GetCurrentToken()->GetType() == TokenType::L_SBRA)
+	if (_tokens->GetCurrentToken()->GetType() == TokenType::L_SBRA)
 	{
-		UseNextToken();
+		_tokens->UseNextToken();
 	}
 
 	Node* node = ParentExpr();
 
-	if (GetCurrentToken()->GetType() == TokenType::R_SBRA)
+	if (_tokens->GetCurrentToken()->GetType() == TokenType::R_SBRA)
 	{
-		UseNextToken();
+		_tokens->UseNextToken();
 
 	}
 
@@ -544,16 +402,16 @@ Node* Parser::ParentExprSBra()
 
 Node* Parser::ParentExpr()
 {
-	if (GetCurrentToken()->GetType() == TokenType::LPAR)
+	if (_tokens->GetCurrentToken()->GetType() == TokenType::LPAR)
 	{
-		UseNextToken();
+		_tokens->UseNextToken();
 	}
 
 	Node* node = Expr();
 
-	if (GetCurrentToken()->GetType() == TokenType::RPAR)
+	if (_tokens->GetCurrentToken()->GetType() == TokenType::RPAR)
 	{
-		UseNextToken();
+		_tokens->UseNextToken();
 	}
 
 	return node;
@@ -564,32 +422,66 @@ Node* Parser::ParentExpr()
 Node* Parser::Expr()
 {
 	 Node* node = nullptr;
-	 if (GetCurrentToken()->GetType() == TokenType::NUMBER)
+	 if (_tokens->GetCurrentToken()->GetType() == TokenType::NUMBER)
 		 return LogOr();
 
-	 if (BaseTokenTypes::IsTypeVar(GetCurrentToken()->GetType()) == true)
+	 if (BaseTokenTypes::IsTypeVar(_tokens->GetCurrentToken()->GetType()) == true)
 	 {
-		 UseNextToken();
-		 UseNextToken();
+		 _tokens->UseNextToken();
+		 _tokens->UseNextToken();
 		 node = new Node(NodeType::SET, "", node, Expr());
 	 }
 
 	 node = LogOr();
-	 if (node->GetType() == NodeType::VAR && GetCurrentToken()->GetType() == TokenType::ASSIGN)
+
+
+	 if (node->GetType() == NodeType::VAR && _tokens->GetCurrentToken()->IsWithAssing())
 	 {
-		 UseNextToken(); 
-		 if (GetCurrentToken()->GetType() == TokenType::L_SBRA)
+		 if (_tokens->GetCurrentToken()->GetType() == TokenType::ASSIGN_DECLARATION)
 		 {
-			 node->Operand2 = ParentExprSBra();
-			 node->Operand1 = new Node(NodeType::VAR_TYPE, GetCurrentToken()->GetValue());
-			 string tempType = GetCurrentToken()->GetValue();
-			 UseNextToken();
-			 UseNextToken();
-			 InitializationArray(node, tempType);
+			 node = new Node(NodeType::NEW_VAR, node->GetValue());
 		 }
-		 else
+
+		 switch (_tokens->GetCurrentToken()->GetType())
 		 {
-			 node = new Node(NodeType::SET, "", node, ParentExprSBra());
+			 case TokenType::PLUS_EQUAL:
+				 _tokens->UseNextToken();
+				 node = new Node(NodeType::SET, "", node, new Node(NodeType::ADD, "", node, ParentExprSBra()));
+				break;
+			 case TokenType::MINUS_EQUAL:
+				 _tokens->UseNextToken();
+				 node = new Node(NodeType::SET, "", node, new Node(NodeType::SUB, "", node, ParentExprSBra()));
+				 break;
+			 case TokenType::STAR_EQUAL:
+				 _tokens->UseNextToken();
+				 node = new Node(NodeType::SET, "", node, new Node(NodeType::MUL, "", node, ParentExprSBra()));
+				 break;
+			 case TokenType::SLASH_EQUAL:
+				 _tokens->UseNextToken();
+				 node = new Node(NodeType::SET, "", node, new Node(NodeType::DIV, "", node, ParentExprSBra()));
+				 break;
+			 case TokenType::PROCENT_EQUAL:
+				 _tokens->UseNextToken();
+				 node = new Node(NodeType::SET, "", node, new Node(NodeType::REM_OF_DIV, "", node, ParentExprSBra()));
+				 break;
+			 default:
+			 {
+				 _tokens->UseNextToken();
+				 if (_tokens->GetCurrentToken()->GetType() == TokenType::L_SBRA)
+				 {
+					 node->Operand2 = ParentExprSBra();
+					 node->Operand1 = new Node(NodeType::VAR_TYPE, _tokens->GetCurrentToken()->GetValue());
+					 string tempType = _tokens->GetCurrentToken()->GetValue();
+					 _tokens->UseNextToken();
+					 _tokens->UseNextToken();
+					 InitializationArray(node, tempType);
+				 }
+				 else
+				 {
+					 node = new Node(NodeType::SET, "", node, ParentExprSBra());
+				 }
+			 }
+
 		 }
 	 }
 
@@ -600,9 +492,9 @@ Node* Parser::LogOr()
 {
 	Node* node = LogAnd();
 
-	while (GetCurrentToken()->GetType() == TokenType::OR)
+	while (_tokens->GetCurrentToken()->GetType() == TokenType::OR)
 	{
-		UseNextToken();
+		_tokens->UseNextToken();
 		node = new Node(NodeType::OR, "", node, LogAnd());
 	}
 	return node;
@@ -612,9 +504,9 @@ Node* Parser::LogAnd()
 {
 	Node* node = LogUnarOr();
 
-	while (GetCurrentToken()->GetType() == TokenType::AND)
+	while (_tokens->GetCurrentToken()->GetType() == TokenType::AND)
 	{
-		UseNextToken();
+		_tokens->UseNextToken();
 		node = new Node(NodeType::AND, "", node, LogUnarOr());
 	}
 	return node;
@@ -625,9 +517,9 @@ Node* Parser::LogUnarOr()
 {
 	Node* node = LogUnarAnd();
 
-	while (GetCurrentToken()->GetType() == TokenType::OR_ONE)
+	while (_tokens->GetCurrentToken()->GetType() == TokenType::OR_ONE)
 	{
-		UseNextToken();
+		_tokens->UseNextToken();
 		node = new Node(NodeType::OR_ONE, "", node, LogUnarAnd());
 	}
 	return node;
@@ -637,9 +529,9 @@ Node* Parser::LogUnarAnd()
 {
 	Node* node = Compare();
 
-	while (GetCurrentToken()->GetType() == TokenType::AND_ONE)
+	while (_tokens->GetCurrentToken()->GetType() == TokenType::AND_ONE)
 	{
-		UseNextToken();
+		_tokens->UseNextToken();
 		node = new Node(NodeType::AND_ONE, "", node, Compare());
 	}
 	return node;
@@ -652,36 +544,36 @@ Node* Parser::Compare()
 	NodeType typeCompare;
 
 	
-	if (GetCurrentToken()->GetType() == TokenType::LESS)
+	if (_tokens->GetCurrentToken()->GetType() == TokenType::LESS)
 	{
 		typeCompare = NodeType::LESS;
 	}
-	else if (GetCurrentToken()->GetType() == TokenType::MORE)
+	else if (_tokens->GetCurrentToken()->GetType() == TokenType::MORE)
 	{
 		typeCompare = NodeType::MORE;
 	}
-	else if (GetCurrentToken()->GetType() == TokenType::LESS_EQUAL)
+	else if (_tokens->GetCurrentToken()->GetType() == TokenType::LESS_EQUAL)
 	{
 		typeCompare = NodeType::LESS_EQUAL;
 	}
-	else if (GetCurrentToken()->GetType() == TokenType::MORE_EQUAL)
+	else if (_tokens->GetCurrentToken()->GetType() == TokenType::MORE_EQUAL)
 	{
 		typeCompare = NodeType::MORE_EQUAL;
 	}
-	else if (GetCurrentToken()->GetType() == TokenType::EQUAL)
+	else if (_tokens->GetCurrentToken()->GetType() == TokenType::EQUAL)
 	{
 		typeCompare = NodeType::EQUAL;
 	}
-	else if (GetCurrentToken()->GetType() == TokenType::NOT_EQUAL)
+	else if (_tokens->GetCurrentToken()->GetType() == TokenType::NOT_EQUAL)
 	{
 		typeCompare = NodeType::NOT_EQUAL;
 	}
 
-	if (GetCurrentToken()->GetType() == TokenType::LESS || GetCurrentToken()->GetType() == TokenType::MORE
-		|| GetCurrentToken()->GetType() == TokenType::LESS_EQUAL || GetCurrentToken()->GetType() == TokenType::MORE_EQUAL 
-		|| GetCurrentToken()->GetType() == TokenType::EQUAL || GetCurrentToken()->GetType() == TokenType::NOT_EQUAL)
+	if (_tokens->GetCurrentToken()->GetType() == TokenType::LESS || _tokens->GetCurrentToken()->GetType() == TokenType::MORE
+		|| _tokens->GetCurrentToken()->GetType() == TokenType::LESS_EQUAL || _tokens->GetCurrentToken()->GetType() == TokenType::MORE_EQUAL 
+		|| _tokens->GetCurrentToken()->GetType() == TokenType::EQUAL || _tokens->GetCurrentToken()->GetType() == TokenType::NOT_EQUAL)
 	{
-		UseNextToken();
+		_tokens->UseNextToken();
 		node = new Node(typeCompare, "", node, Summa());
 	}
 	
@@ -693,18 +585,18 @@ Node* Parser::Summa()
 {
 	Node* node = Ymnog();
 	NodeType nodeType;
-	while (GetCurrentToken()->GetType() == TokenType::PLUS || GetCurrentToken()->GetType() == TokenType::MINUS)
+	while (_tokens->GetCurrentToken()->GetType() == TokenType::PLUS || _tokens->GetCurrentToken()->GetType() == TokenType::MINUS)
 	{
-		if (GetCurrentToken()->GetType() == TokenType::PLUS)
+		if (_tokens->GetCurrentToken()->GetType() == TokenType::PLUS)
 		{
 			nodeType = NodeType::ADD;
 		}
-		else if (GetCurrentToken()->GetType() == TokenType::MINUS)
+		else if (_tokens->GetCurrentToken()->GetType() == TokenType::MINUS)
 		{
 			nodeType = NodeType::SUB;
 		}
 
-		UseNextToken();
+		_tokens->UseNextToken();
 		node = new Node(nodeType, "", node, Ymnog());
 	}
 	return node;
@@ -714,18 +606,22 @@ Node* Parser::Ymnog()
 {
 	Node* node = Unar();
 	NodeType nodeType;
-	while (GetCurrentToken()->GetType() == TokenType::SLASH || GetCurrentToken()->GetType() == TokenType::STAR)
+	while (_tokens->GetCurrentToken()->GetType() == TokenType::SLASH || _tokens->GetCurrentToken()->GetType() == TokenType::STAR || _tokens->GetCurrentToken()->GetType() == TokenType::PROCENT)
 	{
-		if (GetCurrentToken()->GetType() == TokenType::SLASH)
+		if (_tokens->GetCurrentToken()->GetType() == TokenType::SLASH)
 		{
-			nodeType = NodeType::DVS;
+			nodeType = NodeType::DIV;
 		}
-		else if (GetCurrentToken()->GetType() == TokenType::STAR)
+		else if (_tokens->GetCurrentToken()->GetType() == TokenType::STAR)
 		{
 			nodeType = NodeType::MUL;
 		}
+		else if (_tokens->GetCurrentToken()->GetType() == TokenType::PROCENT)
+		{
+			nodeType = NodeType::REM_OF_DIV;
+		}
 
-		UseNextToken();
+		_tokens->UseNextToken();
 		node = new Node(nodeType, "", node, Unar());
 	}
 	return node;
@@ -735,32 +631,32 @@ Node* Parser::Ymnog()
 Node* Parser::Unar()
 {
 	Node* node = nullptr;
-	if (GetCurrentToken()->GetType() == TokenType::INCREMENT)
+	if (_tokens->GetCurrentToken()->GetType() == TokenType::INCREMENT)
 	{
-		UseNextToken();
+		_tokens->UseNextToken();
 		node = GetNodeValue();
 		node = new Node(NodeType::INCREMENT, "", node);
 	}
-	else if (GetCurrentToken()->GetType() == TokenType::DECREMENT)
+	else if (_tokens->GetCurrentToken()->GetType() == TokenType::DECREMENT)
 	{
-		UseNextToken();
+		_tokens->UseNextToken();
 		node = GetNodeValue();
 		node = new Node(NodeType::DECREMENT, "", node);
 	}
 	else
 	{
 		node = GetNodeValue();
-		if (GetCurrentToken()->GetType() == TokenType::INCREMENT || GetCurrentToken()->GetType() == TokenType::DECREMENT)
+		if (_tokens->GetCurrentToken()->GetType() == TokenType::INCREMENT || _tokens->GetCurrentToken()->GetType() == TokenType::DECREMENT)
 		{
-			if (GetCurrentToken()->GetType() == TokenType::INCREMENT)
+			if (_tokens->GetCurrentToken()->GetType() == TokenType::INCREMENT)
 			{
 				node = new Node(NodeType::INCREMENT_AFTER, "", node);
 			}
-			else if (GetCurrentToken()->GetType() == TokenType::DECREMENT)
+			else if (_tokens->GetCurrentToken()->GetType() == TokenType::DECREMENT)
 			{
 				node = new Node(NodeType::DECREMENT_AFTER, "", node);
 			}
-			UseNextToken();
+			_tokens->UseNextToken();
 		}
 	}
 
@@ -771,26 +667,24 @@ Node* Parser::Unar()
 Node* Parser::GetNodeValue()
 {
 	Node* node = nullptr;
-	if (GetCurrentToken()->GetType() == TokenType::LITERAL)
+	if (_tokens->GetCurrentToken()->GetType() == TokenType::LITERAL)
 	{
-		string nameVar = GetCurrentToken()->GetValue();
-		node = new Node(NodeType::VAR, GetCurrentToken()->GetValue());
-		UseNextToken();
+		string nameVar = _tokens->GetCurrentToken()->GetValue();
+		node = new Node(NodeType::VAR, _tokens->GetCurrentToken()->GetValue());
+		_tokens->UseNextToken();
 
 
-		if (GetCurrentToken()->GetType() == TokenType::L_SBRA)
+		if (_tokens->GetCurrentToken()->GetType() == TokenType::L_SBRA)
 		{
 			node = new Node(NodeType::ARRAY_ACCESS, nameVar, ParentExpr());
-			UseNextToken();
-			node = new Node(NodeType::SET, "", node, ParentExpr());
 		}
 
 		return node;
 	}
-	else if (GetCurrentToken()->GetType() == TokenType::NUMBER)
+	else if (_tokens->GetCurrentToken()->GetType() == TokenType::NUMBER)
 	{
-		node = new Node(NodeType::CONST, GetCurrentToken()->GetValue());
-		UseNextToken();
+		node = new Node(NodeType::CONST, _tokens->GetCurrentToken()->GetValue());
+		_tokens->UseNextToken();
 		return node;
 	}
 	else
@@ -799,13 +693,3 @@ Node* Parser::GetNodeValue()
 	}
 }
 
-Parser::Parser(vector<Token*>* allTokens)
-{
-	_tokens = allTokens;
-	Parse();
-}
-
-Node* Parser::GetNodeHead()
-{
-	return _head;
-}

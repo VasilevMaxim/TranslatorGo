@@ -1,36 +1,39 @@
 #pragma once
 #include "Node.h"
 #include "TokenBreaking.h"
+#include "VariableInit.h"
 
 using std::vector;
 using std::cout;
 using std::endl;
 
+class VariableInit;
+class QueueVariableNode;
+
 class Parser
 {
+
 private:
 
-	int _indexCurrentToken = 0;
-	vector<Token*>* _tokens;
 	bool _isBlockVars;
+	ListTokens* _tokens;
+	QueueVariableNode* _variableNodes;
 
-
-	Token* GetCurrentToken();
-	void UseNextToken();
-	vector<Node*> _nodesVar;
-
+	Node* GetSignatureFunc();
+	Node* GetResultFunc();
 	Node* GetNodeArray();
 	Node* GetListParameters();
 	Node* RezultParameters();
 	Node* ArrayParameters();
 	Node* Parameters();
+
 	Node* GetTypeParams();
 
 	Node* Parse();
 	Node* Statement();
 	Node* ParentExprSBra();
 	Node* ParentExpr();
-	Node* Expr();
+
 	Node* Unar();
 	Node* Compare();
 	Node* Ymnog();
@@ -45,6 +48,8 @@ private:
 
 	void InitializationArray(Node* x, string type);
 public:
+	Node* Expr();
+
 	Parser(vector<Token*>* allTokens);
 	
 	Node* GetNodeHead();

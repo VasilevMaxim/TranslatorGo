@@ -153,23 +153,43 @@
   <ItemGroup>
     <ClCompile Include="AbstractSyntaxTree.cpp" />
     <ClCompile Include="BaseTokenTypes.cpp" />
+    <ClCompile Include="Error.cpp" />
+    <ClCompile Include="ErrorParser.cpp" />
+    <ClCompile Include="Expression.cpp" />
+    <ClCompile Include="ListTokens.cpp" />
     <ClCompile Include="Node.cpp" />
     <ClCompile Include="Parser.cpp" />
     <ClCompile Include="Preprocessing.cpp" />
+    <ClCompile Include="RecursiveTraversal.cpp" />
+    <ClCompile Include="Singleton.cpp" />
+    <ClCompile Include="TableVariable.cpp" />
     <ClCompile Include="Token.cpp" />
     <ClCompile Include="TokenBreaking.cpp" />
     <ClCompile Include="Translator.cpp" />
+    <ClCompile Include="Variable.cpp" />
+    <ClCompile Include="VariableInit.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractSyntaxTree.h" />
     <ClInclude Include="BaseTokenTypes.h" />
+    <ClInclude Include="Error.h" />
+    <ClInclude Include="ErrorParser.h" />
+    <ClInclude Include="Expression.h" />
+    <ClInclude Include="IControl.h" />
+    <ClInclude Include="ListTokens.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="NodeType.h" />
     <ClInclude Include="Parser.h" />
     <ClInclude Include="Preprocessing.h" />
+    <ClInclude Include="RecursiveTraversal.h" />
+    <ClInclude Include="Singleton.h" />
+    <ClInclude Include="TableVariable.h" />
     <ClInclude Include="Token.h" />
     <ClInclude Include="TokenBreaking.h" />
     <ClInclude Include="TokenType.h" />
+    <ClInclude Include="Variable.h" />
+    <ClInclude Include="VariableInit.h" />
+    <ClInclude Include="VariableType.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="progGo.go" />

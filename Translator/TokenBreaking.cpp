@@ -1,10 +1,26 @@
 #include "TokenBreaking.h"
 #include "TokenType.h"
 #include <string>
+#include "Error.h"
 
 Token* TokenBreaking::GetToken(string lexeme)
 {
-	return new Token(lexeme);
+	Token* newToken = new Token(lexeme);
+
+	if (_delayMinus == true)
+	{
+		if (newToken->GetType() == TokenType::LITERAL || newToken->GetType() == TokenType::NUMBER)
+		{
+			newToken = new Token("-" + lexeme);
+		}
+		else
+		{
+			Error("WL002",true);
+		}
+		_delayMinus = false;
+	}
+	
+	return newToken;
 }
 
 void TokenBreaking::SplitIntoTokens()
@@ -27,10 +43,17 @@ void TokenBreaking::SplitIntoTokens()
 
 			if (_znaks.find(_text[index]) != string::npos)
 			{
-				if (_tokens.size() > 0 && (IsCompositesSeparator(_text[index], _tokens[_tokens.size() - 1]->GetValue()[0]) == true))
+				if (_tokens.size() > 0 && (IsCompositesSeparator(_text[index], _tokens.back()->GetValue()[0]) == true))
 				{
 					continue;
 				}
+
+				if (_text[index] == '-' && (_tokens.back()->GetType() != TokenType::LITERAL && _tokens.back()->GetType() != TokenType::NUMBER))
+				{
+					tempLexems += _text[index];
+					continue;
+				}
+
 				string forSym;
 				forSym += _text[index];
 
@@ -59,6 +82,14 @@ void TokenBreaking::SplitIntoTokens()
 
 
 		tempLexems += _text[index];
+
+		if (index > 0 && IsSymNumber(_text[index - 1]) == true)
+		{
+			if (IsSymLit(_text[index]) == true)
+			{
+				Error("WL001", true);
+			}
+		}
 	}
 	
 }
@@ -179,4 +210,46 @@ void TokenBreaking::ShowTokens()
 			cout << token->GetValue() << endl;
 		}
 	}
+}
+
+string TokenBreaking::GetLineCurrentToken(int numCurrentLine)
+{
+	int currentNewLine = 0;
+	int column = 0;
+	while (column != numCurrentLine)
+	{
+		currentNewLine = _text.find("\n", currentNewLine);
+		column++;
+	}
+
+	return "";
+}
+
+bool TokenBreaking::IsSymNumber(char sym)
+{
+	if (sym >= 48 && sym <= 57)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool TokenBreaking::IsSymLit(char sym)
+{
+	// UNICODE
+
+	// Eng (a-z, A-Z)
+	if ((sym >= 65 && sym <= 90) || (sym >= 97 && sym <= 122))
+	{
+		return true;
+	}
+
+	// Rus (a-ß)
+	if (sym >= 192 && sym <= 255)
+	{
+		return true;
+	}
+
+	return false;
 }

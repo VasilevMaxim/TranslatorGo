@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include "TokenType.h"
+#include "NodeType.h"
 
 using std::string;
 
@@ -15,4 +16,10 @@ public:
 
 	string GetValue();
 	TokenType GetType();
+
+	bool IsSeporator();
+	bool IsVar();
+	bool IsWithAssing();
+
+	NodeType GetNeighborNodeType();
 };

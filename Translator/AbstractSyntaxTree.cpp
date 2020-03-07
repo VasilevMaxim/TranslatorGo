@@ -39,6 +39,7 @@ void AbstractSyntaxTree::ShowPartTree(Node* sub, size_t level)
 	case NodeType::CONST:
 		cout << "+-Const ";
 		break;
+
 	case NodeType::ADD:
 		cout << "+-Add ";
 		break;
@@ -48,8 +49,11 @@ void AbstractSyntaxTree::ShowPartTree(Node* sub, size_t level)
 	case NodeType::MUL:
 		cout << "+-Mul ";
 		break;
-	case NodeType::DVS:
-		cout << "+-Dvs ";
+	case NodeType::DIV:
+		cout << "+-Div ";
+		break;
+	case NodeType::REM_OF_DIV :
+		cout << "+-RemOfDiv ";
 		break;
 	case NodeType::FOR:
 		cout << "For ";

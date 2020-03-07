@@ -13,8 +13,10 @@ private:
 	string _text;
 
 	string _separators = " \t\r";
-	string _znaks = ",()[]{}:=+-*/!;<>&|\n";
+	string _znaks = ",()[]{}:=+-*%/!;<>&|\n";
 	string _fixedZnaks = "\"\'";
+	
+	bool _delayMinus = false;
 
 	vector<Token*> _tokens;
 
@@ -28,5 +30,8 @@ public:
 
 	vector<Token*>* GetTokens();
 	void ShowTokens();
+	string GetLineCurrentToken(int numCurrentLine);
+	bool IsSymNumber(char sym);
+	bool IsSymLit(char sym);
 };
 

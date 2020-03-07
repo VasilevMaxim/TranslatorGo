@@ -8,8 +8,8 @@ map<string, TokenType> BaseTokenTypes::_baseTokenTypes =
 	{ "for", TokenType::FOR },
 	{ "break", TokenType::BREAK },
 	{ "int", TokenType::INT },
-	{ "float", TokenType::FLOAT },
-	{ "double", TokenType::DOUBLE },
+	{ "float64", TokenType::FLOAT64 },
+	{ "float32", TokenType::FLOAT32 },
 	{ "if", TokenType::IF },
 	{ "else", TokenType::ELSE },
 
@@ -23,11 +23,20 @@ map<string, TokenType> BaseTokenTypes::_baseTokenTypes =
 	{ "]", TokenType::R_SBRA },
 
 	{ "=", TokenType::ASSIGN },
-	{ ":=", TokenType::ASSIGN },
+	{ ":=", TokenType::ASSIGN_DECLARATION },
+
 	{ "+", TokenType::PLUS },
 	{ "-", TokenType::MINUS },
 	{ "*", TokenType::STAR },
 	{ "/", TokenType::SLASH },
+	{ "%", TokenType::PROCENT },
+
+	{ "+=", TokenType::PLUS_EQUAL },
+	{ "-=", TokenType::MINUS_EQUAL },
+	{ "*=", TokenType::STAR_EQUAL },
+	{ "/=", TokenType::SLASH_EQUAL },
+	{ "%=", TokenType::PROCENT_EQUAL },
+
 	{ "==", TokenType::EQUAL },
 	{ "!=", TokenType::NOT_EQUAL },
 	{ ">", TokenType::MORE },
@@ -63,10 +72,10 @@ bool BaseTokenTypes::IsTypeVar(TokenType type)
 	case TokenType::INT:
 		return true;
 		break;
-	case TokenType::FLOAT:
+	case TokenType::FLOAT64:
 		return true;
 		break;
-	case TokenType::DOUBLE:
+	case TokenType::FLOAT32:
 		return true;
 		break;
 	}
@@ -77,7 +86,10 @@ bool BaseTokenTypes::IsTypeVar(TokenType type)
 bool BaseTokenTypes::IsNumberToken(string token)
 {
 	bool isPoint = false;
-
+	if (token[0] == '-')
+	{
+		token.erase(0, 1);
+	}
 	for (const char& sym : token)
 	{
 		if (sym == '.' && !isPoint)
