@@ -35,13 +35,7 @@ In order to translate the code, specify the path to the file in the main functio
 :white_check_mark: array    
 :white_check_mark: array(expr)     
 :white_check_mark: accessing a element array     
-       
-:white_check_mark: editing code building tree     
-## Need to do.
-   
-   
-:black_square_button: editing code in classes     
-:black_square_button: table of correspondence   
+
 :black_square_button: function call
 
 Based on an article from Habr: https://habr.com/en/post/133780/     
