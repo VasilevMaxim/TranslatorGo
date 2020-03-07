@@ -1,6 +1,6 @@
 #include "Parser.h"
 #include "BaseTokenTypes.h"
-
+#include "ErrorParser.h"
 #include <queue>
 
 using std::queue;
@@ -124,6 +124,10 @@ Node* Parser::Statement()
 	else if (_tokens->GetCurrentToken()->GetType() == TokenType::FUNC)
 	{
 		_tokens->UseNextToken();
+
+		if (_tokens->GetCurrentToken()->GetType() != TokenType::LITERAL)
+			ErrorParser("001");
+
 		node = new Node(NodeType::FUNC, _tokens->GetCurrentToken()->GetValue());
 		node->Operand1 = GetSignatureFunc();
 		node->Operand2 = Statement();
@@ -166,6 +170,10 @@ Node* Parser::Statement()
 Node* Parser::GetSignatureFunc()
 {
 	_tokens->UseNextToken();
+
+	if (_tokens->GetCurrentToken()->GetType() != TokenType::LPAR)
+		ErrorParser("002");
+
 	_tokens->UseNextToken();
 	Node* node = GetListParameters();
 	_tokens->UseNextToken();
@@ -306,9 +314,12 @@ Node* Parser::RezultParameters()
 
 Node* Parser::Parameters()
 {
+	if (_tokens->GetCurrentToken()->GetType() != TokenType::LITERAL)
+		ErrorParser("003");
+
 	Node* node = new Node(NodeType::VAR, _tokens->GetCurrentToken()->GetValue());
 	_tokens->UseNextToken();
-	
+
 	return node;
 }
 

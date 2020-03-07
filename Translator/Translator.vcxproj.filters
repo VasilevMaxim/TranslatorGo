@@ -74,7 +74,10 @@
       <Filter>AST</Filter>
     </ClCompile>
     <ClCompile Include="Error.cpp">
-      <Filter>Main</Filter>
+      <Filter>Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="ErrorParser.cpp">
+      <Filter>Errors</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -122,7 +125,12 @@
     <ClInclude Include="RecursiveTraversal.h">
       <Filter>AST</Filter>
     </ClInclude>
-    <ClInclude Include="Error.h" />
+    <ClInclude Include="Error.h">
+      <Filter>Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="ErrorParser.h">
+      <Filter>Errors</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="progGo.go" />

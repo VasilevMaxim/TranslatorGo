@@ -1,1 +1,3 @@
-Wrong name variable at lexic analyzer. Please fix the name variable.
+You need to name the function correctly.
+No parentheses after the function name.
+You must specify the function arguments correctly.
