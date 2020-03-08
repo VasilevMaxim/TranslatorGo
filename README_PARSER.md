@@ -9,7 +9,7 @@
 
 # Translator from Go to Assembler language.   
 
-[![ENG](https://img.shields.io/badge/ENG%20>>-9cf)](https://github.com/VasilevMaxim/TranslatorGo) 
+
 ![Translator](https://sun9-37.userapi.com/c858032/v858032731/1890f7/F0RMRY0Npr4.jpg "GO")
 
 
@@ -50,11 +50,14 @@
 
 ## Нужно сделать:
    
-:black_square_button: function call
-:black_square_button: editing code in classes     
-:black_square_button: table of correspondence   
+:black_square_button: function call    
+:black_square_button: editing code in classes       
+:black_square_button: table of correspondence     
 
+ 
 ____
 
 Based on an article from Habr: https://habr.com/en/post/133780/     
-Thanks so much for helping Peter, I582: https://github.com/i582
+Thanks so much for helping Peter, I582: https://github.com/i582      
+    
+[![ENG](https://img.shields.io/badge/ENG%20>>-9cf)](https://github.com/VasilevMaxim/TranslatorGo)
