@@ -6,8 +6,19 @@ QueueVariableNode::QueueVariableNode()
 	_tokens = ListTokens::GetInstance();
 }
 
-void QueueVariableNode::PlacedUnderControl(Parser* parser)
+void QueueVariableNode::PlacedUnderControl(Parser* parser, bool isConst)
 {
+	_isConst = isConst;
+
+	if (_isConst == true)
+	{
+		_typeNewVar = NodeType::NEW_CONST;
+	}
+	else
+	{
+		_typeNewVar = NodeType::NEW_VAR;
+	}
+
 	_parser = parser;
 
 	if (_tokens->GetCurrentToken()->GetType() == TokenType::LPAR)
@@ -23,7 +34,7 @@ void QueueVariableNode::PlacedUnderControl(Parser* parser)
 		Error("name || var");
 	}
 	PushingVariables();
-	
+
 	if (_tokens->GetCurrentToken()->GetType() == TokenType::ASSIGN)
 	{
 		_tokens->UseNextToken();
@@ -38,7 +49,7 @@ void QueueVariableNode::PlacedUnderControl(Parser* parser)
 			_vars.pop();
 			frontVar->Operand1 = _type;
 			_vars.push(frontVar);
-		} 
+		}
 		//_tokens->UseNextToken();
 	}
 }
@@ -48,7 +59,8 @@ void QueueVariableNode::PushingVariables()
 {
 	while (true)
 	{
-		_vars.push(new Node(NodeType::NEW_VAR, _tokens->GetCurrentToken()->GetValue()));
+		
+		_vars.push(new Node(_typeNewVar, _tokens->GetCurrentToken()->GetValue()));
 		_tokens->UseNextToken();
 
 		if (_tokens->GetCurrentToken()->GetType() != TokenType::COMMA)
@@ -170,6 +182,11 @@ Node* QueueVariableNode::Pop()
 bool QueueVariableNode::IsLPAR()
 {
 	return _isLPAR;
+}
+
+bool QueueVariableNode::IsConst()
+{
+	return _isConst;
 }
 
 void QueueVariableNode::SetLPAR(bool value)

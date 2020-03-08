@@ -24,7 +24,7 @@ private:
 	Node* GetNodeArray();
 	Node* GetListParameters();
 	Node* RezultParameters();
-	Node* ArrayParameters();
+	Node* ApplyTypeParameters();
 	Node* Parameters();
 
 	Node* GetTypeParams();

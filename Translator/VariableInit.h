@@ -21,6 +21,9 @@ private:
 	Node* _type;
 	ListTokens* _tokens;
 
+	bool _isConst = false;
+	NodeType _typeNewVar = NodeType::NEW_VAR;
+
 	bool _isLPAR = false;
 	Parser* _parser;
 
@@ -31,12 +34,12 @@ private:
 public:
 
 	QueueVariableNode();
-	void PlacedUnderControl(Parser* parser);
-
+	void PlacedUnderControl(Parser* parser, bool isConst);
 
 	Node* Pop();
 
 	bool IsLPAR();
+	bool IsConst();
 	void SetLPAR(bool value);
 	bool IsEmpty();
 };

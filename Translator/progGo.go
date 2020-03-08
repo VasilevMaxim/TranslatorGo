@@ -1,5 +1,13 @@
  { 
-    
+    const (
+		a int = 2222
+		b = 2222
+	)
+
+	var (
+		a = 2
+		g = 3;;
+	)
     a += 8
     func testFunc(x, y, z [5]int, a, b float64, r, g, b [6]float64)[5]int, [6]int, float64 {
        x := ++a + b--

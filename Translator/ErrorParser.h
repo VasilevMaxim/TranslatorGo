@@ -1,8 +1,9 @@
 #pragma once
 #include "Error.h"
+#include <string>
 class ErrorParser : public Error
 {
 public:
-	ErrorParser(string text) : Error(text, true) {}
+	ErrorParser(int num) : Error(std::to_string(num), true) {}
 };
 

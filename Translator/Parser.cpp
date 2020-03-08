@@ -39,6 +39,10 @@ Node* Parser::Statement()
 		_tokens->UseNextToken();
 
 		node->Operand1 = ParentExprSBra();
+		
+		if (_tokens->GetCurrentToken()->GetType() != TokenType::LBRA)
+			ErrorParser(8);
+
 		node->Operand2 = Statement(); 
 	
 		if (_tokens->GetCurrentToken()->GetType() == TokenType::ELSE)
@@ -96,9 +100,9 @@ Node* Parser::Statement()
 	{
 		if (_tokens->GetCurrentToken()->GetType() == TokenType::LITERAL)
 		{
-			_variableNodes->PlacedUnderControl(this);
+			_variableNodes->PlacedUnderControl(this, _variableNodes->IsConst());
 		}
-		node = _variableNodes->Pop();
+		node = _variableNodes->Pop(); 
 		_tokens->UseNextToken();
 
 		if (_tokens->GetCurrentToken()->GetType() == TokenType::RPAR)
@@ -126,7 +130,7 @@ Node* Parser::Statement()
 		_tokens->UseNextToken();
 
 		if (_tokens->GetCurrentToken()->GetType() != TokenType::LITERAL)
-			ErrorParser("001");
+			ErrorParser(1);
 
 		node = new Node(NodeType::FUNC, _tokens->GetCurrentToken()->GetValue());
 		node->Operand1 = GetSignatureFunc();
@@ -135,7 +139,13 @@ Node* Parser::Statement()
 	else if (_tokens->GetCurrentToken()->GetType() == TokenType::VAR)
 	{
 		_tokens->UseNextToken();
-		_variableNodes->PlacedUnderControl(this);
+		_variableNodes->PlacedUnderControl(this, false);
+	}
+	else if (_tokens->GetCurrentToken()->GetType() == TokenType::CONST)
+	{		
+		_tokens->UseNextToken();
+		_variableNodes->PlacedUnderControl(this, true);
+
 	}
 	else if (_isBlockVars == true && _tokens->GetCurrentToken()->GetType() == TokenType::RPAR)
 	{
@@ -172,7 +182,7 @@ Node* Parser::GetSignatureFunc()
 	_tokens->UseNextToken();
 
 	if (_tokens->GetCurrentToken()->GetType() != TokenType::LPAR)
-		ErrorParser("002");
+		ErrorParser(2);
 
 	_tokens->UseNextToken();
 	Node* node = GetListParameters();
@@ -192,20 +202,26 @@ Node* Parser::GetResultFunc()
 {
 	Node* tempRezult = GetTypeParams();
 	Node* headRezult = tempRezult;
-	_tokens->UseNextToken();
 
 	while (true)
 	{
-		_tokens->UseNextToken();
-		tempRezult->Operand2 = GetTypeParams();
-		tempRezult = tempRezult->Operand2;
-
 		_tokens->UseNextToken();
 
 		if (_tokens->GetCurrentToken()->GetType() == TokenType::LBRA)
 		{
 			break;
 		}
+		else if (_tokens->GetCurrentToken()->GetType() == TokenType::COMMA)
+		{
+			_tokens->UseNextToken();
+		}
+		else
+		{
+			ErrorParser(7);
+		}
+
+		tempRezult->Operand2 = GetTypeParams();
+		tempRezult = tempRezult->Operand2;
 	}
 
 	return headRezult;
@@ -218,14 +234,14 @@ Node* Parser::GetNodeArray()
 
 Node* Parser::GetListParameters()
 {
-	Node* headListOtherTypesParams = ArrayParameters();
+	Node* headListOtherTypesParams = ApplyTypeParameters();
 	Node* temp = headListOtherTypesParams;
 
 	_tokens->UseNextToken();
 
 	while (true)
 	{
-		temp->Operand3 = ArrayParameters();
+		temp->Operand3 = ApplyTypeParameters();
 		temp = temp->Operand3;
 
 		if (_tokens->GetCurrentToken()->GetType() == TokenType::RPAR)
@@ -233,49 +249,26 @@ Node* Parser::GetListParameters()
 			break;
 		}
 
+		if (_tokens->GetCurrentToken()->GetType() != TokenType::COMMA)
+			ErrorParser(6);
+
 		_tokens->UseNextToken();
 	}
 	
 	return headListOtherTypesParams;
 }
 
-Node* Parser::ArrayParameters()
+Node* Parser::ApplyTypeParameters()
 {
 	Node* headListParams = RezultParameters();
 	Node* temp = headListParams;
-	bool isArray = false;
 
 	Node* type = GetTypeParams();
-
-	if (type->Operand1 != nullptr)
-	{
-		isArray = true;
-	}
 
 	while (temp != nullptr)
 	{
 		temp->Operand1 = type;
 		temp = temp->Operand2;
-	}
-
-	temp = headListParams;
-	if (isArray == true)
-	{
-		Node* tempArray = new Node(NodeType::NEW_VAR, temp->GetValue());
-		tempArray->Operand1 = temp->Operand1;
-		headListParams = tempArray;
-		temp = temp->Operand2;
-
-		while (temp != nullptr)
-		{
-			Node* newArray = new Node(NodeType::NEW_VAR, temp->GetValue());
-			newArray->Operand1 = temp->Operand1;
-
-			tempArray->Operand2 = newArray;
-
-			tempArray = tempArray->Operand2;
-			temp = temp->Operand2;
-		}
 	}
 
 	_tokens->UseNextToken();
@@ -305,7 +298,11 @@ Node* Parser::RezultParameters()
 			break;
 		}
 
+		if (_tokens->GetCurrentToken()->GetType() != TokenType::COMMA)
+			ErrorParser(4);
+
 		_tokens->UseNextToken();
+
 	}
 
 	return begin;
@@ -315,7 +312,7 @@ Node* Parser::RezultParameters()
 Node* Parser::Parameters()
 {
 	if (_tokens->GetCurrentToken()->GetType() != TokenType::LITERAL)
-		ErrorParser("003");
+		ErrorParser(3);
 
 	Node* node = new Node(NodeType::VAR, _tokens->GetCurrentToken()->GetValue());
 	_tokens->UseNextToken();
@@ -333,6 +330,11 @@ Node* Parser::GetTypeParams()
 		_tokens->UseNextToken();
 		expr = Expr();
 		_tokens->UseNextToken();
+	}
+
+	if (_tokens->GetCurrentToken()->IsVar() == false)
+	{
+		ErrorParser(5);
 	}
 	
 	type = new Node(NodeType::VAR_TYPE, _tokens->GetCurrentToken()->GetValue(), expr);
