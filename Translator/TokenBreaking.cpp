@@ -91,7 +91,11 @@ void TokenBreaking::SplitIntoTokens()
 			}
 		}
 	}
-	
+
+	if (_tokens[0]->GetType() == TokenType::NEW_LINE || _tokens[0]->GetType() == TokenType::SEMICOLON)
+	{
+		_tokens.erase(_tokens.begin());
+	}
 }
 
 bool TokenBreaking::IsCompositesToken(char sym1, char sym2)

@@ -23,4 +23,6 @@ public:
 
 	string GetLineCurrentToken();
 	int GetNumLine();
+
+	bool IsBackTokens();
 };

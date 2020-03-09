@@ -37,3 +37,13 @@ int ListTokens::GetNumLine()
 {
 	return _numCurrentLine;
 }
+
+bool ListTokens::IsBackTokens()
+{
+	if (_indexCurrentToken == _tokens->size() - 1)
+	{
+		return true;
+	}
+
+	return false;
+}

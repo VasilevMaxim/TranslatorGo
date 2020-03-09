@@ -22,12 +22,24 @@ Node* Parser::GetNodeHead()
 
 Node* Parser::Parse()
 {
-	_head = new Node(NodeType::PROG, "", Statement());
+	_head = new Node(NodeType::PROG, "", Statements());
 	if (_tokens->GetCurrentToken()->GetValue()[0] != EOF)
 	{
 		// error("Invalid statement syntax")
 	}
 	return _head;
+}
+
+Node* Parser::Statements()
+{
+	Node* temp  = new Node(NodeType::STMT, "", Statement());
+	while (_tokens->IsBackTokens() == false)
+	{
+		_tokens->UseNextToken();
+		temp = temp->Operand1;
+		temp = new Node(NodeType::STMT, "", temp, Statement());
+	}
+	return temp;
 }
 
 Node* Parser::Statement()

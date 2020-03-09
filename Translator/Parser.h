@@ -19,6 +19,8 @@ private:
 	ListTokens* _tokens;
 	QueueVariableNode* _variableNodes;
 
+
+	Node* Statements();
 	Node* GetSignatureFunc();
 	Node* GetResultFunc();
 	Node* GetNodeArray();
