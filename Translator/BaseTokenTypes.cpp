@@ -10,8 +10,12 @@ map<string, TokenType> BaseTokenTypes::_baseTokenTypes =
 	{ "int", TokenType::INT },
 	{ "float64", TokenType::FLOAT64 },
 	{ "float32", TokenType::FLOAT32 },
+	{ "bool", TokenType::BOOL },
 	{ "if", TokenType::IF },
 	{ "else", TokenType::ELSE },
+	{ "true", TokenType::TRUE },
+	{ "false", TokenType::FALSE },
+	{ "!", TokenType::INVERSION },
 
 	{ "func", TokenType::FUNC },
 
@@ -76,6 +80,9 @@ bool BaseTokenTypes::IsTypeVar(TokenType type)
 		return true;
 		break;
 	case TokenType::FLOAT32:
+		return true;
+		break;
+	case TokenType::BOOL:
 		return true;
 		break;
 	}

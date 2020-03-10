@@ -7,6 +7,8 @@ enum class TokenType
 	INT,
 	FLOAT64,
 	FLOAT32,
+
+	INVERSION,
 	STRING,
 	BOOL,
 	TRUE,

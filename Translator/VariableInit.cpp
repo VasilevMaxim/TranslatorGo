@@ -126,11 +126,25 @@ Node* QueueVariableNode::InitializationArray()
 	GetType();
 	_tokens->UseNextToken();
 	_tokens->UseNextToken();
+	if (_tokens->GetCurrentToken()->GetType() == TokenType::NEW_LINE)
+	{
+		_tokens->UseNextToken();
+	}
 	tempArray = _parser->Expr();
 	headArray = tempArray;
 	while (_tokens->GetCurrentToken()->GetType() != TokenType::RBRA)
 	{
 		_tokens->UseNextToken();
+
+		if (_tokens->GetCurrentToken()->GetType() == TokenType::NEW_LINE)
+		{
+			_tokens->UseNextToken();
+
+			if (_tokens->GetCurrentToken()->GetType() == TokenType::RBRA)
+			{
+				break;
+			}
+		}
 
 		tempArray->Operand1 = _parser->Expr();
 		tempArray = tempArray->Operand1;

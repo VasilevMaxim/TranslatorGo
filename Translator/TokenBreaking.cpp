@@ -83,7 +83,7 @@ void TokenBreaking::SplitIntoTokens()
 
 		tempLexems += _text[index];
 
-		if (index > 0 && IsSymNumber(_text[index - 1]) == true)
+		if (index > 0 && IsSymNumber(_text[index - 1]) == true && IsSymLit(_text[index - 2]) == false)
 		{
 			if (IsSymLit(_text[index]) == true)
 			{

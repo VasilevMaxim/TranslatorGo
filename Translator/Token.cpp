@@ -25,7 +25,7 @@ bool Token::IsSeporator()
 
 bool Token::IsVar()
 {
-	return _type == TokenType::INT || _type == TokenType::FLOAT64 || _type == TokenType::FLOAT32;
+	return _type == TokenType::INT || _type == TokenType::FLOAT64 || _type == TokenType::FLOAT32 || _type == TokenType::BOOL;
 }
 
 bool Token::IsWithAssing()

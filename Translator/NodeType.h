@@ -7,6 +7,7 @@ enum class NodeType
 	VAR,
 	VAR_TYPE,
 
+	BOOL,
 
 	NEW_CONST,
 	CONST,
@@ -45,6 +46,8 @@ enum class NodeType
 	INCREMENT_AFTER,
 	DECREMENT_AFTER,
 
+	INVERSION,
+
 	LT,
 
 	SET,
@@ -55,7 +58,6 @@ enum class NodeType
 
 	STMT,
 
-
 	FUNC,
 	FUNC_ARGS,
 	FUNC_ARG,
@@ -65,7 +67,7 @@ enum class NodeType
 	FUNCTION_IMPL_ARG,
 	FUNCTION_IMPL_TYPE,
 	FUNC_ACCESS,
-
+	SIGNATURE,
 
 	RETURN
 };

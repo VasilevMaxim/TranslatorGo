@@ -19,7 +19,8 @@ private:
 	ListTokens* _tokens;
 	QueueVariableNode* _variableNodes;
 
-
+	Node* Inversion();
+	Node* GetListParametersAccess();
 	Node* Statements();
 	Node* GetSignatureFunc();
 	Node* GetResultFunc();

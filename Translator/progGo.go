@@ -1,44 +1,34 @@
  
-
-    func testFunc(x, y, z [5]int, a, b float64, r, g, b [6]float64)[5]int, [6]int, float64 {
-        const (
-		a int = 2222
-		b = 2222
-		)
-
-		var (
-			a = 2
-			g = 3;;
-		)
-		a += 8
-	   x := ++a + b--
-    }
-
-    func testFunc2(x, y, z [5]int, a, b float64, r, g, b [6]float64) {
-		var j [999*7/i]float64 = [999*7/i]float64{90.2, 40.1, 22.3}
-		var (
-		x = 4
-		y = 5
-		n = [900*7/i]float64{90.2, 40.1, 22.3}
-		)
-
-		i %= -8;
-		numbers[5] = -1 -5 % g + 6 / y;
-
-    		if numbers[5] >= b || c > b && k > o{
-		if b <= c{
-			   if c == d{
-				b = a;
+func solveMinor3x3(matrix [3*3]float64, column int, row int) float64 {
+	if (column + row)%2 != 0{
+		temp = -1*temp
+	}
+	var (
+		temp float64 = 0
+		tempMatrix [2*2]float64
+	)
+	var itemp, jtemp int = 0, 0
+	for i := 0; i < size; i++{
+		if i != column{
+			for j := 0; j < size; j++{
+					if j != row{
+						tempMatrix[itemp*(2)+jtemp] = matrix[i*(3)+j]
+						jtemp++
 				}
+			}
+			jtemp = 0
+			itemp++
 		}
-		} else if b != a {
-			b = 1;
-		} else if b < m {
-			b = 2;
-		} else{
-			b = 0; 
-		}
-	
+	}
+	for i := 0; i < size - 1; i++{
+			temp = temp + solveMinor2x2(tempMatrix)
+	}
+
+	return temp*matrix[column*(size) + row]
+}
+
+
+    func testFunc2(x [4]int, y float64)float64 {
 		g := 1.9823 * 23213.424
 
 		var numbers [5]int
@@ -109,3 +99,7 @@
 		}
     
 	}
+
+
+	
+    

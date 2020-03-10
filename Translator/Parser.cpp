@@ -45,7 +45,40 @@ Node* Parser::Statements()
 Node* Parser::Statement()
 {
 	Node* node = nullptr;
-	if (_tokens->GetCurrentToken()->GetType() == TokenType::IF)
+
+
+	if (_variableNodes->IsLPAR() == true)
+	{
+		if (_tokens->GetCurrentToken()->GetType() == TokenType::LITERAL)
+		{
+			_variableNodes->PlacedUnderControl(this, _variableNodes->IsConst());
+		}
+		node = _variableNodes->Pop();
+		_tokens->UseNextToken();
+
+		if (_tokens->GetCurrentToken()->GetType() == TokenType::RPAR)
+		{
+			_variableNodes->SetLPAR(false);
+			_tokens->UseNextToken();
+			_tokens->UseNextToken();
+		}
+	}
+	else if (_variableNodes->IsEmpty() == false)
+	{
+		node = _variableNodes->Pop();
+	}
+	else if (_tokens->GetCurrentToken()->GetType() == TokenType::VAR)
+	{
+		_tokens->UseNextToken();
+		_variableNodes->PlacedUnderControl(this, false);
+	}
+	else if (_tokens->GetCurrentToken()->GetType() == TokenType::CONST)
+	{
+		_tokens->UseNextToken();
+		_variableNodes->PlacedUnderControl(this, true);
+
+	}
+	else if (_tokens->GetCurrentToken()->GetType() == TokenType::IF)
 	{
 		node = new Node(NodeType::IF); 
 		_tokens->UseNextToken();
@@ -108,26 +141,6 @@ Node* Parser::Statement()
 		node->Operand4 = Statement();
 		_tokens->UseNextToken();
 	}
-	else if (_variableNodes->IsLPAR() == true)
-	{
-		if (_tokens->GetCurrentToken()->GetType() == TokenType::LITERAL)
-		{
-			_variableNodes->PlacedUnderControl(this, _variableNodes->IsConst());
-		}
-		node = _variableNodes->Pop(); 
-		_tokens->UseNextToken();
-
-		if (_tokens->GetCurrentToken()->GetType() == TokenType::RPAR)
-		{
-			_variableNodes->SetLPAR(false);
-			_tokens->UseNextToken();
-			_tokens->UseNextToken();
-		}
-	}
-	else if (_variableNodes->IsEmpty() == false)
-	{
-		node = _variableNodes->Pop();
-	}
 	else if (_tokens->GetCurrentToken()->GetType() == TokenType::BREAK)
 	{
 		node = new Node(NodeType::BREAK);
@@ -148,16 +161,11 @@ Node* Parser::Statement()
 		node->Operand1 = GetSignatureFunc();
 		node->Operand2 = Statement();
 	}
-	else if (_tokens->GetCurrentToken()->GetType() == TokenType::VAR)
+	else if (_tokens->GetCurrentToken()->GetType() == TokenType::RETURN)
 	{
 		_tokens->UseNextToken();
-		_variableNodes->PlacedUnderControl(this, false);
-	}
-	else if (_tokens->GetCurrentToken()->GetType() == TokenType::CONST)
-	{		
-		_tokens->UseNextToken();
-		_variableNodes->PlacedUnderControl(this, true);
 
+		node = GetListParametersAccess();
 	}
 	else if (_isBlockVars == true && _tokens->GetCurrentToken()->GetType() == TokenType::RPAR)
 	{
@@ -196,8 +204,14 @@ Node* Parser::GetSignatureFunc()
 	if (_tokens->GetCurrentToken()->GetType() != TokenType::LPAR)
 		ErrorParser(2);
 
+	Node* node = new Node(NodeType::SIGNATURE);
+	
 	_tokens->UseNextToken();
-	Node* node = GetListParameters();
+	if (_tokens->GetCurrentToken()->GetType() != TokenType::RPAR)
+	{
+		node->Operand1 = GetListParameters();
+	}
+	
 	_tokens->UseNextToken();
 
 	if (_tokens->GetCurrentToken()->GetType() == TokenType::LBRA)
@@ -205,7 +219,7 @@ Node* Parser::GetSignatureFunc()
 		return node;
 	}
 
-	node->Operand4 = GetResultFunc();
+	node->Operand2 = GetResultFunc();
 
 	return node;
 }
@@ -249,22 +263,24 @@ Node* Parser::GetListParameters()
 	Node* headListOtherTypesParams = ApplyTypeParameters();
 	Node* temp = headListOtherTypesParams;
 
-	_tokens->UseNextToken();
-
-	while (true)
+	if (_tokens->GetCurrentToken()->GetType() != TokenType::RPAR)
 	{
-		temp->Operand3 = ApplyTypeParameters();
-		temp = temp->Operand3;
-
-		if (_tokens->GetCurrentToken()->GetType() == TokenType::RPAR)
-		{
-			break;
-		}
-
-		if (_tokens->GetCurrentToken()->GetType() != TokenType::COMMA)
-			ErrorParser(6);
-
 		_tokens->UseNextToken();
+		while (true)
+		{
+			temp->Operand3 = ApplyTypeParameters();
+			temp = temp->Operand3;
+
+			if (_tokens->GetCurrentToken()->GetType() == TokenType::RPAR)
+			{
+				break;
+			}
+
+			if (_tokens->GetCurrentToken()->GetType() != TokenType::COMMA)
+				ErrorParser(6);
+
+			_tokens->UseNextToken();
+		}
 	}
 	
 	return headListOtherTypesParams;
@@ -284,7 +300,6 @@ Node* Parser::ApplyTypeParameters()
 	}
 
 	_tokens->UseNextToken();
-
 	return headListParams;
 }
 
@@ -295,26 +310,28 @@ Node* Parser::RezultParameters()
 	Node* begin = temp;
 	Node* pastTemp = temp;
 
-	_tokens->UseNextToken();
-
-	while (true)
+	if (_tokens->GetCurrentToken()->GetType() == TokenType::COMMA)
 	{
-		temp = Parameters();
-
-		// Create List.
-		pastTemp->Operand2 = temp;
-		pastTemp = temp;
-
-		if (_tokens->GetCurrentToken()->GetType() == TokenType::L_SBRA || BaseTokenTypes::IsTypeVar(_tokens->GetCurrentToken()->GetType()) == true)
-		{
-			break;
-		}
-
-		if (_tokens->GetCurrentToken()->GetType() != TokenType::COMMA)
-			ErrorParser(4);
-
 		_tokens->UseNextToken();
+		while (true)
+		{
+			temp = Parameters();
 
+			// Create List.
+			pastTemp->Operand2 = temp;
+			pastTemp = temp;
+
+			if (_tokens->GetCurrentToken()->GetType() == TokenType::L_SBRA || BaseTokenTypes::IsTypeVar(_tokens->GetCurrentToken()->GetType()) == true)
+			{
+				break;
+			}
+
+			if (_tokens->GetCurrentToken()->GetType() != TokenType::COMMA)
+				ErrorParser(4);
+
+			_tokens->UseNextToken();
+
+		}
 	}
 
 	return begin;
@@ -322,8 +339,8 @@ Node* Parser::RezultParameters()
 
 
 Node* Parser::Parameters()
-{
-	if (_tokens->GetCurrentToken()->GetType() != TokenType::LITERAL)
+{	
+	if (_tokens->GetCurrentToken()->GetType() != TokenType::LITERAL && _tokens->GetCurrentToken()->GetType() != TokenType::NUMBER)
 		ErrorParser(3);
 
 	Node* node = new Node(NodeType::VAR, _tokens->GetCurrentToken()->GetValue());
@@ -502,6 +519,9 @@ Node* Parser::Expr()
 	 return node;
 }
 
+
+
+
 Node* Parser::LogOr()
 {
 	Node* node = LogAnd();
@@ -648,18 +668,18 @@ Node* Parser::Unar()
 	if (_tokens->GetCurrentToken()->GetType() == TokenType::INCREMENT)
 	{
 		_tokens->UseNextToken();
-		node = GetNodeValue();
+		node = Inversion();
 		node = new Node(NodeType::INCREMENT, "", node);
 	}
 	else if (_tokens->GetCurrentToken()->GetType() == TokenType::DECREMENT)
 	{
 		_tokens->UseNextToken();
-		node = GetNodeValue();
+		node = Inversion();
 		node = new Node(NodeType::DECREMENT, "", node);
 	}
 	else
 	{
-		node = GetNodeValue();
+		node = Inversion();
 		if (_tokens->GetCurrentToken()->GetType() == TokenType::INCREMENT || _tokens->GetCurrentToken()->GetType() == TokenType::DECREMENT)
 		{
 			if (_tokens->GetCurrentToken()->GetType() == TokenType::INCREMENT)
@@ -678,6 +698,23 @@ Node* Parser::Unar()
 	return node;
 }
 
+Node* Parser::Inversion()
+{
+	Node* node = nullptr;
+	if (_tokens->GetCurrentToken()->GetType() == TokenType::INVERSION)
+	{
+		_tokens->UseNextToken();
+		node = new Node(NodeType::INVERSION, "", node, GetNodeValue());
+	}
+	else
+	{
+		node = GetNodeValue();
+	}
+
+
+	return node;
+}
+
 Node* Parser::GetNodeValue()
 {
 	Node* node = nullptr;
@@ -685,12 +722,17 @@ Node* Parser::GetNodeValue()
 	{
 		string nameVar = _tokens->GetCurrentToken()->GetValue();
 		node = new Node(NodeType::VAR, _tokens->GetCurrentToken()->GetValue());
-		_tokens->UseNextToken();
 
+		_tokens->UseNextToken();
 
 		if (_tokens->GetCurrentToken()->GetType() == TokenType::L_SBRA)
 		{
 			node = new Node(NodeType::ARRAY_ACCESS, nameVar, ParentExpr());
+		}
+		if (_tokens->GetCurrentToken()->GetType() == TokenType::LPAR)
+		{
+			_tokens->UseNextToken();
+			node = new Node(NodeType::FUNC_ACCESS, nameVar, GetListParametersAccess());
 		}
 
 		return node;
@@ -701,9 +743,29 @@ Node* Parser::GetNodeValue()
 		_tokens->UseNextToken();
 		return node;
 	}
+	else if (_tokens->GetCurrentToken()->GetType() == TokenType::TRUE || _tokens->GetCurrentToken()->GetType() == TokenType::FALSE)
+	{
+		node = new Node(NodeType::BOOL, _tokens->GetCurrentToken()->GetValue());
+		_tokens->UseNextToken();
+		return node;
+	}
 	else
 	{
 		return ParentExprSBra();
 	}
 }
 
+Node* Parser::GetListParametersAccess()
+{
+	Node* headParam = ParentExprSBra();
+	Node* temp = headParam;
+	while (_tokens->GetCurrentToken()->GetType() == TokenType::COMMA)
+	{
+		_tokens->UseNextToken();
+		temp->Operand4 = ParentExprSBra();
+		temp = temp->Operand4;
+	}
+	
+	return headParam;
+	
+}
