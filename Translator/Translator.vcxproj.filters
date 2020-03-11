@@ -73,10 +73,16 @@
     <ClCompile Include="RecursiveTraversal.cpp">
       <Filter>AST</Filter>
     </ClCompile>
-    <ClCompile Include="Error.cpp">
+    <ClCompile Include="Errors\Error.cpp">
       <Filter>Errors</Filter>
     </ClCompile>
-    <ClCompile Include="ErrorParser.cpp">
+    <ClCompile Include="Errors\ErrorSettings.cpp">
+      <Filter>Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="Errors\LanguageSystem.cpp">
+      <Filter>Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="Errors\Table.cpp">
       <Filter>Errors</Filter>
     </ClCompile>
   </ItemGroup>
@@ -125,10 +131,19 @@
     <ClInclude Include="RecursiveTraversal.h">
       <Filter>AST</Filter>
     </ClInclude>
-    <ClInclude Include="Error.h">
+    <ClInclude Include="Errors\Error.h">
       <Filter>Errors</Filter>
     </ClInclude>
-    <ClInclude Include="ErrorParser.h">
+    <ClInclude Include="Errors\ErrorSettings.h">
+      <Filter>Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="Errors\Language.h">
+      <Filter>Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="Errors\LanguageSystem.h">
+      <Filter>Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="Errors\Table.h">
       <Filter>Errors</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,5 +1,5 @@
  
-func solveMinor3x3(matrix [3*3]float64, column int, row int) float64 {
+func solveMinor3x3 (matrix [3*3]float64, column int, row int) float64 {
 	if (column + row)%2 != 0{
 		temp = -1*temp
 	}

@@ -1,6 +1,6 @@
 #include "Parser.h"
 #include "BaseTokenTypes.h"
-#include "ErrorParser.h"
+#include "Errors/Error.h"
 #include <queue>
 
 using std::queue;
@@ -86,7 +86,7 @@ Node* Parser::Statement()
 		node->Operand1 = ParentExprSBra();
 		
 		if (_tokens->GetCurrentToken()->GetType() != TokenType::LBRA)
-			ErrorParser(8);
+			Error("P8");
 
 		node->Operand2 = Statement(); 
 	
@@ -155,7 +155,7 @@ Node* Parser::Statement()
 		_tokens->UseNextToken();
 
 		if (_tokens->GetCurrentToken()->GetType() != TokenType::LITERAL)
-			ErrorParser(1);
+			Error("P1");
 
 		node = new Node(NodeType::FUNC, _tokens->GetCurrentToken()->GetValue());
 		node->Operand1 = GetSignatureFunc();
@@ -202,7 +202,7 @@ Node* Parser::GetSignatureFunc()
 	_tokens->UseNextToken();
 
 	if (_tokens->GetCurrentToken()->GetType() != TokenType::LPAR)
-		ErrorParser(2);
+		Error("P2");
 
 	Node* node = new Node(NodeType::SIGNATURE);
 	
@@ -243,7 +243,7 @@ Node* Parser::GetResultFunc()
 		}
 		else
 		{
-			ErrorParser(7);
+			Error("P7");
 		}
 
 		tempRezult->Operand2 = GetTypeParams();
@@ -277,7 +277,7 @@ Node* Parser::GetListParameters()
 			}
 
 			if (_tokens->GetCurrentToken()->GetType() != TokenType::COMMA)
-				ErrorParser(6);
+				Error("P6");
 
 			_tokens->UseNextToken();
 		}
@@ -327,7 +327,7 @@ Node* Parser::RezultParameters()
 			}
 
 			if (_tokens->GetCurrentToken()->GetType() != TokenType::COMMA)
-				ErrorParser(4);
+				Error("P4");
 
 			_tokens->UseNextToken();
 
@@ -341,7 +341,7 @@ Node* Parser::RezultParameters()
 Node* Parser::Parameters()
 {	
 	if (_tokens->GetCurrentToken()->GetType() != TokenType::LITERAL && _tokens->GetCurrentToken()->GetType() != TokenType::NUMBER)
-		ErrorParser(3);
+		Error("P3");
 
 	Node* node = new Node(NodeType::VAR, _tokens->GetCurrentToken()->GetValue());
 	_tokens->UseNextToken();
@@ -363,7 +363,7 @@ Node* Parser::GetTypeParams()
 
 	if (_tokens->GetCurrentToken()->IsVar() == false)
 	{
-		ErrorParser(5);
+		Error("P4");
 	}
 	
 	type = new Node(NodeType::VAR_TYPE, _tokens->GetCurrentToken()->GetValue(), expr);
@@ -420,7 +420,7 @@ Node* Parser::ParentExprSBra()
 		_tokens->UseNextToken();
 	}
 
-	Node* node = ParentExpr();
+	Node* node = Expr();
 
 	if (_tokens->GetCurrentToken()->GetType() == TokenType::R_SBRA)
 	{
@@ -431,22 +431,6 @@ Node* Parser::ParentExprSBra()
 	return node;
 }
 
-Node* Parser::ParentExpr()
-{
-	if (_tokens->GetCurrentToken()->GetType() == TokenType::LPAR)
-	{
-		_tokens->UseNextToken();
-	}
-
-	Node* node = Expr();
-
-	if (_tokens->GetCurrentToken()->GetType() == TokenType::RPAR)
-	{
-		_tokens->UseNextToken();
-	}
-
-	return node;
-}
 
 
 
@@ -704,13 +688,31 @@ Node* Parser::Inversion()
 	if (_tokens->GetCurrentToken()->GetType() == TokenType::INVERSION)
 	{
 		_tokens->UseNextToken();
-		node = new Node(NodeType::INVERSION, "", node, GetNodeValue());
+		node = new Node(NodeType::INVERSION, "", node, ParentExpr());
 	}
 	else
 	{
-		node = GetNodeValue();
+		node = ParentExpr();
 	}
 
+
+	return node;
+}
+
+
+Node* Parser::ParentExpr()
+{
+	if (_tokens->GetCurrentToken()->GetType() == TokenType::LPAR)
+	{
+		_tokens->UseNextToken();
+	}
+
+	Node* node = GetNodeValue();
+
+	if (_tokens->GetCurrentToken()->GetType() == TokenType::RPAR)
+	{
+		_tokens->UseNextToken();
+	}
 
 	return node;
 }
@@ -727,7 +729,7 @@ Node* Parser::GetNodeValue()
 
 		if (_tokens->GetCurrentToken()->GetType() == TokenType::L_SBRA)
 		{
-			node = new Node(NodeType::ARRAY_ACCESS, nameVar, ParentExpr());
+			node = new Node(NodeType::ARRAY_ACCESS, nameVar, ParentExprSBra());
 		}
 		if (_tokens->GetCurrentToken()->GetType() == TokenType::LPAR)
 		{

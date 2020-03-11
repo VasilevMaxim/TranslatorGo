@@ -1,7 +1,7 @@
 #include "TokenBreaking.h"
 #include "TokenType.h"
 #include <string>
-#include "Error.h"
+#include "Errors/Error.h"
 
 Token* TokenBreaking::GetToken(string lexeme)
 {
@@ -15,7 +15,7 @@ Token* TokenBreaking::GetToken(string lexeme)
 		}
 		else
 		{
-			Error("WL002",true);
+			Error("L2");
 		}
 		_delayMinus = false;
 	}
@@ -87,7 +87,7 @@ void TokenBreaking::SplitIntoTokens()
 		{
 			if (IsSymLit(_text[index]) == true)
 			{
-				Error("WL001", true);
+				Error("L1");
 			}
 		}
 	}

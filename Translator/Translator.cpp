@@ -1,21 +1,29 @@
 ﻿#include <iostream>
 #include <fstream>
-
+#include <vector>
 #include "TokenBreaking.h"
 #include "Parser.h"
 #include "AbstractSyntaxTree.h"
 #include "Preprocessing.h"
 #include "RecursiveTraversal.h"
+#include "Errors/ErrorSettings.h"
+#include <Windows.h>
 
 using std::ifstream;
 using std::getline;
+using std::vector;
 
 void OnCompilation(string pathFile);
 string GetAllTextInFile(string pathFile);
 
 int main()
 {
-	setlocale(LC_ALL, "Rus");
+	SetConsoleOutputCP(CP_UTF8);
+
+	ErrorSettings::SetLanguage(Language::Russian);
+	vector<Table*> tables;
+	tables.push_back(new Table("ErrorsParser.csv"));
+	ErrorSettings::InitTables(tables);
 
 	OnCompilation("progGo.go");
 

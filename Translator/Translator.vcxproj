@@ -153,8 +153,10 @@
   <ItemGroup>
     <ClCompile Include="AbstractSyntaxTree.cpp" />
     <ClCompile Include="BaseTokenTypes.cpp" />
-    <ClCompile Include="Error.cpp" />
-    <ClCompile Include="ErrorParser.cpp" />
+    <ClCompile Include="Errors\Error.cpp" />
+    <ClCompile Include="Errors\ErrorSettings.cpp" />
+    <ClCompile Include="Errors\LanguageSystem.cpp" />
+    <ClCompile Include="Errors\Table.cpp" />
     <ClCompile Include="Expression.cpp" />
     <ClCompile Include="ListTokens.cpp" />
     <ClCompile Include="Node.cpp" />
@@ -172,8 +174,11 @@
   <ItemGroup>
     <ClInclude Include="AbstractSyntaxTree.h" />
     <ClInclude Include="BaseTokenTypes.h" />
-    <ClInclude Include="Error.h" />
-    <ClInclude Include="ErrorParser.h" />
+    <ClInclude Include="Errors\Error.h" />
+    <ClInclude Include="Errors\ErrorSettings.h" />
+    <ClInclude Include="Errors\Language.h" />
+    <ClInclude Include="Errors\LanguageSystem.h" />
+    <ClInclude Include="Errors\Table.h" />
     <ClInclude Include="Expression.h" />
     <ClInclude Include="IControl.h" />
     <ClInclude Include="ListTokens.h" />

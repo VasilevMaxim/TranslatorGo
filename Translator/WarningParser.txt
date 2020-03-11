@@ -1,8 +1,0 @@
-You need to name the function correctly.
-No parentheses after the function name.
-You must specify the function arguments correctly.
-There is no comma after the token.
-Неправильно указан тип.
-Неверно указаны аргументы функции.
-Неверно указаны типы возвращаемых значений функции.
-Неверно задана конструкция if.
