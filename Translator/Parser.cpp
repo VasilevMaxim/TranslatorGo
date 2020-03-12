@@ -32,14 +32,16 @@ Node* Parser::Parse()
 
 Node* Parser::Statements()
 {
+	Node* head;
 	Node* temp  = new Node(NodeType::STMT, "", Statement());
+	head = temp;
 	while (_tokens->IsBackTokens() == false)
 	{
 		_tokens->UseNextToken();
-		temp = temp->Operand1;
-		temp = new Node(NodeType::STMT, "", temp, Statement());
+		temp->Operand2 = new Node(NodeType::STMT, "", Statement());
+		temp = temp->Operand2;
 	}
-	return temp;
+	return head;
 }
 
 Node* Parser::Statement()
