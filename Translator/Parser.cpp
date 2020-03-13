@@ -80,6 +80,10 @@ Node* Parser::Statement()
 		_variableNodes->PlacedUnderControl(this, true);
 
 	}
+	else if (_tokens->GetCurrentToken()->GetType() == TokenType::RBRA)
+	{
+		return node;
+	}
 	else if (_tokens->GetCurrentToken()->GetType() == TokenType::IF)
 	{
 		node = new Node(NodeType::IF); 
@@ -113,7 +117,7 @@ Node* Parser::Statement()
 					Node* newNodeElse = new Node(NodeType::IF_ELSE);
 
 					newNodeElse->Operand1 = Statement();
-					_tokens->UseNextToken();
+					// _tokens->UseNextToken();
 					nodeActiveIfElse->Operand3 = newNodeElse;
 					break;
 				}
@@ -121,7 +125,7 @@ Node* Parser::Statement()
 		}
 		else
 		{
-			_tokens->UseNextToken();
+			//_tokens->UseNextToken();
 		}
  	}
 	else if (_tokens->GetCurrentToken()->GetType() == TokenType::FOR)
@@ -193,7 +197,11 @@ Node* Parser::Statement()
 			// error
 		}
 
-		_tokens->UseNextToken();
+		if (_tokens->GetCurrentToken()->GetType() != TokenType::RBRA)
+		{
+			_tokens->UseNextToken();
+		}
+		
 	}
 	
 	return node;
