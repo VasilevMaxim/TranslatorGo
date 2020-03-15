@@ -6,6 +6,7 @@
 #include "AbstractSyntaxTree.h"
 #include "Preprocessing.h"
 #include "RecursiveTraversal.h"
+#include "Errors/LocalizationSettings.h"
 #include "Errors/ErrorSettings.h"
 #include <Windows.h>
 
@@ -20,10 +21,9 @@ int main()
 {
 	SetConsoleOutputCP(CP_UTF8);
 
-	ErrorSettings::SetLanguage(Language::Russian);
-	vector<Table*> tables;
-	tables.push_back(new Table("ErrorsParser.csv"));
-	ErrorSettings::InitTables(tables);
+	LocalizationSettings::SetLanguage(Language::Russian);
+	ErrorSettings::AddTableLocalization("L", new TableLocalization("ErrorsLexer.csv"));
+	ErrorSettings::AddTableLocalization("P", new TableLocalization("ErrorsParser.csv"));
 
 	OnCompilation("progGo.go");
 

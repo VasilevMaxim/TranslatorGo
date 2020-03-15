@@ -1,0 +1,9 @@
+Key,Russian,English,German,French,Portuguese,Spanish,Italian,Romanian,Turkish,Polish,Czech,Korean,Chinese
+L1,Вам нужно правильно назвать функцию.,You need to name the function correctly.,Sie müssen die Funktion richtig benennen.,,,,,,,,,,
+L2,Нет скобок после имени функции.,No parentheses after the function name.,Es gibt keine Klammern nach dem Funktionsnamen.,,,,,,,,,,
+L3,Необходимо правильно указать аргументы функции.,You must specify the function arguments correctly.,Sie müssen die Argumente der Funktion korrekt angeben.,,,,,,,,,,
+L4,После токена нет запятой.,There is no comma after the token.,Nach dem Token gibt es kein Komma.,,,,,,,,,,
+L5,Неправильно указан тип.,The type is incorrect.,Der Typ ist falsch angegeben.,,,,,,,,,,
+L6,Неверно указаны аргументы функции.,Incorrect function arguments are specified.,Die Funktionsargumente sind falsch angegeben.,,,,,,,,,,
+L7,Неверно указаны типы возвращаемых значений функции.,The return value types of the function are not specified correctly.,Die Rückgabetypen der Funktion sind falsch angegeben.,,,,,,,,,,
+L8,Неверно задана конструкция if.,The if construction is set incorrectly.,Das if-Konstrukt ist falsch.,,,,,,,,,,

@@ -28,7 +28,7 @@ func main() {
 //	fmt.Println(answerMatrix)
 }
 
-func solveMinor3x3(matrix [3*3]float64, column int, row int) float64 {
+func (matrix [3*3]float64, column int, row int) float64 {
 	var (
 		temp float64 = 0
 		tempMatrix [2*2]float64

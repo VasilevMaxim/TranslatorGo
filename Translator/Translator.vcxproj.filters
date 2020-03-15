@@ -24,13 +24,10 @@
       <UniqueIdentifier>{0f294958-f98a-4f66-aa21-752d26ed12bc}</UniqueIdentifier>
     </Filter>
     <Filter Include="Errors">
-      <UniqueIdentifier>{52c4a639-96d4-4f43-a0a4-34c5e3eadd7c}</UniqueIdentifier>
+      <UniqueIdentifier>{96604d36-498a-4207-82fd-631257c9c20d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Translator.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
     <ClCompile Include="BaseTokenTypes.cpp">
       <Filter>Tokens</Filter>
     </ClCompile>
@@ -49,15 +46,6 @@
     <ClCompile Include="AbstractSyntaxTree.cpp">
       <Filter>AST</Filter>
     </ClCompile>
-    <ClCompile Include="Preprocessing.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="ListTokens.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="Singleton.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
     <ClCompile Include="Expression.cpp">
       <Filter>Parser\NodeFilter</Filter>
     </ClCompile>
@@ -73,16 +61,31 @@
     <ClCompile Include="RecursiveTraversal.cpp">
       <Filter>AST</Filter>
     </ClCompile>
+    <ClCompile Include="ListTokens.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Preprocessing.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Singleton.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Translator.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
     <ClCompile Include="Errors\Error.cpp">
       <Filter>Errors</Filter>
     </ClCompile>
     <ClCompile Include="Errors\ErrorSettings.cpp">
       <Filter>Errors</Filter>
     </ClCompile>
-    <ClCompile Include="Errors\LanguageSystem.cpp">
+    <ClCompile Include="Errors\LocalizationSettings.cpp">
       <Filter>Errors</Filter>
     </ClCompile>
-    <ClCompile Include="Errors\Table.cpp">
+    <ClCompile Include="Errors\Table\Table.cpp">
+      <Filter>Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="Errors\TableLocalization.cpp">
       <Filter>Errors</Filter>
     </ClCompile>
   </ItemGroup>
@@ -140,10 +143,13 @@
     <ClInclude Include="Errors\Language.h">
       <Filter>Errors</Filter>
     </ClInclude>
-    <ClInclude Include="Errors\LanguageSystem.h">
+    <ClInclude Include="Errors\LocalizationSettings.h">
       <Filter>Errors</Filter>
     </ClInclude>
-    <ClInclude Include="Errors\Table.h">
+    <ClInclude Include="Errors\TableLocalization.h">
+      <Filter>Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="Errors\Table\Table.h">
       <Filter>Errors</Filter>
     </ClInclude>
   </ItemGroup>

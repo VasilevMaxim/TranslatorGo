@@ -155,8 +155,9 @@
     <ClCompile Include="BaseTokenTypes.cpp" />
     <ClCompile Include="Errors\Error.cpp" />
     <ClCompile Include="Errors\ErrorSettings.cpp" />
-    <ClCompile Include="Errors\LanguageSystem.cpp" />
-    <ClCompile Include="Errors\Table.cpp" />
+    <ClCompile Include="Errors\LocalizationSettings.cpp" />
+    <ClCompile Include="Errors\TableLocalization.cpp" />
+    <ClCompile Include="Errors\Table\Table.cpp" />
     <ClCompile Include="Expression.cpp" />
     <ClCompile Include="ListTokens.cpp" />
     <ClCompile Include="Node.cpp" />
@@ -177,8 +178,9 @@
     <ClInclude Include="Errors\Error.h" />
     <ClInclude Include="Errors\ErrorSettings.h" />
     <ClInclude Include="Errors\Language.h" />
-    <ClInclude Include="Errors\LanguageSystem.h" />
-    <ClInclude Include="Errors\Table.h" />
+    <ClInclude Include="Errors\LocalizationSettings.h" />
+    <ClInclude Include="Errors\TableLocalization.h" />
+    <ClInclude Include="Errors\Table\Table.h" />
     <ClInclude Include="Expression.h" />
     <ClInclude Include="IControl.h" />
     <ClInclude Include="ListTokens.h" />
