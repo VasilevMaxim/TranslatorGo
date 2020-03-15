@@ -8,9 +8,11 @@ class RecursiveTraversal
 private:
     TableVariable _allVariable;
 	TableFunction _allFunction;
+
 public:
 	RecursiveTraversal(Node* currentNode);
     void Traversal(Node* currentNode);
+	bool IsTraversalExprDouble(Node* currentNode);
     VariableType GetTypeVariable(string type);
 	void Show();
 };

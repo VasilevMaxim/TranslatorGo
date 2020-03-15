@@ -37,7 +37,11 @@ Node* Parser::Statements()
 	head = temp;
 	while (_tokens->IsBackTokens() == false)
 	{
-		_tokens->UseNextToken();
+		if (_tokens->GetCurrentToken()->GetType() != TokenType::FUNC)
+		{
+			_tokens->UseNextToken();
+		}
+		
 		temp->Operand2 = new Node(NodeType::STMT, "", Statement());
 		temp = temp->Operand2;
 	}
@@ -331,7 +335,7 @@ Node* Parser::RezultParameters()
 			pastTemp->Operand2 = temp;
 			pastTemp = temp;
 
-			if (_tokens->GetCurrentToken()->GetType() == TokenType::L_SBRA || BaseTokenTypes::IsTypeVar(_tokens->GetCurrentToken()->GetType()) == true)
+			if (_tokens->GetCurrentToken()->GetType() == TokenType::L_SBRA || _tokens->GetCurrentToken()->IsVar() == true)
 			{
 				break;
 			}
@@ -350,10 +354,10 @@ Node* Parser::RezultParameters()
 
 Node* Parser::Parameters()
 {	
-	if (_tokens->GetCurrentToken()->GetType() != TokenType::LITERAL && _tokens->GetCurrentToken()->GetType() != TokenType::NUMBER)
+	if (_tokens->GetCurrentToken()->GetType() != TokenType::LITERAL &&  _tokens->GetCurrentToken()->IsNumber() == false)
 		Error("P3");
 
-	Node* node = new Node(NodeType::VAR, _tokens->GetCurrentToken()->GetValue());
+	Node* node = new Node(NodeType::NEW_VAR, _tokens->GetCurrentToken()->GetValue());
 	_tokens->UseNextToken();
 
 	return node;
@@ -447,10 +451,10 @@ Node* Parser::ParentExprSBra()
 Node* Parser::Expr()
 {
 	 Node* node = nullptr;
-	 if (_tokens->GetCurrentToken()->GetType() == TokenType::NUMBER)
+	 if (_tokens->GetCurrentToken()->IsNumber() == true)
 		 return LogOr();
 
-	 if (BaseTokenTypes::IsTypeVar(_tokens->GetCurrentToken()->GetType()) == true)
+	 if (_tokens->GetCurrentToken()->IsVar() == true)
 	 {
 		 _tokens->UseNextToken();
 		 _tokens->UseNextToken();
@@ -749,9 +753,17 @@ Node* Parser::GetNodeValue()
 
 		return node;
 	}
-	else if (_tokens->GetCurrentToken()->GetType() == TokenType::NUMBER)
+	else if (_tokens->GetCurrentToken()->IsNumber() == true)
 	{
-		node = new Node(NodeType::CONST, _tokens->GetCurrentToken()->GetValue());
+		if (_tokens->GetCurrentToken()->GetType() == TokenType::NUMBER)
+		{
+			node = new Node(NodeType::CONST, _tokens->GetCurrentToken()->GetValue());
+		}
+		if (_tokens->GetCurrentToken()->GetType() == TokenType::NUMBER_DOUBLE)
+		{
+			node = new Node(NodeType::CONST_DOUBLE, _tokens->GetCurrentToken()->GetValue());
+		}
+	
 		_tokens->UseNextToken();
 		return node;
 	}

@@ -10,11 +10,9 @@ class BaseTokenTypes
 {
 private:
 	static map<string, TokenType> _baseTokenTypes;
-	static bool IsNumberToken(string token);
+	static TokenType GetNumberToken(string token);
 	
 public:
-	static bool IsTokenSeparator(TokenType token);
-	static bool IsTypeVar(TokenType type);
 	static TokenType GetTypeToken(string token);
 };
 

@@ -11,6 +11,7 @@ enum class NodeType
 
 	NEW_CONST,
 	CONST,
+	CONST_DOUBLE,
 
 	ARRAY,
 	ARRAY_ACCESS,

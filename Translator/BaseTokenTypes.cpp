@@ -69,29 +69,10 @@ map<string, TokenType> BaseTokenTypes::_baseTokenTypes =
 
 };
 
-bool BaseTokenTypes::IsTypeVar(TokenType type)
-{
-	switch (type)
-	{
-	case TokenType::INT:
-		return true;
-		break;
-	case TokenType::FLOAT64:
-		return true;
-		break;
-	case TokenType::FLOAT32:
-		return true;
-		break;
-	case TokenType::BOOL:
-		return true;
-		break;
-	}
 
-	return false;
-}
-
-bool BaseTokenTypes::IsNumberToken(string token)
+TokenType BaseTokenTypes::GetNumberToken(string token)
 {
+	TokenType type = TokenType::NON;
 	bool isPoint = false;
 	if (token[0] == '-')
 	{
@@ -99,30 +80,33 @@ bool BaseTokenTypes::IsNumberToken(string token)
 	}
 	for (const char& sym : token)
 	{
-		if (sym == '.' && !isPoint)
+		if (sym == '.' && isPoint == false)
 		{
+			type = TokenType::NUMBER_DOUBLE;
 			isPoint = true;
 			continue;
 		}
 
 		if (sym == '.')
 		{
-			return false;
+			return TokenType::NON;
 		}
 
 		if ((sym < '0' || sym > '9'))
 		{
-			return false;
+			return TokenType::NON;
 		}
 	}
 
-	return true;
+
+	if (type == TokenType::NON)
+	{
+		type = TokenType::NUMBER;
+	}
+	
+	return type;
 }
 
-bool BaseTokenTypes::IsTokenSeparator(TokenType token)
-{
-	return token == TokenType::SEMICOLON || token == TokenType::NEW_LINE;
-}
 
 TokenType BaseTokenTypes::GetTypeToken(string token)
 {
@@ -132,9 +116,10 @@ TokenType BaseTokenTypes::GetTypeToken(string token)
 	}
 	catch (std::out_of_range e)
 	{
-		if (IsNumberToken(token))
+		TokenType type = GetNumberToken(token);
+		if (type != TokenType::NON)
 		{
-			return TokenType::NUMBER;
+			return type;
 		}
 
 		return TokenType::LITERAL;

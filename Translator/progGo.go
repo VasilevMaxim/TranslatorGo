@@ -1,7 +1,10 @@
 
+const size int = 3
 
 func main(matrix [3*3]float64, column int, row int) float64 {
 
+	
+	var kkk float64 = 90.3
 	var(
 		baseMinor float64
 		answerMatrix [size]float64

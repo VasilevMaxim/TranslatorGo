@@ -60,6 +60,7 @@ enum class TokenType
 	COLON,
 	COMMA,
 	NUMBER,
+	NUMBER_DOUBLE,
 	RETURN,
 	LITERAL,
 	

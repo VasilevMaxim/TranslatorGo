@@ -28,6 +28,21 @@ bool Token::IsVar()
 	return _type == TokenType::INT || _type == TokenType::FLOAT64 || _type == TokenType::FLOAT32 || _type == TokenType::BOOL;
 }
 
+bool Token::IsNumber()
+{
+	switch (_type)
+	{
+	case TokenType::NUMBER:
+		return true;
+		break;
+	case TokenType::NUMBER_DOUBLE:
+	return true;
+		break;
+	}
+
+	return false;
+}
+
 bool Token::IsWithAssing()
 {
 	switch (_type)

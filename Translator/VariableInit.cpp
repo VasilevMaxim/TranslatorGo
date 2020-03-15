@@ -65,7 +65,7 @@ void QueueVariableNode::PushingVariables()
 
 		if (_tokens->GetCurrentToken()->GetType() != TokenType::COMMA)
 		{
-			if (BaseTokenTypes::IsTypeVar(_tokens->GetCurrentToken()->GetType()) == true)
+			if (_tokens->GetCurrentToken()->IsVar() == true)
 			{
 				_type = GetType();
 				_tokens->UseNextToken();

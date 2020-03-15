@@ -19,6 +19,7 @@ public:
 
 	bool IsSeporator();
 	bool IsVar();
+	bool IsNumber();
 	bool IsWithAssing();
 
 	NodeType GetNeighborNodeType();
