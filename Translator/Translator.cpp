@@ -24,6 +24,7 @@ int main()
 	LocalizationSettings::SetLanguage(Language::Russian);
 	ErrorSettings::AddTableLocalization("L", new TableLocalization("ErrorsLexer.csv"));
 	ErrorSettings::AddTableLocalization("P", new TableLocalization("ErrorsParser.csv"));
+	ErrorSettings::AddTableLocalization("AST", new TableLocalization("ErrorsAST.csv"));
 
 	OnCompilation("progGo.go");
 
@@ -42,8 +43,8 @@ void OnCompilation(string pathFile)
 	AbstractSyntaxTree tree(parser.GetNodeHead());
 	tree.ShowTree();
 
-	// RecursiveTraversal recursiveTraversal;
-	// recursiveTraversal.Traversal(parser.GetNodeHead());
+	 RecursiveTraversal recursiveTraversal(parser.GetNodeHead());
+	 recursiveTraversal.Show();
 }
 
 string GetAllTextInFile(string pathFile)

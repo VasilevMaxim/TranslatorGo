@@ -1,6 +1,6 @@
 #include "Variable.h"
 
-Variable::Variable(const string name, VariableType type)
+Variable::Variable(const string& name, VariableType type)
 {
 	_name = name;
 	_type = type;

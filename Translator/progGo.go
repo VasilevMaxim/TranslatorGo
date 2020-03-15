@@ -1,10 +1,11 @@
 
 
-func main() {
+func main(matrix [3*3]float64, column int, row int) float64 {
 
 	var(
 		baseMinor float64
 		answerMatrix [size]float64
+		answer2Matrix [size]float64
 		matrix = [size*size]float64{
 			2,4,3,
 			5,6,2,
@@ -20,7 +21,7 @@ func main() {
 
 	// fmt.Println(matrix)
 	for i := 0; i < size; i++ {
-		baseMinor = baseMinor + solveMinor3x3(matrix, 0, i)
+		baseMinor = baseMinor + solveMinor2x2(matrix, 0, i)
 	}
 	for i := 0; i < size; i++ {
 		answerMatrix[i] = findDeterminant(matrix, helpMatrix, baseMinor,  i)
@@ -28,7 +29,7 @@ func main() {
 //	fmt.Println(answerMatrix)
 }
 
-func (matrix [3*3]float64, column int, row int) float64 {
+func main2(matrix [3*3]float64, column int, row int) float64 {
 	var (
 		temp float64 = 0
 		tempMatrix [2*2]float64
@@ -73,7 +74,7 @@ func findDeterminant(matrix [size*size]float64, helpMatrix [size]float64, baseMi
 		tempMatrix[i*size + column] = helpMatrix[i]
 	}
 	for i := 0; i < size; i++ {
-		helpMinor = helpMinor + solveMinor3x3(tempMatrix, 0, i)
+		helpMinor = helpMinor + solveMinor2x2(tempMatrix, 0, i)
 	}
 	return helpMinor/baseMinor
 }

@@ -10,7 +10,7 @@ private:
 	string _name;
 	VariableType _type;
 public:
-	Variable(const string name, VariableType type);
+	Variable(const string& name, VariableType type);
 	string GetName();
 	VariableType GetType();
 };

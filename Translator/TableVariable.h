@@ -15,5 +15,6 @@ public:
 	void Add(Variable* var);
 	Variable* GetNameVariable(const string name);
 	bool ContainsVariable(const string name);
+	bool IsVariable(const string& name);
 };
 

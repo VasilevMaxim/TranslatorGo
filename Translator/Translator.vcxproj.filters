@@ -64,12 +64,6 @@
     <ClCompile Include="ListTokens.cpp">
       <Filter>Main</Filter>
     </ClCompile>
-    <ClCompile Include="Preprocessing.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
-    <ClCompile Include="Singleton.cpp">
-      <Filter>Main</Filter>
-    </ClCompile>
     <ClCompile Include="Translator.cpp">
       <Filter>Main</Filter>
     </ClCompile>
@@ -87,6 +81,18 @@
     </ClCompile>
     <ClCompile Include="Errors\TableLocalization.cpp">
       <Filter>Errors</Filter>
+    </ClCompile>
+    <ClCompile Include="Preprocessing.cpp">
+      <Filter>Preprocessing</Filter>
+    </ClCompile>
+    <ClCompile Include="Singleton.cpp">
+      <Filter>Singleton</Filter>
+    </ClCompile>
+    <ClCompile Include="Function.cpp">
+      <Filter>AST</Filter>
+    </ClCompile>
+    <ClCompile Include="TableFunction.cpp">
+      <Filter>AST</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -114,10 +120,8 @@
     <ClInclude Include="AbstractSyntaxTree.h">
       <Filter>AST</Filter>
     </ClInclude>
-    <ClInclude Include="Preprocessing.h" />
     <ClInclude Include="VariableInit.h" />
     <ClInclude Include="ListTokens.h" />
-    <ClInclude Include="Singleton.h" />
     <ClInclude Include="Expression.h" />
     <ClInclude Include="IControl.h">
       <Filter>Parser\NodeFilter</Filter>
@@ -151,6 +155,18 @@
     </ClInclude>
     <ClInclude Include="Errors\Table\Table.h">
       <Filter>Errors</Filter>
+    </ClInclude>
+    <ClInclude Include="Preprocessing.h">
+      <Filter>Preprocessing</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.h">
+      <Filter>Singleton</Filter>
+    </ClInclude>
+    <ClInclude Include="TableFunction.h">
+      <Filter>AST</Filter>
+    </ClInclude>
+    <ClInclude Include="Function.h">
+      <Filter>AST</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

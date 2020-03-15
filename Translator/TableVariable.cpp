@@ -35,3 +35,14 @@ bool TableVariable::ContainsVariable(const string name)
 
     return false;
 }
+bool TableVariable::IsVariable(const string& name)
+{
+	for (int i = 0; i < _vars.size(); i++)
+	{
+		if (_vars[i]->GetName() == name)
+		{
+			return true;
+		}
+	}
+	return false;
+}
