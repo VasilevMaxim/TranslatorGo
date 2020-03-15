@@ -21,13 +21,5 @@ In order to translate the code, specify the path to the file in the main functio
 :white_check_mark: Lexer    
 :white_check_mark: Parser    
 
-## Not done.    
-### Parser.
-:black_square_button: function call     
-:black_square_button: const     
-:black_square_button: errors     
-### Ast.
-
-
 Based on an article from Habr: https://habr.com/en/post/133780/     
 Thanks so much for helping Peter, I582: https://github.com/i582
