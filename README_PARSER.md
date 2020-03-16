@@ -48,11 +48,11 @@
        
 :white_check_mark: editing code building tree 
 
+:white_check_mark: function call   
+
 ## Нужно сделать:
    
-:black_square_button: function call    
-:black_square_button: editing code in classes       
-:black_square_button: table of correspondence     
+:black_square_button: editing code in classes          
 
  
 ____
