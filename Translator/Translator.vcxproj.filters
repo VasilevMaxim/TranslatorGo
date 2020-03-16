@@ -94,6 +94,12 @@
     <ClCompile Include="TableFunction.cpp">
       <Filter>AST</Filter>
     </ClCompile>
+    <ClCompile Include="Sequence.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="ListSequence.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TokenType.h">
@@ -168,6 +174,8 @@
     <ClInclude Include="Function.h">
       <Filter>AST</Filter>
     </ClInclude>
+    <ClInclude Include="Sequence.h" />
+    <ClInclude Include="ListSequence.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="progGo.go" />

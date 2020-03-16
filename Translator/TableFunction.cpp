@@ -46,3 +46,8 @@ bool TableFunction::IsVariable(const string& name)
 	}
 	return false;
 }
+
+Function* TableFunction::GetFunction(int index)
+{
+	return _functions[index];
+}

@@ -16,6 +16,7 @@ class Parser
 private:
 
 	bool _isBlockVars;
+	bool _isStartFunc = false;
 	ListTokens* _tokens;
 	QueueVariableNode* _variableNodes;
 

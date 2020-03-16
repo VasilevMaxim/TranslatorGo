@@ -4,6 +4,7 @@
 
 RecursiveTraversal::RecursiveTraversal(Node* headNode)
 {
+	_listSequence.Add(new Sequence(0));
 	Node* tempNode = headNode->Operand1;
 	while (tempNode != nullptr)
 	{
@@ -28,6 +29,7 @@ RecursiveTraversal::RecursiveTraversal(Node* headNode)
 	Traversal(headNode);
 }
 
+
 void RecursiveTraversal::Traversal(Node* currentNode)
 {
     if (currentNode == nullptr)
@@ -35,14 +37,30 @@ void RecursiveTraversal::Traversal(Node* currentNode)
 
 	if (currentNode->GetType() == NodeType::VAR)
 	{
-		bool isArray = currentNode->Operand1 && currentNode->Operand1->Operand1 != nullptr;
 		string name = currentNode->GetValue();
-		if (isArray == false)
+
+		if (_listSequence.IsVariable(name) == false)
 		{
-			if (_allVariable.IsVariable(name) == false)
-			{
-				Error("AST1");
-			}
+			Error("AST1");
+		}
+	}
+	else if (currentNode->GetType() == NodeType::STATEMENT)
+	{
+		_levelCurrentSequence++;
+		_listSequence.Add(new Sequence(_levelCurrentSequence));
+	}
+	else if (currentNode->GetType() == NodeType::ARRAY_ACCESS)
+	{
+		string name = currentNode->GetValue();
+
+		if (_listSequence.IsVariable(name) == false)
+		{
+			Error("AST1");
+		}
+
+		if (IsTraversalExprDouble(currentNode->Operand1) == true)
+		{
+			Error("AST1");
 		}
 	}
 	else if (currentNode->GetType() == NodeType::FUNC_ACCESS)
@@ -53,38 +71,12 @@ void RecursiveTraversal::Traversal(Node* currentNode)
 			Error("AST2");
 		}
 	}
-    else if (currentNode->GetType() == NodeType::NEW_VAR)
-    {
-        string name = currentNode->GetValue();
-		VariableType type = VariableType::UNDEFINED;
-		if(currentNode->Operand1 != nullptr)
-		{
-			type = GetTypeVariable(currentNode->Operand1->GetValue());
-		}
-
-        Variable* newVar = new Variable(name, type);
-        _allVariable.Add(newVar);
-    }
-	else if (currentNode->GetType() == NodeType::NEW_CONST)
-	{
-		string name = currentNode->GetValue();
-		VariableType type = VariableType::UNDEFINED;
-		if (currentNode->Operand1 != nullptr)
-		{
-			type = GetTypeVariable(currentNode->Operand1->GetValue());
-		}
-
-
-		Variable* newVar = new Variable(name, type);
-		newVar->IsConst = true;
-		_allVariable.Add(newVar);
-	}
 	else if (currentNode->GetType() == NodeType::SET)
 	{
 		Node* varLeft = currentNode->Operand1;
-		VariableType typeVarLeft = _allVariable.GetNameVariable(varLeft->GetValue())->GetType();
+		VariableType typeVarLeft = _globalVariable.GetNameVariable(varLeft->GetValue())->GetType();
 
-		if (_allVariable.GetNameVariable(varLeft->GetValue())->IsConst == true)
+		if (_globalVariable.GetNameVariable(varLeft->GetValue())->IsConst == true)
 		{
 			Error("AST4");
 		}
@@ -93,13 +85,47 @@ void RecursiveTraversal::Traversal(Node* currentNode)
 		{
 			Error("AST3");
 		}
+
+		if (typeVarLeft == VariableType::UNDEFINED)
+		{
+			if (IsTraversalExprDouble(currentNode->Operand2) == true)
+			{
+				_globalVariable.GetNameVariable(varLeft->GetValue())->SetType(VariableType::FLOAT64);
+			}
+			else
+			{
+				_globalVariable.GetNameVariable(varLeft->GetValue())->SetType(VariableType::INTEGER);
+			}
+		}
 	}
+    else if (currentNode->GetType() == NodeType::NEW_VAR || currentNode->GetType() == NodeType::NEW_CONST)
+    {
+        string name = currentNode->GetValue();
+		VariableType type = GetTypeVariable(currentNode->Operand1->GetValue());
+
+        Variable* newVar = new Variable(name, type);
+
+		if (currentNode->GetType() == NodeType::NEW_CONST)
+		{
+			newVar->IsConst = true;
+		}
+
+		_listSequence.GetCurrentSequence()->LocalVariables.Add(newVar);
+    }
+	
 
 
     Traversal(currentNode->Operand1);
     Traversal(currentNode->Operand2);
     Traversal(currentNode->Operand3);
     Traversal(currentNode->Operand4);
+
+
+	if (currentNode->GetType() == NodeType::STATEMENT)
+	{
+		_levelCurrentSequence--;
+		_listSequence.RemoveBack();
+	}
 }
 
 bool RecursiveTraversal::IsTraversalExprDouble(Node* currentNode)
@@ -107,10 +133,7 @@ bool RecursiveTraversal::IsTraversalExprDouble(Node* currentNode)
 	if (currentNode == nullptr)
 		return false;
 
-	if (currentNode->GetType() == NodeType::DIV)
-	{
-		return true;
-	}
+
 	if (currentNode->GetType() == NodeType::CONST_DOUBLE)
 	{
 		return true;
@@ -118,7 +141,7 @@ bool RecursiveTraversal::IsTraversalExprDouble(Node* currentNode)
 
 	if (currentNode->GetType() == NodeType::VAR)
 	{
-		if (_allVariable.GetNameVariable(currentNode->GetValue())->GetType() != VariableType::INTEGER)
+		if (_globalVariable.GetNameVariable(currentNode->GetValue())->GetType() != VariableType::INTEGER)
 		{
 			return true;
 		}
@@ -148,7 +171,10 @@ VariableType RecursiveTraversal::GetTypeVariable(string type)
     {
         return VariableType::FLOAT;
     }
-
+	else  if (type == "null")
+	{
+		return VariableType::UNDEFINED;
+	}
     return VariableType::UNDEFINED;
 }
 
@@ -156,5 +182,5 @@ VariableType RecursiveTraversal::GetTypeVariable(string type)
 
 void RecursiveTraversal::Show()
 {
-	_allVariable;
+	_globalVariable;
 }

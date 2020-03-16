@@ -65,13 +65,16 @@ void QueueVariableNode::PushingVariables()
 
 		if (_tokens->GetCurrentToken()->GetType() != TokenType::COMMA)
 		{
+			_type = new Node(NodeType::VAR_TYPE, "null");
 			if (_tokens->GetCurrentToken()->IsVar() == true)
 			{
+				delete _type;
 				_type = GetType();
 				_tokens->UseNextToken();
 			}
 			else if (_tokens->GetCurrentToken()->GetType() == TokenType::L_SBRA)
 			{
+				delete _type;
 				_type = GetType();
 				_tokens->UseNextToken();
 			}
@@ -96,10 +99,11 @@ void QueueVariableNode::InitializationVariables()
 
 		frontVar->Operand1 = _type;
 		
-		Node* valueVar;
-		if (_tokens->GetCurrentToken()->GetType() == TokenType::L_SBRA)
-		{
+			Node* valueVar;
+			if (_tokens->GetCurrentToken()->GetType() == TokenType::L_SBRA)
+			{
 			valueVar = InitializationArray();
+			frontVar->Operand1 = valueVar->Operand2;
 		}
 		else
 		{
@@ -123,7 +127,7 @@ Node* QueueVariableNode::InitializationArray()
 {
 	Node* tempArray; 
 	Node* headArray;
-	GetType();
+	Node* typeArray = GetType();
 	_tokens->UseNextToken();
 	_tokens->UseNextToken();
 	if (_tokens->GetCurrentToken()->GetType() == TokenType::NEW_LINE)
@@ -132,6 +136,7 @@ Node* QueueVariableNode::InitializationArray()
 	}
 	tempArray = _parser->Expr();
 	headArray = tempArray;
+	headArray->Operand2 = typeArray;
 	while (_tokens->GetCurrentToken()->GetType() != TokenType::RBRA)
 	{
 		_tokens->UseNextToken();

@@ -15,3 +15,8 @@ VariableType Variable::GetType()
 {
 	return _type;
 }
+
+void Variable::SetType(VariableType type)
+{
+	_type = type;
+}

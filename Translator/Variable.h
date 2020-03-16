@@ -16,5 +16,6 @@ public:
 
 	string GetName();
 	VariableType GetType();
+	void SetType(VariableType type);
 };
 

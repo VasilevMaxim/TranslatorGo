@@ -33,16 +33,20 @@ Node* Parser::Parse()
 Node* Parser::Statements()
 {
 	Node* head;
-	Node* temp  = new Node(NodeType::STMT, "", Statement());
+	Node* temp  = new Node(NodeType::STATEMENT, "", Statement());
 	head = temp;
 	while (_tokens->IsBackTokens() == false)
 	{
 		if (_tokens->GetCurrentToken()->GetType() != TokenType::FUNC)
 		{
 			_tokens->UseNextToken();
+			temp->Operand2 = new Node(NodeType::STMT, "", Statement());
+		}
+		else
+		{
+			temp->Operand2 = new Node(NodeType::STMT, "", new Node(NodeType::STATEMENT, "", Statement()));
 		}
 		
-		temp->Operand2 = new Node(NodeType::STMT, "", Statement());
 		temp = temp->Operand2;
 	}
 	return head;
@@ -51,7 +55,6 @@ Node* Parser::Statements()
 Node* Parser::Statement()
 {
 	Node* node = nullptr;
-
 
 	if (_variableNodes->IsLPAR() == true)
 	{
@@ -82,7 +85,6 @@ Node* Parser::Statement()
 	{
 		_tokens->UseNextToken();
 		_variableNodes->PlacedUnderControl(this, true);
-
 	}
 	else if (_tokens->GetCurrentToken()->GetType() == TokenType::RBRA)
 	{
@@ -98,7 +100,7 @@ Node* Parser::Statement()
 		if (_tokens->GetCurrentToken()->GetType() != TokenType::LBRA)
 			Error("P8");
 
-		node->Operand2 = Statement(); 
+		node->Operand2 = new Node(NodeType::STATEMENT, "", Statement());
 	
 		if (_tokens->GetCurrentToken()->GetType() == TokenType::ELSE)
 		{
@@ -111,7 +113,7 @@ Node* Parser::Statement()
 					_tokens->UseNextToken();
 					Node* newNodeIfElse = new Node(NodeType::IF_ELSE);
 					newNodeIfElse->Operand1 = ParentExprSBra();
-					newNodeIfElse->Operand2 = Statement();
+					newNodeIfElse->Operand2 = new Node(NodeType::STATEMENT, "", Statement());
 
 					nodeActiveIfElse->Operand3 = newNodeIfElse;
 					nodeActiveIfElse = newNodeIfElse;
@@ -120,7 +122,7 @@ Node* Parser::Statement()
 				{
 					Node* newNodeElse = new Node(NodeType::IF_ELSE);
 
-					newNodeElse->Operand1 = Statement();
+					newNodeElse->Operand1 = new Node(NodeType::STATEMENT, "", Statement());
 					// _tokens->UseNextToken();
 					nodeActiveIfElse->Operand3 = newNodeElse;
 					break;
@@ -148,8 +150,9 @@ Node* Parser::Statement()
 			}
 		}
 
-		node->Operand4 = Statement();
+		node->Operand4 = new Node(NodeType::STATEMENT, "", Statement());
 		_tokens->UseNextToken();
+		node = new Node(NodeType::STATEMENT, "", node);
 	}
 	else if (_tokens->GetCurrentToken()->GetType() == TokenType::BREAK)
 	{
@@ -163,13 +166,13 @@ Node* Parser::Statement()
 	else if (_tokens->GetCurrentToken()->GetType() == TokenType::FUNC)
 	{
 		_tokens->UseNextToken();
-
+		_isStartFunc = true;
 		if (_tokens->GetCurrentToken()->GetType() != TokenType::LITERAL)
 			Error("P1");
 
 		node = new Node(NodeType::FUNC, _tokens->GetCurrentToken()->GetValue());
 		node->Operand1 = GetSignatureFunc();
-		node->Operand2 = Statement();
+		node->Operand2 = new Node(NodeType::STATEMENT, "", Statement());
 	}
 	else if (_tokens->GetCurrentToken()->GetType() == TokenType::RETURN)
 	{
@@ -186,7 +189,17 @@ Node* Parser::Statement()
 	else if (_tokens->GetCurrentToken()->GetType() == TokenType::LBRA)
 	{
 		_tokens->UseNextToken();
-		node = Statement();
+
+		if (_isStartFunc == true)
+		{
+			_isStartFunc = false;
+			node = Statement();
+		}
+		else
+		{
+			node = new Node(NodeType::STATEMENT, "", Statement());
+		}
+		
 		while (_tokens->GetCurrentToken()->GetType() != TokenType::RBRA)
 		{
 			node = new Node(NodeType::SEQ, "", node, Statement());
@@ -469,6 +482,7 @@ Node* Parser::Expr()
 		 if (_tokens->GetCurrentToken()->GetType() == TokenType::ASSIGN_DECLARATION)
 		 {
 			 node = new Node(NodeType::NEW_VAR, node->GetValue());
+			 node->Operand1 = new Node(NodeType::VAR_TYPE, "null");
 		 }
 
 		 switch (_tokens->GetCurrentToken()->GetType())

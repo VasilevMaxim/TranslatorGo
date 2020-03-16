@@ -59,6 +59,8 @@ enum class NodeType
 
 	STMT,
 
+	STATEMENT,
+
 	FUNC,
 	FUNC_ARGS,
 	FUNC_ARG,
