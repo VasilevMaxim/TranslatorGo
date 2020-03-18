@@ -148,6 +148,9 @@ void AbstractSyntaxTree::ShowPartTree(Node* sub, size_t level)
 		break;
 	case NodeType::FUNCTION_IMPL_TYPE:
 		break;
+	case NodeType::CAST:
+		cout << "Cast ";
+		break;
 	case NodeType::STATEMENT:
 		cout << "Statement ";
 		break;

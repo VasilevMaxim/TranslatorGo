@@ -39,7 +39,7 @@ void QueueVariableNode::PlacedUnderControl(Parser* parser, bool isConst)
 	}
 	PushingVariables();
 
-	if (_tokens->GetCurrentToken()->GetType() == TokenType::ASSIGN)
+	if (_tokens->GetCurrentToken()->GetType() == TokenType::ASSIGN || _tokens->GetCurrentToken()->GetType() == TokenType::ASSIGN_DECLARATION)
 	{
 		_tokens->UseNextToken();
 		InitializationVariables();
@@ -51,7 +51,11 @@ void QueueVariableNode::PlacedUnderControl(Parser* parser, bool isConst)
 		{
 			auto frontVar = _vars.front();
 			_vars.pop();
-			frontVar->Operand1 = _type;
+
+			if (frontVar->Operand1 == nullptr)
+			{
+				frontVar->Operand1 = _type;
+			}
 			_vars.push(frontVar);
 		}
 		//_tokens->UseNextToken();
@@ -61,15 +65,30 @@ void QueueVariableNode::PlacedUnderControl(Parser* parser, bool isConst)
 
 void QueueVariableNode::PushingVariables()
 {
+	string nameVar = _tokens->GetCurrentToken()->GetValue();
+	Node* node;
 	while (true)
 	{
-		
-		_vars.push(new Node(_typeNewVar, _tokens->GetCurrentToken()->GetValue()));
+		nameVar = _tokens->GetCurrentToken()->GetValue();
 		_tokens->UseNextToken();
 
-		if (_tokens->GetCurrentToken()->GetType() != TokenType::COMMA)
+		if (_tokens->GetCurrentToken()->GetType() == TokenType::L_SBRA)
 		{
-			_type = new Node(NodeType::VAR_TYPE, "null");
+			node = new Node(NodeType::ARRAY_ACCESS, nameVar, _parser->ParentExprSBra());
+		}
+		else
+		{
+			node = new Node(_typeNewVar, nameVar);
+		}
+		_vars.push(node);
+
+		if (_tokens->GetCurrentToken()->GetType() != TokenType::COMMA)
+		{	
+			if (node->GetType() != NodeType::ARRAY_ACCESS)
+			{
+				_type = new Node(NodeType::VAR_TYPE, "null"); 
+			}
+			
 			if (_tokens->GetCurrentToken()->IsVar() == true)
 			{
 				delete _type;
@@ -82,7 +101,11 @@ void QueueVariableNode::PushingVariables()
 				_type = GetType();
 				_tokens->UseNextToken();
 			}
-			else if (_tokens->GetCurrentToken()->GetType() != TokenType::ASSIGN)
+			else if ((_tokens->GetCurrentToken()->GetType() == TokenType::ASSIGN_DECLARATION) || (_tokens->GetCurrentToken()->GetType() == TokenType::ASSIGN && _isLPAR  == true))
+			{
+ 				node = new Node(NodeType::NEW_VAR, node->GetValue(), node->Operand1);
+			}
+			else if (_tokens->GetCurrentToken()->GetType() != TokenType::ASSIGN && _tokens->GetCurrentToken()->GetType() != TokenType::ASSIGN_DECLARATION && _tokens->GetCurrentToken()->GetType() != TokenType::LPAR)
 			{
 				Error("Not Assign");
 			}
@@ -101,7 +124,10 @@ void QueueVariableNode::InitializationVariables()
 		auto frontVar = _vars.front();
 		_vars.pop();
 
-		frontVar->Operand1 = _type;
+		if (frontVar->Operand1 == nullptr)
+		{
+			frontVar->Operand1 = _type;
+		}
 		
 		Node* valueVar;
 		if (_tokens->GetCurrentToken()->GetType() == TokenType::L_SBRA)

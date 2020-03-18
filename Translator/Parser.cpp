@@ -119,6 +119,11 @@ Node* Parser::Statement()
 	else if (_variableNodes->IsEmpty() == false)
 	{
 		node = _variableNodes->Pop();
+		if (_tokens->GetCurrentToken()->GetType() == TokenType::LPAR)
+		{
+			node = new Node(NodeType::FUNC_ACCESS, node->GetValue(), GetListParametersAccess());
+		}
+
 	}
 	else if (_tokens->GetCurrentToken()->GetType() == TokenType::VAR)
 	{
@@ -129,6 +134,14 @@ Node* Parser::Statement()
 	{
 		_tokens->UseNextToken();
 		_variableNodes->PlacedUnderControl(this, true);
+	}
+	else if (_tokens->GetCurrentToken()->GetType() == TokenType::LITERAL)
+	{
+		_variableNodes->PlacedUnderControl(this, _variableNodes->IsConst());
+		if (_tokens->GetCurrentToken()->IsSeporator() == true)
+		{
+			_tokens->UseNextToken();
+		}
 	}
 	else if (_tokens->GetCurrentToken()->GetType() == TokenType::RBRA)
 	{
@@ -545,6 +558,7 @@ Node* Parser::Expr()
 		 if (_tokens->GetCurrentToken()->GetType() == TokenType::ASSIGN_DECLARATION)
 		 {
 			 node = new Node(NodeType::NEW_VAR, node->GetValue());
+			 node = new Node(NodeType::NEW_VAR, node->GetValue());
 			 node->Operand1 = new Node(NodeType::VAR_TYPE, "null");
 		 }
 
@@ -773,6 +787,11 @@ Node* Parser::Unar()
 	return node;
 }
 
+Node* Parser::Cast()
+{
+	return nullptr;
+}
+
 Node* Parser::Inversion()
 {
 	Node* node = nullptr;
@@ -830,6 +849,15 @@ Node* Parser::GetNodeValue()
 	else if (_tokens->GetCurrentToken()->GetType() == TokenType::TRUE || _tokens->GetCurrentToken()->GetType() == TokenType::FALSE)
 	{
 		node = new Node(NodeType::BOOL, _tokens->GetCurrentToken()->GetValue());
+		_tokens->UseNextToken();
+		return node;
+	}
+	else if (_tokens->GetCurrentToken()->IsVar() == true)
+	{
+		string temp = _tokens->GetCurrentToken()->GetValue();
+		_tokens->UseNextToken();
+		_tokens->UseNextToken();
+		node = new Node(NodeType::CAST, temp, Expr());
 		_tokens->UseNextToken();
 		return node;
 	}

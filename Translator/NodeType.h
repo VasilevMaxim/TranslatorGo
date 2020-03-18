@@ -28,6 +28,8 @@ enum class NodeType
 	IF,
 	IF_ELSE,
 
+	CAST,
+
 	LESS, // <
 	MORE, // >
 	EQUAL, // ==

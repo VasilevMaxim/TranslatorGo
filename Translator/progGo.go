@@ -1,79 +1,53 @@
-const size int = 3
+
 
 func main() {
 
-	var(
-		baseMinor float64
-		answerMatrix [size]float64
-		matrix = [size*size]float64{
-			2,4,3,
-			5,6,2,
-			3,12,24,
-		}
-		helpMatrix = [size]float64{
-			1,
-			4,
-			7,
-		}
-
+	var (
+		array [size]int = [size]int{4,1,2,6,0,123,4,23,1,0}
 	)
 
-	// fmt.Println(matrix)
-	for i := 0; i < size; i++ {
-		baseMinor = baseMinor + solveMinor3x3(matrix, 0, i)
-	}
-	for i := 0; i < size; i++ {
-		answerMatrix[i] = findDeterminant(matrix, helpMatrix, baseMinor,  i)
-	}
-	// fmt.Println(answerMatrix)
+	sortGrowth(array)
+	//fmt.Println(sortGrowth(array))
+	//fmt.Println(sortDecrease(array))
 }
 
-func solveMinor3x3(matrix [3*3]float64, column int, row int) float64 {
-	var (
-		temp float64 = 0
-		tempMatrix [2*2]float64
-	)
-	var itemp, jtemp int = 0, 0
+
+func sortGrowth(array [size]int) [size]int{
 	for i := 0; i < size; i++{
-		if i != column{
-			for j := 0; j < size; j++{
-					if j != row{
-						tempMatrix[itemp*(2)+jtemp] = matrix[i*(3)+j]
-						jtemp++
-				}
+		key := array[i]
+		lo, hi := 0, i
+		for lo < hi{
+			mid := (hi + lo)/2
+			if key < array[mid]{
+				hi = mid
+			} else {
+				lo = mid + 1
 			}
-			jtemp = 0
-			itemp++
 		}
+		for j := i; j > lo; j--{
+			array[j] = array[j-1]
+		}
+		array[lo] = key
 	}
-	for i := 0; i < size - 1; i++{
-			temp = temp + solveMinor2x2(tempMatrix)
-	}
-	if (column + row)%2 != 0{
-		temp = -1*temp
-	}
-	return temp*matrix[column*(size) + row]
+	return array
 }
-func solveMinor2x2(matrix [2*2]float64) float64{
-	return matrix[0]*matrix[3] - matrix[1]*matrix[2]
-}
-func findDeterminant(matrix [size*size]float64, helpMatrix [size]float64, baseMinor float64, column int) float64{
-	var (
-		helpMinor float64
-		tempMatrix [size*size]float64
-	)
 
-	//Я комментарий я тут нахожусь
+func sortDecrease(array [size]int) [size]int{
 	for i := 0; i < size; i++{
-		for j := 0; j < size; j++{
-			tempMatrix[i*size + j] = matrix[i*size + j]
+		key := array[i]
+		lo, hi := 0, i
+		for lo < hi{
+			mid := (hi + lo)/2
+			if key > array[mid]{
+				hi = mid
+			} else {
+				lo = mid + 1
+			}
 		}
+		for j := i; j > lo; j--{
+			array[j] = array[j-1]
+		}
+		array[lo] = key
 	}
-	for i := 0; i < size; i++ {
-		tempMatrix[i*size + column] = helpMatrix[i]
-	}
-	for i := 0; i < size; i++ {
-		helpMinor = helpMinor + solveMinor3x3(tempMatrix, 0, i)
-	}
-	return helpMinor/baseMinor
+	return array
 }

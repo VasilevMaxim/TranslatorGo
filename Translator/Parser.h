@@ -20,7 +20,7 @@ private:
 	ListTokens* _tokens;
 	QueueVariableNode* _variableNodes;
 
-	Node* ParentExprR();
+	Node* Cast();
 	Node* Inversion();
 	Node* GetListParametersAccess();
 	Node* Statements();
@@ -36,7 +36,6 @@ private:
 
 	Node* Parse();
 	Node* Statement();
-	Node* ParentExprSBra();
 	Node* ParentExpr();
 
 	Node* Unar();
@@ -53,6 +52,8 @@ private:
 
 	void InitializationArray(Node* x, string type);
 public:
+
+	Node* ParentExprSBra();
 	Node* Expr();
 
 	Parser(vector<Token*>* allTokens);
