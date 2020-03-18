@@ -8,12 +8,13 @@ RecursiveTraversal::RecursiveTraversal(Node* headNode)
 	Node* tempNode = headNode->Operand1;
 	while (tempNode != nullptr)
 	{
-		if (tempNode->Operand1 != nullptr && tempNode->Operand1->GetType() == NodeType::FUNC)
+		if (tempNode->Operand1 != nullptr && tempNode->Operand1->GetType() == NodeType::STATEMENT)
 		{
-			string name = tempNode->Operand1->GetValue();
+			Node* func = tempNode->Operand1->Operand1;
+			string name = func->GetValue();
 			vector<VariableType>* types = new vector<VariableType>();
 
-			Node* tempTypes = tempNode->Operand1->Operand1->Operand2;
+			Node* tempTypes = func->Operand1->Operand2;
 			while (tempTypes != nullptr)
 			{
 				types->push_back(GetTypeVariable(tempTypes->GetValue()));
@@ -26,7 +27,7 @@ RecursiveTraversal::RecursiveTraversal(Node* headNode)
 		
 		tempNode = tempNode->Operand2;
 	}
-	Traversal(headNode);
+ 	Traversal(headNode);
 }
 
 
@@ -74,29 +75,37 @@ void RecursiveTraversal::Traversal(Node* currentNode)
 	else if (currentNode->GetType() == NodeType::SET)
 	{
 		Node* varLeft = currentNode->Operand1;
-		VariableType typeVarLeft = _globalVariable.GetNameVariable(varLeft->GetValue())->GetType();
-
-		if (_globalVariable.GetNameVariable(varLeft->GetValue())->IsConst == true)
+		VariableType typeVarLeft = VariableType::UNDEFINED;
+		Variable* var = _listSequence.GetVariable(varLeft->GetValue());
+		if (var != nullptr)
 		{
-			Error("AST4");
-		}
+			typeVarLeft = var->GetType();
 
-		if (typeVarLeft == VariableType::INTEGER && IsTraversalExprDouble(currentNode) == true)
-		{
-			Error("AST3");
-		}
-
-		if (typeVarLeft == VariableType::UNDEFINED)
-		{
-			if (IsTraversalExprDouble(currentNode->Operand2) == true)
+			if (_listSequence.GetVariable(varLeft->GetValue())->IsConst == true)
 			{
-				_globalVariable.GetNameVariable(varLeft->GetValue())->SetType(VariableType::FLOAT64);
+				Error("AST4");
 			}
-			else
+
+			if (typeVarLeft == VariableType::INTEGER && IsTraversalExprDouble(currentNode) == true)
 			{
-				_globalVariable.GetNameVariable(varLeft->GetValue())->SetType(VariableType::INTEGER);
+				Error("AST3");
 			}
 		}
+		else
+		{
+			if (varLeft->Operand1->GetValue() == "null")
+			{
+				if (IsTraversalExprDouble(currentNode->Operand2) == true)
+				{
+					varLeft->Operand1 = new Node(NodeType::VAR_TYPE, "float64");
+				}
+				else
+				{
+					varLeft->Operand1 = new Node(NodeType::VAR_TYPE, "int");
+				}
+			}
+		}
+
 	}
     else if (currentNode->GetType() == NodeType::NEW_VAR || currentNode->GetType() == NodeType::NEW_CONST)
     {
@@ -141,7 +150,7 @@ bool RecursiveTraversal::IsTraversalExprDouble(Node* currentNode)
 
 	if (currentNode->GetType() == NodeType::VAR)
 	{
-		if (_globalVariable.GetNameVariable(currentNode->GetValue())->GetType() != VariableType::INTEGER)
+		if (_listSequence.GetVariable(currentNode->GetValue())->GetType() != VariableType::INTEGER)
 		{
 			return true;
 		}
@@ -182,5 +191,5 @@ VariableType RecursiveTraversal::GetTypeVariable(string type)
 
 void RecursiveTraversal::Show()
 {
-	_globalVariable;
+	
 }

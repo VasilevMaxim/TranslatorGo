@@ -20,6 +20,7 @@ private:
 	ListTokens* _tokens;
 	QueueVariableNode* _variableNodes;
 
+	Node* ParentExprR();
 	Node* Inversion();
 	Node* GetListParametersAccess();
 	Node* Statements();

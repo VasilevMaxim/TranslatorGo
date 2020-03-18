@@ -27,3 +27,16 @@ bool ListSequence::IsVariable(const string& name)
 
 	return false;
 }
+
+Variable* ListSequence::GetVariable(const string& name)
+{
+	for (int i = _listSequence.size() - 1; i >= 0; i--)
+	{
+		if (_listSequence[i]->LocalVariables.IsVariable(name) == true)
+		{
+			return _listSequence[i]->LocalVariables.GetNameVariable(name);
+		}
+	}
+
+	return nullptr;
+}

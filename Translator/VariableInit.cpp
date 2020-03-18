@@ -25,7 +25,11 @@ void QueueVariableNode::PlacedUnderControl(Parser* parser, bool isConst)
 	{
 		_isLPAR = true;
 		_tokens->UseNextToken();
-		_tokens->UseNextToken();
+		if (_tokens->GetCurrentToken()->IsSeporator() == true)
+		{
+			_tokens->UseNextToken();
+		}
+		
 
 		return;
 	}
@@ -72,7 +76,7 @@ void QueueVariableNode::PushingVariables()
 				_type = GetType();
 				_tokens->UseNextToken();
 			}
-			else if (_tokens->GetCurrentToken()->GetType() == TokenType::L_SBRA)
+			else if (_tokens->GetCurrentToken()->GetType() == TokenType::L_SBRA) 
 			{
 				delete _type;
 				_type = GetType();
@@ -99,9 +103,9 @@ void QueueVariableNode::InitializationVariables()
 
 		frontVar->Operand1 = _type;
 		
-			Node* valueVar;
-			if (_tokens->GetCurrentToken()->GetType() == TokenType::L_SBRA)
-			{
+		Node* valueVar;
+		if (_tokens->GetCurrentToken()->GetType() == TokenType::L_SBRA)
+		{
 			valueVar = InitializationArray();
 			frontVar->Operand1 = valueVar->Operand2;
 		}
@@ -114,7 +118,7 @@ void QueueVariableNode::InitializationVariables()
 
 		_vars.push(frontVar);
 
-		if (_tokens->GetCurrentToken()->IsSeporator() == true)
+		if (_tokens->GetCurrentToken()->IsSeporator() == true || _tokens->GetCurrentToken()->GetType() == TokenType::RPAR)
 		{
 			break;
 		}

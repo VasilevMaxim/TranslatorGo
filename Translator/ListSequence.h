@@ -10,5 +10,6 @@ public:
 	void Add(Sequence* sequence);
 	void RemoveBack();
 	bool IsVariable(const string& name);
+	Variable* GetVariable(const string& name);
 };
 

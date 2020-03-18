@@ -1,14 +1,10 @@
-
 const size int = 3
 
-func main(matrix [3*3]float64, column int, row int) float64 {
+func main() {
 
-	
-	var kkk float64 = 90.3
 	var(
 		baseMinor float64
 		answerMatrix [size]float64
-		answer2Matrix [size]float64
 		matrix = [size*size]float64{
 			2,4,3,
 			5,6,2,
@@ -19,19 +15,20 @@ func main(matrix [3*3]float64, column int, row int) float64 {
 			4,
 			7,
 		}
+
 	)
 
 	// fmt.Println(matrix)
 	for i := 0; i < size; i++ {
-		baseMinor = baseMinor + solveMinor2x2(matrix, 0, i)
+		baseMinor = baseMinor + solveMinor3x3(matrix, 0, i)
 	}
-	for j := 0; j < size; j++ {
-		answerMatrix[j] = findDeterminant(matrix, helpMatrix, baseMinor,  i)
+	for i := 0; i < size; i++ {
+		answerMatrix[i] = findDeterminant(matrix, helpMatrix, baseMinor,  i)
 	}
-//	fmt.Println(answerMatrix)
+	// fmt.Println(answerMatrix)
 }
 
-func main2(_matrix [3*3]float64, column int, row int) float64 {
+func solveMinor3x3(matrix [3*3]float64, column int, row int) float64 {
 	var (
 		temp float64 = 0
 		tempMatrix [2*2]float64
@@ -41,7 +38,7 @@ func main2(_matrix [3*3]float64, column int, row int) float64 {
 		if i != column{
 			for j := 0; j < size; j++{
 					if j != row{
-						tempMatrix[itemp*(2)+jtemp] = _matrix[i*(3)+j]
+						tempMatrix[itemp*(2)+jtemp] = matrix[i*(3)+j]
 						jtemp++
 				}
 			}
@@ -55,12 +52,12 @@ func main2(_matrix [3*3]float64, column int, row int) float64 {
 	if (column + row)%2 != 0{
 		temp = -1*temp
 	}
-	return temp*_matrix[column*(size) + row]
+	return temp*matrix[column*(size) + row]
 }
-func solveMinor2x2(__matrix [2*2]float64) float64{
-	return __matrix[0]*__matrix[3] - __matrix[1]*__matrix[2]
+func solveMinor2x2(matrix [2*2]float64) float64{
+	return matrix[0]*matrix[3] - matrix[1]*matrix[2]
 }
-func findDeterminant(___matrix [size*size]float64, helpMatrix [size]float64, baseMinor float64, column int) float64{
+func findDeterminant(matrix [size*size]float64, helpMatrix [size]float64, baseMinor float64, column int) float64{
 	var (
 		helpMinor float64
 		tempMatrix [size*size]float64
@@ -69,14 +66,14 @@ func findDeterminant(___matrix [size*size]float64, helpMatrix [size]float64, bas
 	//Я комментарий я тут нахожусь
 	for i := 0; i < size; i++{
 		for j := 0; j < size; j++{
-			tempMatrix[i*size + j] = ___matrix[i*size + j]
+			tempMatrix[i*size + j] = matrix[i*size + j]
 		}
 	}
 	for i := 0; i < size; i++ {
 		tempMatrix[i*size + column] = helpMatrix[i]
 	}
 	for i := 0; i < size; i++ {
-		helpMinor = helpMinor + solveMinor2x2(tempMatrix, 0, i)
+		helpMinor = helpMinor + solveMinor3x3(tempMatrix, 0, i)
 	}
 	return helpMinor/baseMinor
 }

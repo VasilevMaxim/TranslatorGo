@@ -37,7 +37,7 @@ void OnCompilation(string pathFile)
 	Preprocessing preprocessing(&textInFile);
 
 	TokenBreaking tokenBreaking(preprocessing.GetText());
-	// tokenBreaking.ShowTokens();
+	 tokenBreaking.ShowTokens();
 
 	Parser parser(tokenBreaking.GetTokens());
 	AbstractSyntaxTree tree(parser.GetNodeHead());
@@ -57,6 +57,6 @@ string GetAllTextInFile(string pathFile)
 		textInFile += tempLineText + '\n';
 	}
 	in.close();
-
+	textInFile.erase(textInFile.end() - 1);
 	return textInFile;
 }

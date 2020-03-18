@@ -34,18 +34,59 @@ Node* Parser::Statements()
 {
 	Node* head;
 	Node* temp  = new Node(NodeType::STATEMENT, "", Statement());
+	if (temp->Operand1 == nullptr)
+	{
+		temp->Operand2 = new Node(NodeType::STMT, "", Statement());
+		temp = temp->Operand2;
+	}
 	head = temp;
+
+	if (_tokens->GetCurrentToken()->IsSeporator() == true)
+	{
+		_tokens->UseNextToken();
+	}
+	else
+	{
+		Error("P112");
+	}
+
 	while (_tokens->IsBackTokens() == false)
 	{
-		if (_tokens->GetCurrentToken()->GetType() != TokenType::FUNC)
+		if (_tokens->GetCurrentToken()->GetType() == TokenType::CONST || _tokens->GetCurrentToken()->GetType() == TokenType::VAR)
 		{
-			_tokens->UseNextToken();
 			temp->Operand2 = new Node(NodeType::STMT, "", Statement());
+
+			if (_tokens->GetCurrentToken()->IsSeporator() == true)
+			{
+				_tokens->UseNextToken();
+			}
+			else
+			{
+				Error("P112");
+			}
+		}
+		else if(_tokens->GetCurrentToken()->GetType() == TokenType::FUNC)
+		{
+			temp->Operand2 = new Node(NodeType::STMT, "", new Node(NodeType::STATEMENT, "", Statement()));
+
+			if (_tokens->GetCurrentToken()->IsSeporator() == true)
+			{
+ 				_tokens->UseNextToken();
+			}
+			else
+			{
+				if (_tokens->IsBackTokens() == false)
+				{
+					Error("P112");
+				}
+			}
 		}
 		else
 		{
-			temp->Operand2 = new Node(NodeType::STMT, "", new Node(NodeType::STATEMENT, "", Statement()));
+			Error("P1223");
 		}
+
+
 		
 		temp = temp->Operand2;
 	}
@@ -63,7 +104,10 @@ Node* Parser::Statement()
 			_variableNodes->PlacedUnderControl(this, _variableNodes->IsConst());
 		}
 		node = _variableNodes->Pop();
-		_tokens->UseNextToken();
+		if (_tokens->GetCurrentToken()->IsSeporator() == true)
+		{
+			_tokens->UseNextToken();
+		}
 
 		if (_tokens->GetCurrentToken()->GetType() == TokenType::RPAR)
 		{
@@ -95,7 +139,7 @@ Node* Parser::Statement()
 		node = new Node(NodeType::IF); 
 		_tokens->UseNextToken();
 
-		node->Operand1 = ParentExprSBra();
+		node->Operand1 = Expr();
 		
 		if (_tokens->GetCurrentToken()->GetType() != TokenType::LBRA)
 			Error("P8");
@@ -204,7 +248,11 @@ Node* Parser::Statement()
 		{
 			node = new Node(NodeType::SEQ, "", node, Statement());
 		}
-		_tokens->UseNextToken();
+
+		if (_tokens->IsBackTokens() == false)
+		{
+			_tokens->UseNextToken();
+		}
 	}
 	else
 	{
@@ -447,7 +495,7 @@ Node* Parser::ParentExprSBra()
 		_tokens->UseNextToken();
 	}
 
-	Node* node = Expr();
+	Node* node = ParentExpr();
 
 	if (_tokens->GetCurrentToken()->GetType() == TokenType::R_SBRA)
 	{
@@ -458,7 +506,22 @@ Node* Parser::ParentExprSBra()
 	return node;
 }
 
+Node* Parser::ParentExpr()
+{
+	if (_tokens->GetCurrentToken()->GetType() == TokenType::LPAR)
+	{
+		_tokens->UseNextToken();
+	}
 
+	Node* node = Expr();
+
+	if (_tokens->GetCurrentToken()->GetType() == TokenType::RPAR)
+	{
+		_tokens->UseNextToken();
+	}
+
+	return node;
+}
 
 
 Node* Parser::Expr()
@@ -716,34 +779,17 @@ Node* Parser::Inversion()
 	if (_tokens->GetCurrentToken()->GetType() == TokenType::INVERSION)
 	{
 		_tokens->UseNextToken();
-		node = new Node(NodeType::INVERSION, "", node, ParentExpr());
+		node = new Node(NodeType::INVERSION, "", node, GetNodeValue());
 	}
 	else
 	{
-		node = ParentExpr();
+		node = GetNodeValue();
 	}
 
 
 	return node;
 }
 
-
-Node* Parser::ParentExpr()
-{
-	if (_tokens->GetCurrentToken()->GetType() == TokenType::LPAR)
-	{
-		_tokens->UseNextToken();
-	}
-
-	Node* node = GetNodeValue();
-
-	if (_tokens->GetCurrentToken()->GetType() == TokenType::RPAR)
-	{
-		_tokens->UseNextToken();
-	}
-
-	return node;
-}
 
 Node* Parser::GetNodeValue()
 {
