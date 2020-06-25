@@ -37,7 +37,7 @@ void OnCompilation(string pathFile)
 	Preprocessing preprocessing(&textInFile);
 
 	TokenBreaking tokenBreaking(preprocessing.GetText());
-	 tokenBreaking.ShowTokens();
+	tokenBreaking.ShowTokens();
 
 	Parser parser(tokenBreaking.GetTokens());
 	AbstractSyntaxTree tree(parser.GetNodeHead());

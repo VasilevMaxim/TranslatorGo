@@ -74,7 +74,7 @@ void QueueVariableNode::PushingVariables()
 
 		if (_tokens->GetCurrentToken()->GetType() == TokenType::L_SBRA)
 		{
-			node = new Node(NodeType::ARRAY_ACCESS, nameVar, _parser->ParentExprSBra());
+			node = new Node(NodeType::ARRAY, nameVar, _parser->ParentExprSBra());
 		}
 		else
 		{

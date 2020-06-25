@@ -30,7 +30,6 @@ public:
 
 	vector<Token*>* GetTokens();
 	void ShowTokens();
-	string GetLineCurrentToken(int numCurrentLine);
 	bool IsSymNumber(char sym);
 	bool IsSymLit(char sym);
 };

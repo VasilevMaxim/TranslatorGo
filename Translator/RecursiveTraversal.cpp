@@ -5,7 +5,7 @@
 RecursiveTraversal::RecursiveTraversal(Node* headNode)
 {
 	_listSequence.Add(new Sequence(0));
-	Node* tempNode = headNode->Operand1;
+	Node* tempNode = headNode->Operand1->Operand1;
 	while (tempNode != nullptr)
 	{
 		if (tempNode->Operand1 != nullptr && tempNode->Operand1->GetType() == NodeType::STATEMENT)
@@ -24,6 +24,7 @@ RecursiveTraversal::RecursiveTraversal(Node* headNode)
 			Function* newfunc = new Function(name, types);
 			_allFunction.Add(newfunc);
 		}
+
 		
 		tempNode = tempNode->Operand2;
 	}
@@ -37,6 +38,15 @@ void RecursiveTraversal::Traversal(Node* currentNode)
         return;
 
 	if (currentNode->GetType() == NodeType::VAR)
+	{
+		string name = currentNode->GetValue();
+
+		if (_listSequence.IsVariable(name) == false)
+		{
+			Error("AST1");
+		}
+	}
+	else if(currentNode->GetType() == NodeType::ARRAY_ACCESS)
 	{
 		string name = currentNode->GetValue();
 
@@ -107,7 +117,7 @@ void RecursiveTraversal::Traversal(Node* currentNode)
 		}
 
 	}
-    else if (currentNode->GetType() == NodeType::NEW_VAR || currentNode->GetType() == NodeType::NEW_CONST)
+    else if (currentNode->GetType() == NodeType::NEW_VAR || currentNode->GetType() == NodeType::NEW_CONST || currentNode->GetType() == NodeType::ARRAY)
     {
         string name = currentNode->GetValue();
 		VariableType type = GetTypeVariable(currentNode->Operand1->GetValue());
@@ -117,6 +127,10 @@ void RecursiveTraversal::Traversal(Node* currentNode)
 		if (currentNode->GetType() == NodeType::NEW_CONST)
 		{
 			newVar->IsConst = true;
+		}
+		if (currentNode->GetType() == NodeType::ARRAY)
+		{
+			newVar->IsArray = true;
 		}
 
 		_listSequence.GetCurrentSequence()->LocalVariables.Add(newVar);

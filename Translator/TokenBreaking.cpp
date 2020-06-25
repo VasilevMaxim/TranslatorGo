@@ -48,11 +48,18 @@ void TokenBreaking::SplitIntoTokens()
 					continue;
 				}
 
-				if (_text[index] == '-' && (_tokens.back()->GetType() != TokenType::LITERAL && _tokens.back()->GetType() != TokenType::NUMBER))
+				if (_text[index] == '-' && (IsSymLit(_text[index - 1]) == false && IsSymNumber(_text[index - 1]) == false))
 				{
 					tempLexems += _text[index];
+					if (index > 0 && _text[index - 1] == '-')
+					{
+						_tokens.push_back(GetToken(tempLexems.substr(0, tempLexems.length() - 2)));
+						_tokens.push_back(GetToken(tempLexems.substr(tempLexems.length() - 2, 2)));
+						tempLexems.clear();
+					}
 					continue;
 				}
+
 
 				if (_tokens.size() > 0 && _text[index] == '\n' && _tokens.back()->GetType() == TokenType::LBRA)
 				{
@@ -221,19 +228,6 @@ void TokenBreaking::ShowTokens()
 	}
 }
 
-string TokenBreaking::GetLineCurrentToken(int numCurrentLine)
-{
-	int currentNewLine = 0;
-	int column = 0;
-	while (column != numCurrentLine)
-	{
-		currentNewLine = _text.find("\n", currentNewLine);
-		column++;
-	}
-
-	return "";
-}
-
 bool TokenBreaking::IsSymNumber(char sym)
 {
 	if (sym >= 48 && sym <= 57)
@@ -254,7 +248,7 @@ bool TokenBreaking::IsSymLit(char sym)
 		return true;
 	}
 
-	// Rus (a-ß)
+	// Rus (a-Ð¯)
 	if (sym >= 192 && sym <= 255)
 	{
 		return true;

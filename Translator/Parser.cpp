@@ -22,7 +22,7 @@ Node* Parser::GetNodeHead()
 
 Node* Parser::Parse()
 {
-	_head = new Node(NodeType::PROG, "", Statements());
+	_head = new Node(NodeType::PROG, "", new Node(NodeType::STATEMENT, "", Statements()));
 	if (_tokens->GetCurrentToken()->GetValue()[0] != EOF)
 	{
 		// error("Invalid statement syntax")

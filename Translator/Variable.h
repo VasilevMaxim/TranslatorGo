@@ -11,6 +11,7 @@ private:
 	VariableType _type;
 public:
 	bool IsConst = false;
+	bool IsArray = false;
 
 	Variable(const string& name, VariableType type);
 

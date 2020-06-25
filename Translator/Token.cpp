@@ -36,7 +36,7 @@ bool Token::IsNumber()
 		return true;
 		break;
 	case TokenType::NUMBER_DOUBLE:
-	return true;
+		return true;
 		break;
 	}
 
