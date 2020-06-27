@@ -127,6 +127,7 @@ void AbstractSyntaxTree::ShowPartTree(Node* sub, size_t level)
 		cout << "+-DecAfter ";
 		break;
 	case NodeType::STMT:
+		cout << "+-Stmt ";
 		break;
 	case NodeType::FUNC:
 		cout << "+-Func ";

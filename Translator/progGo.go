@@ -51,5 +51,5 @@ func sortDecrease(array3 [size]int) [size]int{
 		}
 		array3[lo] = key
 	}
-	return array
+	return array3 
 }

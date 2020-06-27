@@ -134,6 +134,13 @@ Node* Parser::Statement()
 	{
 		_tokens->UseNextToken();
 		_variableNodes->PlacedUnderControl(this, true);
+
+		node = _variableNodes->Pop();
+		if (_tokens->GetCurrentToken()->GetType() == TokenType::LPAR)
+		{
+			node = new Node(NodeType::FUNC_ACCESS, node->GetValue(), GetListParametersAccess());
+		}
+
 	}
 	else if (_tokens->GetCurrentToken()->GetType() == TokenType::LITERAL)
 	{
@@ -142,6 +149,13 @@ Node* Parser::Statement()
 		{
 			_tokens->UseNextToken();
 		}
+
+		node = _variableNodes->Pop();
+		if (_tokens->GetCurrentToken()->GetType() == TokenType::LPAR)
+		{
+			node = new Node(NodeType::FUNC_ACCESS, node->GetValue(), GetListParametersAccess());
+		}
+
 	}
 	else if (_tokens->GetCurrentToken()->GetType() == TokenType::RBRA)
 	{
@@ -254,7 +268,8 @@ Node* Parser::Statement()
 		}
 		else
 		{
-			node = new Node(NodeType::STATEMENT, "", Statement());
+			node = Statement();
+			//node = new Node(NodeType::STATEMENT, "", Statement());
 		}
 		
 		while (_tokens->GetCurrentToken()->GetType() != TokenType::RBRA)
