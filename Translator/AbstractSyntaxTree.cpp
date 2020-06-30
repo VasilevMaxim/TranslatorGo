@@ -23,37 +23,37 @@ void AbstractSyntaxTree::ShowPartTree(Node* sub, size_t level)
 		cout << "NewVar ";
 		break;
 	case NodeType::VAR:
-		cout << "+-Var ";
+		cout << "Var ";
 		break;
 	case NodeType::VAR_TYPE:
-		cout << "+-VarType ";
+		cout << "VarType ";
 		break;
 	case NodeType::NEW_CONST:
-		cout << "+-NewConst ";
+		cout << "NewConst ";
 		break;
 	case NodeType::ARRAY:
-		cout << "+-Array ";
+		cout << "Array ";
 		break;
 	case NodeType::ARRAY_ACCESS:
-		cout << "+-ArrayAccess ";
+		cout << "ArrayAccess ";
 		break;
 	case NodeType::CONST:
-		cout << "+-Const ";
+		cout << "Const ";
 		break;
 	case NodeType::ADD:
-		cout << "+-Add ";
+		cout << "Add ";
 		break;
 	case NodeType::SUB:
-		cout << "+-Sub ";
+		cout << "Sub ";
 		break;
 	case NodeType::MUL:
-		cout << "+-Mul ";
+		cout << "Mul ";
 		break;
 	case NodeType::DIV:
-		cout << "+-Div ";
+		cout << "Div ";
 		break;
 	case NodeType::REM_OF_DIV :
-		cout << "+-RemOfDiv ";
+		cout << "RemOfDiv ";
 		break;
 	case NodeType::FOR:
 		cout << "For ";
@@ -68,39 +68,39 @@ void AbstractSyntaxTree::ShowPartTree(Node* sub, size_t level)
 		cout << "IfElse ";
 		break;
 	case NodeType::LESS:
-		cout << "+-Less ";
+		cout << "Less ";
 		break;
 	case NodeType::MORE:
-		cout << "+-More ";
+		cout << "More ";
 		break;
 	case NodeType::MORE_EQUAL:
-		cout << "+-MoreEqual ";
+		cout << "MoreEqual ";
 		break;
 	case NodeType::LESS_EQUAL:
-		cout << "+-LessEqual ";
+		cout << "LessEqual ";
 		break;
 	case NodeType::EQUAL:
-		cout << "+-Equal ";
+		cout << "Equal ";
 		break;
 	case NodeType::NOT_EQUAL:
-		cout << "+-NotEqual ";
+		cout << "NotEqual ";
 		break;
 	case NodeType::AND:
-		cout << "+-And ";
+		cout << "And ";
 		break;
 	case NodeType::OR:
-		cout << "+-Or ";
+		cout << "Or ";
 		break;
 	case NodeType::AND_ONE:
-		cout << "+-AndOne ";
+		cout << "AndOne ";
 		break;
 	case NodeType::OR_ONE:
-		cout << "+-OrOne ";
+		cout << "OrOne ";
 		break;
 	case NodeType::LT:
 		break;
 	case NodeType::SET:
-		cout << "+-Set ";
+		cout << "Set ";
 		break;
 	case NodeType::EMPTY:
 		cout << "Empty ";
@@ -115,37 +115,43 @@ void AbstractSyntaxTree::ShowPartTree(Node* sub, size_t level)
 		cout << "Seq ";
 		break;
 	case NodeType::INCREMENT:
-		cout << "+-Inc ";
+		cout << "Inc ";
 		break;
 	case NodeType::DECREMENT:
-		cout << "+-Dec ";
+		cout << "Dec ";
 		break;
 	case NodeType::INCREMENT_AFTER:
-		cout << "+-IncAfter ";
+		cout << "IncAfter ";
 		break;
 	case NodeType::DECREMENT_AFTER:
-		cout << "+-DecAfter ";
+		cout << "DecAfter ";
 		break;
 	case NodeType::STMT:
-		cout << "+-Stmt ";
+		cout << "Stmt ";
 		break;
 	case NodeType::FUNC:
-		cout << "+-Func ";
+		cout << "Func ";
+		break;
+	case NodeType::SIGNATURE:
+		cout << "Signature ";
 		break;
 	case NodeType::FUNC_ARGS:
-		cout << "+-FuncArgs ";
+		cout << "FuncArgs ";
 		break;
 	case NodeType::FUNC_ARG:
-		cout << "+-FuncArg ";
+		cout << "FuncArg ";
 		break;
 	case NodeType::FUNCTION_IMPL:
-		cout << "+-FuncImpl ";
+		cout << "FuncImpl ";
 		break;
 	case NodeType::FUNCTION_IMPL_ARGS:
-		cout << "+-FuncImplArgs ";
+		cout << "FuncImplArgs ";
 		break;
 	case NodeType::FUNCTION_IMPL_ARG:
-		cout << "+-FuncImplArg ";
+		cout << "FuncImplArg ";
+		break;
+	case NodeType::FUNC_ACCESS:
+		cout << "FuncAccess ";
 		break;
 	case NodeType::FUNCTION_IMPL_TYPE:
 		break;

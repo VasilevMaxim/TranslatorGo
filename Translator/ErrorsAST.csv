@@ -1,6 +1,6 @@
 Key,Russian,English,German,French,Portuguese,Spanish,Italian,Romanian,Turkish,Polish,Czech,Korean,Chinese
-AST1,Не существует переменной с именем {0:N1}.,You need to name the function correctly.,Sie müssen die Funktion richtig benennen.,,,,,,,,,,
-AST2,Не существует функции с именем {0:N1}.,No parentheses after the function name.,Es gibt keine Klammern nach dem Funktionsnamen.,,,,,,,,,,
+AST1,Не существует переменной с именем {0}.,You need to name the function correctly.{0},Sie müssen die Funktion richtig benennen.{0},,,,,,,,,,
+AST2,Не существует функции с именем {0}.,No parentheses after the function name.{0},Es gibt keine Klammern nach dem Funktionsnamen.{0},,,,,,,,,,
 AST3,Необходимо правильно указать аргументы функции.,You must specify the function arguments correctly.,Sie müssen die Argumente der Funktion korrekt angeben.,,,,,,,,,,
 AST4,После токена нет запятой.,There is no comma after the token.,Nach dem Token gibt es kein Komma.,,,,,,,,,,
 AST5,Неправильно указан тип.,The type is incorrect.,Der Typ ist falsch angegeben.,,,,,,,,,,

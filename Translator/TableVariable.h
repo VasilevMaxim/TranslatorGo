@@ -8,6 +8,7 @@ class TableVariable
 {
 private:
 	vector<Variable*> _vars;
+	int _volumeVariables = 0;
 public:
 	TableVariable() = default;
 	~TableVariable();
@@ -16,5 +17,7 @@ public:
 	Variable* GetNameVariable(const string name);
 	bool ContainsVariable(const string name);
 	bool IsVariable(const string& name);
+
+	int GetVolumeVariables();
 };
 

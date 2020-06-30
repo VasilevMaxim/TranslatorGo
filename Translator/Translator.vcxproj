@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AbstractSyntaxTree.cpp" />
+    <ClCompile Include="Asm\Asm.cpp" />
     <ClCompile Include="BaseTokenTypes.cpp" />
     <ClCompile Include="Errors\Error.cpp" />
     <ClCompile Include="Errors\ErrorSettings.cpp" />
@@ -178,6 +179,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractSyntaxTree.h" />
+    <ClInclude Include="Asm\Asm.h" />
+    <ClInclude Include="Asm\AsmConstants.h" />
     <ClInclude Include="BaseTokenTypes.h" />
     <ClInclude Include="Errors\Error.h" />
     <ClInclude Include="Errors\ErrorSettings.h" />

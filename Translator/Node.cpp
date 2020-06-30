@@ -19,3 +19,8 @@ NodeType Node::GetType()
 {
 	return _type;
 }
+
+bool Node::IsValueNull()
+{
+	return _value == "null";
+}

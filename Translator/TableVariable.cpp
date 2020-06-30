@@ -8,6 +8,7 @@ TableVariable::~TableVariable()
 void TableVariable::Add(Variable* var)
 {
 	_vars.push_back(var);
+    _volumeVariables += (int) var->GetType();
 }
 
 Variable* TableVariable::GetNameVariable(const string name)
@@ -45,4 +46,9 @@ bool TableVariable::IsVariable(const string& name)
 		}
 	}
 	return false;
+}
+
+int TableVariable::GetVolumeVariables()
+{
+    return _volumeVariables;
 }

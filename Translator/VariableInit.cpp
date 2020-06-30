@@ -103,7 +103,13 @@ void QueueVariableNode::PushingVariables()
 			}
 			else if ((_tokens->GetCurrentToken()->GetType() == TokenType::ASSIGN_DECLARATION) || (_tokens->GetCurrentToken()->GetType() == TokenType::ASSIGN && _isLPAR  == true))
 			{
- 				node = new Node(NodeType::NEW_VAR, node->GetValue(), node->Operand1);
+				_vars.pop();
+				_vars.push(new Node(NodeType::NEW_VAR, node->GetValue(), node->Operand1));
+			}
+			else if (_tokens->GetCurrentToken()->GetType() == TokenType::ASSIGN)
+			{
+				_vars.pop();
+				_vars.push(new Node(NodeType::VAR, node->GetValue(), node->Operand1));
 			}
 			else if (_tokens->GetCurrentToken()->GetType() != TokenType::ASSIGN && _tokens->GetCurrentToken()->GetType() != TokenType::ASSIGN_DECLARATION && _tokens->GetCurrentToken()->GetType() != TokenType::LPAR)
 			{

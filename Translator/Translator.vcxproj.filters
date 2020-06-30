@@ -26,6 +26,9 @@
     <Filter Include="Errors">
       <UniqueIdentifier>{96604d36-498a-4207-82fd-631257c9c20d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ASM">
+      <UniqueIdentifier>{99ff5b06-567d-4a51-b9ae-aec220a46f22}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseTokenTypes.cpp">
@@ -99,6 +102,9 @@
     </ClCompile>
     <ClCompile Include="ListSequence.cpp">
       <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Asm\Asm.cpp">
+      <Filter>ASM</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -176,6 +182,12 @@
     </ClInclude>
     <ClInclude Include="Sequence.h" />
     <ClInclude Include="ListSequence.h" />
+    <ClInclude Include="Asm\AsmConstants.h">
+      <Filter>ASM</Filter>
+    </ClInclude>
+    <ClInclude Include="Asm\Asm.h">
+      <Filter>ASM</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="progGo.go" />

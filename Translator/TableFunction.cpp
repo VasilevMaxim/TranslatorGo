@@ -51,3 +51,8 @@ Function* TableFunction::GetFunction(int index)
 {
 	return _functions[index];
 }
+
+int TableFunction::GetSize()
+{
+	return _functions.size();
+}

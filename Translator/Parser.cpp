@@ -67,7 +67,7 @@ Node* Parser::Statements()
 		}
 		else if(_tokens->GetCurrentToken()->GetType() == TokenType::FUNC)
 		{
-			temp->Operand2 = new Node(NodeType::STMT, "", new Node(NodeType::STATEMENT, "", Statement()));
+			temp->Operand2 = new Node(NodeType::STATEMENT, "", Statement());
 
 			if (_tokens->GetCurrentToken()->IsSeporator() == true)
 			{

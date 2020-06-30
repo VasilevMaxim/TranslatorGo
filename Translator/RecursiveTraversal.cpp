@@ -8,9 +8,9 @@ RecursiveTraversal::RecursiveTraversal(Node* headNode)
 	Node* tempNode = headNode->Operand1->Operand1;
 	while (tempNode != nullptr)
 	{
-		if (tempNode->Operand1 != nullptr && tempNode->Operand1->GetType() == NodeType::STATEMENT)
+		if (tempNode->Operand1 != nullptr && tempNode->Operand1->GetType() == NodeType::FUNC)
 		{
-			Node* func = tempNode->Operand1->Operand1;
+			Node* func = tempNode->Operand1;
 			string name = func->GetValue();
 			vector<VariableType>* types = new vector<VariableType>();
 
@@ -21,7 +21,7 @@ RecursiveTraversal::RecursiveTraversal(Node* headNode)
 				tempTypes = tempTypes->Operand1;
 			}
 
-			Function* newfunc = new Function(name, types);
+			Function* newfunc = new Function(name, types, &_globalVariable);
 			_allFunction.Add(newfunc);
 		}
 
@@ -43,7 +43,7 @@ void RecursiveTraversal::Traversal(Node* currentNode)
 
 		if (_listSequence.IsVariable(name) == false)
 		{
-			Error("AST1");
+			Error("AST1", name);
 		}
 	}
 	else if(currentNode->GetType() == NodeType::ARRAY_ACCESS)
@@ -52,7 +52,7 @@ void RecursiveTraversal::Traversal(Node* currentNode)
 
 		if (_listSequence.IsVariable(name) == false)
 		{
-			Error("AST1");
+			Error("AST1", name);
 		}
 	}
 	else if (currentNode->GetType() == NodeType::STATEMENT)
@@ -66,12 +66,12 @@ void RecursiveTraversal::Traversal(Node* currentNode)
 
 		if (_listSequence.IsVariable(name) == false)
 		{
-			Error("AST1");
+			Error("AST1", name);
 		}
 
 		if (IsTraversalExprDouble(currentNode->Operand1) == true)
 		{
-			Error("AST1");
+			Error("AST1", name);
 		}
 	}
 	else if (currentNode->GetType() == NodeType::FUNC_ACCESS)
@@ -79,8 +79,13 @@ void RecursiveTraversal::Traversal(Node* currentNode)
 		string name = currentNode->GetValue();
 		if (_allFunction.IsVariable(name) == false)
 		{
-			Error("AST2");
+			Error("AST2", name);
 		}
+	}
+	else if (currentNode->GetType() == NodeType::FUNC)
+	{
+		_functionCurrent = _allFunction.GetFunction(_indexCurrentFunction++);
+		currentNode->Function = _functionCurrent;
 	}
 	else if (currentNode->GetType() == NodeType::SET)
 	{
@@ -103,7 +108,7 @@ void RecursiveTraversal::Traversal(Node* currentNode)
 		}
 		else
 		{
-			if (varLeft->Operand1->GetValue() == "null")
+			if (varLeft->Operand1->IsValueNull() == true)
 			{
 				if (IsTraversalExprDouble(currentNode->Operand2) == true)
 				{
@@ -134,6 +139,11 @@ void RecursiveTraversal::Traversal(Node* currentNode)
 		}
 
 		_listSequence.GetCurrentSequence()->LocalVariables.Add(newVar);
+
+		if (_functionCurrent == nullptr)
+			_globalVariable.Add(newVar);
+		else
+			_functionCurrent->LocalVariables.Add(newVar);
     }
 	
 
@@ -199,6 +209,11 @@ VariableType RecursiveTraversal::GetTypeVariable(string type)
 		return VariableType::UNDEFINED;
 	}
     return VariableType::UNDEFINED;
+}
+
+int RecursiveTraversal::GetVolumeGlobalVariables()
+{
+	return _globalVariable.GetVolumeVariables();
 }
 
 
