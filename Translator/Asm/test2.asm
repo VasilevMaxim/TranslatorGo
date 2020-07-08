@@ -15,6 +15,17 @@ data ends
 
 text segment
 
+   a0 = -4
+   b0 = -8
+   c0 = -12
+   d0 = -16
+   l0 = -20
+   i0 = -24
+   a1 = -28
+   a2 = -4
+   b1 = -8
+   c1 = -12
+   d1 = -16
 printD PROC
    enter 0, 0
    mov eax, [ebp + 8]
@@ -44,13 +55,6 @@ sqrt ENDP
 
 __main:
    enter 28, 0
-   a0 = -4
-   b0 = -8
-   c0 = -12
-   d0 = -16
-   l0 = -20
-   i0 = -24
-   a1 = -28
    push 1
    pop a0[ebp]
    push 10
@@ -94,21 +98,21 @@ __main:
    pop l0[ebp]
    push 0
    pop i0[ebp]
-__loop_start_361251850956900:
+__loop_start_391863513627400:
    push i0[ebp]
    pop ecx
    push 3
    pop edx
    cmp ecx, edx
-   jge _compare_not_equal361251850984900
+   jge _compare_not_equal391863513660500
    push 1
-   jmp _compare_end361251850984900
-_compare_not_equal361251850984900:
+   jmp _compare_end391863513660500
+_compare_not_equal391863513660500:
    push 0
-_compare_end361251850984900:
+_compare_end391863513660500:
    pop eax
    cmp eax, 0
-   je __loop_end_361251850956900
+   je __loop_end_391863513627400
    push 1
    pop a1[ebp]
    push a1[ebp]
@@ -118,7 +122,7 @@ _compare_end361251850984900:
    add eax, ebx
    push eax
    pop a1[ebp]
-__loop_aftereffects_361251850956900:
+__loop_aftereffects_391863513627400:
    push i0[ebp]
    push 1
    pop eax
@@ -126,8 +130,8 @@ __loop_aftereffects_361251850956900:
    add eax, ebx
    push eax
    pop i0[ebp]
-   jmp __loop_start_361251850956900
-__loop_end_361251850956900:
+   jmp __loop_start_391863513627400
+__loop_end_391863513627400:
    mov eax, d0[ebp]
    push eax
    call sqrt
@@ -139,7 +143,35 @@ __loop_end_361251850956900:
    ret
 end __main
 __funcc:
-   enter 0, 0
+   enter 16, 0
+   push 1
+   pop a2[ebp]
+   push 10
+   pop b1[ebp]
+   push -39
+   pop c1[ebp]
+   push b1[ebp]
+   push b1[ebp]
+   pop eax
+   pop ebx
+   imul eax, ebx
+   push eax
+   push 4
+   push a2[ebp]
+   pop eax
+   pop ebx
+   imul eax, ebx
+   push eax
+   push c1[ebp]
+   pop eax
+   pop ebx
+   imul eax, ebx
+   push eax
+   pop ebx
+   pop eax
+   sub eax, ebx
+   push eax
+   pop d1[ebp]
    leave
    ret
 text ends

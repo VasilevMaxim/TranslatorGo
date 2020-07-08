@@ -7,6 +7,7 @@ enum class TokenType
 	INT,
 	FLOAT64,
 	FLOAT32,
+	STRING_CONST,
 
 	INVERSION,
 	STRING,
@@ -68,6 +69,9 @@ enum class TokenType
 	DECREMENT,
 
 	FUNC,
+
+	IMPORT,
+	PACKAGE,
 
 	NON
 };

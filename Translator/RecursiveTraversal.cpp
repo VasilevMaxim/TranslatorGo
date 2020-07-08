@@ -25,9 +25,18 @@ RecursiveTraversal::RecursiveTraversal(Node* headNode)
 			_allFunction.Add(newfunc);
 		}
 
+		if (tempNode->Operand1->GetType() == NodeType::IMPORT)
+		{
+			_allImport.Add(new Import(tempNode->Operand1->GetValue()));
+		}
+
 		
 		tempNode = tempNode->Operand2;
 	}
+
+	_allImport.GetImport("fmt")->AddKey("Println");
+	_allImport.GetImport("math")->AddKey("Sqrt");
+
  	Traversal(headNode);
 }
 
@@ -44,6 +53,11 @@ void RecursiveTraversal::Traversal(Node* currentNode)
 		if (_listSequence.IsVariable(name) == false)
 		{
 			Error("AST1", name);
+		}
+		else
+		{
+			auto var = _listSequence.GetVariable(name);
+			currentNode->Variable = var;
 		}
 	}
 	else if(currentNode->GetType() == NodeType::ARRAY_ACCESS)
@@ -77,9 +91,32 @@ void RecursiveTraversal::Traversal(Node* currentNode)
 	else if (currentNode->GetType() == NodeType::FUNC_ACCESS)
 	{
 		string name = currentNode->GetValue();
+
 		if (_allFunction.IsVariable(name) == false)
 		{
-			Error("AST2", name);
+			auto dotPosition = name.find('.');
+
+			if (dotPosition != string::npos)
+			{
+				auto first = name.substr(0, dotPosition);
+				auto second = name.substr(dotPosition + 1, name.size() - dotPosition);
+
+				if (_allImport.ContainsImport(first) == false)
+				{
+					Error("AST2", name);
+				}
+				else
+				{
+					if (_allImport.ContainsFunction(second) == false)
+					{
+						Error("AST2", name);
+					}
+				}
+			}
+			else
+			{
+				Error("AST2", name);
+			}
 		}
 	}
 	else if (currentNode->GetType() == NodeType::FUNC)
@@ -90,6 +127,17 @@ void RecursiveTraversal::Traversal(Node* currentNode)
 	else if (currentNode->GetType() == NodeType::SET)
 	{
 		Node* varLeft = currentNode->Operand1;
+
+		if (currentNode->Operand1->GetType() != NodeType::NEW_VAR
+			&& currentNode->Operand1->GetType() != NodeType::NEW_CONST)
+		{
+			string name = varLeft->GetValue();
+			if (_listSequence.IsVariable(name) == false)
+			{
+				Error("AST1", name);
+			}
+		}
+
 		VariableType typeVarLeft = VariableType::UNDEFINED;
 		Variable* var = _listSequence.GetVariable(varLeft->GetValue());
 		if (var != nullptr)
@@ -126,8 +174,34 @@ void RecursiveTraversal::Traversal(Node* currentNode)
     {
         string name = currentNode->GetValue();
 		VariableType type = GetTypeVariable(currentNode->Operand1->GetValue());
+		Variable* newVar = new Variable(name, type);
 
-        Variable* newVar = new Variable(name, type);
+		auto lastVar = _listSequence.GetVariable(name);
+		Variable* nVar = nullptr;
+
+		for (int i = _allFunction.GetSize() - 1; i >= 0 ; i--)
+		{
+			if (_allFunction.GetFunction(i)->LocalVariables.ContainsVariable(name) == true)
+			{
+				nVar = _allFunction.GetFunction(i)->LocalVariables.GetNameVariable(name);
+			}
+		}
+
+		if (_listSequence.IsVariableInOnlyLast(name) == true)
+		{
+			Error("AST9", name);
+		}
+
+		if (lastVar != nullptr)
+		{
+			newVar->Postfix = lastVar->Postfix + 1;
+			lastVar = newVar;
+		}
+		else if (nVar != nullptr)
+		{
+			newVar->Postfix = nVar->Postfix + 1;
+			lastVar = newVar;
+		}
 
 		if (currentNode->GetType() == NodeType::NEW_CONST)
 		{
@@ -144,8 +218,13 @@ void RecursiveTraversal::Traversal(Node* currentNode)
 			_globalVariable.Add(newVar);
 		else
 			_functionCurrent->LocalVariables.Add(newVar);
+
+		if(lastVar == nullptr)
+			currentNode->Variable = newVar;
+		else
+			currentNode->Variable = lastVar;
     }
-	
+
 
 
     Traversal(currentNode->Operand1);

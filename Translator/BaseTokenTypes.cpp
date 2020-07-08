@@ -67,6 +67,8 @@ map<string, TokenType> BaseTokenTypes::_baseTokenTypes =
 
 	{ "return", TokenType::RETURN },
 
+	{ "import", TokenType::IMPORT },
+	{ "package", TokenType::PACKAGE }
 };
 
 
@@ -117,9 +119,13 @@ TokenType BaseTokenTypes::GetTypeToken(string token)
 	catch (std::out_of_range e)
 	{
 		TokenType type = GetNumberToken(token);
+		
 		if (type != TokenType::NON)
-		{
 			return type;
+
+		if (token[0] == '\"' && token.back() == '\"')
+		{
+			return TokenType::STRING_CONST;
 		}
 
 		return TokenType::LITERAL;

@@ -3,26 +3,6 @@
 #include <string>
 #include "Errors/Error.h"
 
-Token* TokenBreaking::GetToken(string lexeme)
-{
-	Token* newToken = new Token(lexeme);
-
-	if (_delayMinus == true)
-	{
-		if (newToken->GetType() == TokenType::LITERAL || newToken->GetType() == TokenType::NUMBER)
-		{
-			newToken = new Token("-" + lexeme);
-		}
-		else
-		{
-			Error("L2");
-		}
-		_delayMinus = false;
-	}
-	
-	return newToken;
-}
-
 void TokenBreaking::SplitIntoTokens()
 {
 	bool isFixed = false;
@@ -63,7 +43,7 @@ void TokenBreaking::SplitIntoTokens()
 
 				if (_tokens.size() > 0 && _text[index] == '\n' && _tokens.back()->GetType() == TokenType::LBRA)
 				{
-					continue;
+					//continue;
 				}
 
 				string forSym;
@@ -108,6 +88,27 @@ void TokenBreaking::SplitIntoTokens()
 	{
 		_tokens.erase(_tokens.begin());
 	}
+}
+
+
+Token* TokenBreaking::GetToken(string lexeme)
+{
+	Token* newToken = new Token(lexeme);
+
+	if (_delayMinus == true)
+	{
+		if (newToken->GetType() == TokenType::LITERAL || newToken->GetType() == TokenType::NUMBER)
+		{
+			newToken = new Token("-" + lexeme);
+		}
+		else
+		{
+			Error("L2");
+		}
+		_delayMinus = false;
+	}
+
+	return newToken;
 }
 
 bool TokenBreaking::IsCompositesToken(char sym1, char sym2)

@@ -22,6 +22,7 @@ private:
 	ListTokens* _tokens;
 
 	bool _isConst = false;
+	bool _isKeyVar = false;
 	NodeType _typeNewVar = NodeType::NEW_VAR;
 
 	bool _isLPAR = false;
@@ -35,6 +36,7 @@ public:
 
 	QueueVariableNode();
 	void PlacedUnderControl(Parser* parser, bool isConst);
+	void PlacedUnderControl(Parser* parser, bool isConst, bool isKeyVar);
 
 	Node* Pop();
 

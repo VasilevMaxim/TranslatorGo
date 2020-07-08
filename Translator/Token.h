@@ -22,5 +22,7 @@ public:
 	bool IsNumber();
 	bool IsWithAssing();
 
+	string GetValueWithoutQuotes();
+
 	NodeType GetNeighborNodeType();
 };

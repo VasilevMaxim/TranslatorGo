@@ -8,9 +8,6 @@
     <Filter Include="Parser">
       <UniqueIdentifier>{898c9342-e49e-4d4d-96ea-64f4303b36eb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Tokens">
-      <UniqueIdentifier>{b61f0783-4a0d-4b7d-a9d4-7b47432ed5cc}</UniqueIdentifier>
-    </Filter>
     <Filter Include="AST">
       <UniqueIdentifier>{53ab9455-211b-4bdd-823a-34201ef40a3f}</UniqueIdentifier>
     </Filter>
@@ -29,16 +26,22 @@
     <Filter Include="ASM">
       <UniqueIdentifier>{99ff5b06-567d-4a51-b9ae-aec220a46f22}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{09cfc7de-b990-45f1-96f5-8b482e795a2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lexer">
+      <UniqueIdentifier>{b61f0783-4a0d-4b7d-a9d4-7b47432ed5cc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BaseTokenTypes.cpp">
-      <Filter>Tokens</Filter>
+      <Filter>Lexer</Filter>
     </ClCompile>
     <ClCompile Include="Token.cpp">
-      <Filter>Tokens</Filter>
+      <Filter>Lexer</Filter>
     </ClCompile>
     <ClCompile Include="TokenBreaking.cpp">
-      <Filter>Tokens</Filter>
+      <Filter>Lexer</Filter>
     </ClCompile>
     <ClCompile Include="Node.cpp">
       <Filter>Parser</Filter>
@@ -106,19 +109,28 @@
     <ClCompile Include="Asm\Asm.cpp">
       <Filter>ASM</Filter>
     </ClCompile>
+    <ClCompile Include="Random.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="TableImport.cpp">
+      <Filter>AST</Filter>
+    </ClCompile>
+    <ClCompile Include="Import.cpp">
+      <Filter>Main</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TokenType.h">
-      <Filter>Tokens</Filter>
+      <Filter>Lexer</Filter>
     </ClInclude>
     <ClInclude Include="BaseTokenTypes.h">
-      <Filter>Tokens</Filter>
+      <Filter>Lexer</Filter>
     </ClInclude>
     <ClInclude Include="Token.h">
-      <Filter>Tokens</Filter>
+      <Filter>Lexer</Filter>
     </ClInclude>
     <ClInclude Include="TokenBreaking.h">
-      <Filter>Tokens</Filter>
+      <Filter>Lexer</Filter>
     </ClInclude>
     <ClInclude Include="Node.h">
       <Filter>Parser</Filter>
@@ -188,6 +200,13 @@
     <ClInclude Include="Asm\Asm.h">
       <Filter>ASM</Filter>
     </ClInclude>
+    <ClInclude Include="Random.h">
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="TableImport.h">
+      <Filter>AST</Filter>
+    </ClInclude>
+    <ClInclude Include="Import.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="progGo.go" />

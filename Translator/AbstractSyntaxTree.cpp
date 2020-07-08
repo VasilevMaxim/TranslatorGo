@@ -59,7 +59,7 @@ void AbstractSyntaxTree::ShowPartTree(Node* sub, size_t level)
 		cout << "For ";
 		break;
 	case NodeType::BREAK:
-		cout << "+-Break ";
+		cout << "Break ";
 		break;
 	case NodeType::IF:
 		cout << "If ";
@@ -135,21 +135,6 @@ void AbstractSyntaxTree::ShowPartTree(Node* sub, size_t level)
 	case NodeType::SIGNATURE:
 		cout << "Signature ";
 		break;
-	case NodeType::FUNC_ARGS:
-		cout << "FuncArgs ";
-		break;
-	case NodeType::FUNC_ARG:
-		cout << "FuncArg ";
-		break;
-	case NodeType::FUNCTION_IMPL:
-		cout << "FuncImpl ";
-		break;
-	case NodeType::FUNCTION_IMPL_ARGS:
-		cout << "FuncImplArgs ";
-		break;
-	case NodeType::FUNCTION_IMPL_ARG:
-		cout << "FuncImplArg ";
-		break;
 	case NodeType::FUNC_ACCESS:
 		cout << "FuncAccess ";
 		break;
@@ -160,6 +145,12 @@ void AbstractSyntaxTree::ShowPartTree(Node* sub, size_t level)
 		break;
 	case NodeType::STATEMENT:
 		cout << "Statement ";
+		break;
+	case NodeType::IMPORT:
+		cout << "Import ";
+		break;
+	case NodeType::PACKAGE:
+		cout << "Package ";
 		break;
 	case NodeType::RETURN:
 		break;

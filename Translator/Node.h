@@ -18,6 +18,7 @@ public:
 	Node* Operand4;
 
 	Function* Function;
+	Variable* Variable;
 
 	Node(NodeType type, string value = "", Node* operand1_ = nullptr, Node* operand2_ = nullptr,
 		Node* operand3_ = nullptr, Node* operand4_ = nullptr);
@@ -25,5 +26,9 @@ public:
 	string GetValue();
 	NodeType GetType();
 	bool IsValueNull();
+
+	bool IsComparisonOperator() const;
+public:
+	static bool IsComparisonOperator(NodeType type);
 };
 

@@ -63,6 +63,12 @@ bool Token::IsWithAssing()
 	}
 }
 
+string Token::GetValueWithoutQuotes()
+{
+	
+	return _value.substr(1, _value.size() - 2);
+}
+
 NodeType Token::GetNeighborNodeType()
 {
 	switch (_type)

@@ -17,6 +17,11 @@ private:
 
 	bool _isBlockVars;
 	bool _isStartFunc = false;
+
+	bool _isIncrementAfter = false;
+	bool _isDecrementAfter = false;
+	Node* nodeAfter;
+
 	ListTokens* _tokens;
 	QueueVariableNode* _variableNodes;
 

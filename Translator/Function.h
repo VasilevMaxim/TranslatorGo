@@ -20,6 +20,7 @@ public:
 	Function(const string& name, vector<VariableType>* types, TableVariable* globalVariables);
 
 	TableVariable LocalVariables;
+	TableVariable ArgVariables;
 
 	string GetName();
 	vector<VariableType>* GetTypes();

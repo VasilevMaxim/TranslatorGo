@@ -13,12 +13,13 @@
 #include <Windows.h>
 
 using std::ifstream;
+using std::ofstream;
 using std::getline;
 using std::vector;
 
 void OnCompilation(string pathFile);
 string GetAllTextInFile(string pathFile);
-
+void WriteTextInFile(string text, string pathFile);
 
 int main(int argc, char* argv[])
 {
@@ -63,19 +64,29 @@ void OnCompilation(string pathFile)
 
 	tree.ShowTree();
 
-	Asm asmNew(parser.GetNodeHead());
+	Asm newAsm(parser.GetNodeHead(), &recursiveTraversal._allFunction, &recursiveTraversal._allImport);
+	WriteTextInFile(newAsm.GetWritingAsm(), "E:\\github\\TranslatorGo\\TranslatorGo\\Translator\\Asm\\test2.asm");
 }
 
 string GetAllTextInFile(string pathFile)
 {
 	string textInFile;
 	string tempLineText;
-	ifstream in(pathFile);
-	while (getline(in, tempLineText))
+	ifstream fin(pathFile);
+	while (getline(fin, tempLineText))
 	{
 		textInFile += tempLineText + '\n';
 	}
-	in.close();
+	fin.close();
 	textInFile.erase(textInFile.end() - 1);
 	return textInFile;
+}
+
+void WriteTextInFile(string text, string pathFile)
+{
+	string textInFile;
+	string tempLineText;
+	ofstream fout(pathFile);
+	fout << text;
+	fout.close();
 }

@@ -45,9 +45,9 @@ Node* Parser::Statements()
 	{
 		_tokens->UseNextToken();
 	}
-	else
+	else if(_tokens->IsBackTokens() == false)
 	{
-		Error("P112");
+		Error("P11");
 	}
 
 	while (_tokens->IsBackTokens() == false)
@@ -62,7 +62,7 @@ Node* Parser::Statements()
 			}
 			else
 			{
-				Error("P112");
+				Error("P9");
 			}
 		}
 		else if(_tokens->GetCurrentToken()->GetType() == TokenType::FUNC)
@@ -77,13 +77,45 @@ Node* Parser::Statements()
 			{
 				if (_tokens->IsBackTokens() == false)
 				{
-					Error("P112");
+					Error("P9");
+				}
+			}
+		}
+		else if (_tokens->GetCurrentToken()->GetType() == TokenType::PACKAGE)
+		{
+			temp->Operand2 = new Node(NodeType::STATEMENT, "", Statement());
+
+			if (_tokens->GetCurrentToken()->IsSeporator() == true)
+			{
+				_tokens->UseNextToken();
+			}
+			else
+			{
+				if (_tokens->IsBackTokens() == false)
+				{
+					Error("P9");
+				}
+			}
+		}
+		else if (_tokens->GetCurrentToken()->GetType() == TokenType::IMPORT)
+		{
+			temp->Operand2 = new Node(NodeType::STATEMENT, "", Statement());
+
+			if (_tokens->GetCurrentToken()->IsSeporator() == true)
+			{
+				_tokens->UseNextToken();
+			}
+			else
+			{
+				if (_tokens->IsBackTokens() == false)
+				{
+					Error("P9");
 				}
 			}
 		}
 		else
 		{
-			Error("P1223");
+			Error("P10");
 		}
 
 
@@ -128,7 +160,7 @@ Node* Parser::Statement()
 	else if (_tokens->GetCurrentToken()->GetType() == TokenType::VAR)
 	{
 		_tokens->UseNextToken();
-		_variableNodes->PlacedUnderControl(this, false);
+		_variableNodes->PlacedUnderControl(this, false, true);
 	}
 	else if (_tokens->GetCurrentToken()->GetType() == TokenType::CONST)
 	{
@@ -153,13 +185,32 @@ Node* Parser::Statement()
 		node = _variableNodes->Pop();
 		if (_tokens->GetCurrentToken()->GetType() == TokenType::LPAR)
 		{
-			node = new Node(NodeType::FUNC_ACCESS, node->GetValue(), GetListParametersAccess());
+			_tokens->UseNextToken();
+			if (_tokens->GetCurrentToken()->GetType() != TokenType::RPAR)
+			{
+				node = new Node(NodeType::FUNC_ACCESS, node->GetValue(), GetListParametersAccess());
+			}
+			else
+			{
+				node = new Node(NodeType::FUNC_ACCESS, node->GetValue());
+				_tokens->UseNextToken();
+			}
 		}
 
 	}
 	else if (_tokens->GetCurrentToken()->GetType() == TokenType::RBRA)
 	{
 		return node;
+	}
+	else if (_isIncrementAfter == true)
+	{
+		node = new Node(NodeType::SET, "", nodeAfter, new Node(NodeType::ADD, "", nodeAfter, new Node(NodeType::CONST, "1")));
+		_isIncrementAfter = false;
+	}
+	else if (_isDecrementAfter == true)
+	{
+		node = new Node(NodeType::SET, "", nodeAfter, new Node(NodeType::SUB, "", nodeAfter, new Node(NodeType::CONST, "1")));
+		_isDecrementAfter = false;
 	}
 	else if (_tokens->GetCurrentToken()->GetType() == TokenType::IF)
 	{
@@ -230,6 +281,27 @@ Node* Parser::Statement()
 		node = new Node(NodeType::BREAK);
 		_tokens->UseNextToken();
 	}
+	else if (_tokens->GetCurrentToken()->GetType() == TokenType::PACKAGE)
+	{
+		_tokens->UseNextToken();
+		node = new Node(NodeType::PACKAGE, _tokens->GetCurrentToken()->GetValue());		
+		_tokens->UseNextToken();
+	}
+	else if (_tokens->GetCurrentToken()->GetType() == TokenType::IMPORT)
+	{
+		_tokens->UseNextToken();
+
+		if (_tokens->GetCurrentToken()->GetType() == TokenType::STRING_CONST)
+		{
+			node = new Node(NodeType::IMPORT, _tokens->GetCurrentToken()->GetValueWithoutQuotes());
+		}
+		else
+		{
+			Error("P1");
+		}
+
+		_tokens->UseNextToken();
+	}
 	else if (_tokens->GetCurrentToken()->GetType() == TokenType::SEMICOLON || _tokens->GetCurrentToken()->GetType() == TokenType::NEW_LINE)
 	{
 		_tokens->UseNextToken();
@@ -238,6 +310,7 @@ Node* Parser::Statement()
 	{
 		_tokens->UseNextToken();
 		_isStartFunc = true;
+
 		if (_tokens->GetCurrentToken()->GetType() != TokenType::LITERAL)
 			Error("P1");
 
@@ -786,13 +859,16 @@ Node* Parser::Unar()
 		node = Inversion();
 		if (_tokens->GetCurrentToken()->GetType() == TokenType::INCREMENT || _tokens->GetCurrentToken()->GetType() == TokenType::DECREMENT)
 		{
+			nodeAfter = node;
 			if (_tokens->GetCurrentToken()->GetType() == TokenType::INCREMENT)
 			{
-				node = new Node(NodeType::INCREMENT_AFTER, "", node);
+				//node = new Node(NodeType::INCREMENT_AFTER, "", node);
+				_isIncrementAfter = true;
 			}
 			else if (_tokens->GetCurrentToken()->GetType() == TokenType::DECREMENT)
 			{
-				node = new Node(NodeType::DECREMENT_AFTER, "", node);
+				_isDecrementAfter = true;
+				//node = new Node(NodeType::DECREMENT_AFTER, "", node);
 			}
 			_tokens->UseNextToken();
 		}

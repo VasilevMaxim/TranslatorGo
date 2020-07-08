@@ -27,7 +27,7 @@ string ListTokens::GetLineCurrentToken()
 	int indexLine = _indexFirstSymLine;
 	while ((*_tokens)[indexLine]->GetType() != TokenType::NEW_LINE)
 	{
-		line += (*_tokens)[indexLine++]->GetValue();
+		line += (*_tokens)[indexLine++]->GetValue() + " ";
 	}
 
 	return line;

@@ -1,6 +1,7 @@
 #pragma once
 #include "Node.h"
 #include "TableFunction.h"
+#include "TableImport.h"
 #include "ListSequence.h"
 
 class RecursiveTraversal
@@ -18,6 +19,7 @@ private:
 
 public:
 	TableFunction _allFunction;
+	TableImport _allImport;
 
 	RecursiveTraversal(Node* currentNode);
     void Traversal(Node* currentNode);

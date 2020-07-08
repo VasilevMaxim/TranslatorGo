@@ -9,7 +9,6 @@ QueueVariableNode::QueueVariableNode()
 void QueueVariableNode::PlacedUnderControl(Parser* parser, bool isConst)
 {
 	_isConst = isConst;
-
 	if (_isConst == true)
 	{
 		_typeNewVar = NodeType::NEW_CONST;
@@ -35,7 +34,7 @@ void QueueVariableNode::PlacedUnderControl(Parser* parser, bool isConst)
 	}
 	else if (_tokens->GetCurrentToken()->GetType() != TokenType::LITERAL)
 	{
-		Error("name || var");
+		Error("P12");
 	}
 	PushingVariables();
 
@@ -60,6 +59,14 @@ void QueueVariableNode::PlacedUnderControl(Parser* parser, bool isConst)
 		}
 		//_tokens->UseNextToken();
 	}
+
+	_isKeyVar = false;
+}
+
+void QueueVariableNode::PlacedUnderControl(Parser* parser, bool isConst, bool isKeyVar)
+{
+	_isKeyVar = isKeyVar;
+	PlacedUnderControl(parser, isConst);
 }
 
 
@@ -106,14 +113,16 @@ void QueueVariableNode::PushingVariables()
 				_vars.pop();
 				_vars.push(new Node(NodeType::NEW_VAR, node->GetValue(), node->Operand1));
 			}
-			else if (_tokens->GetCurrentToken()->GetType() == TokenType::ASSIGN)
+			else if (_tokens->GetCurrentToken()->GetType() == TokenType::ASSIGN && _isKeyVar == false)
 			{
 				_vars.pop();
 				_vars.push(new Node(NodeType::VAR, node->GetValue(), node->Operand1));
 			}
-			else if (_tokens->GetCurrentToken()->GetType() != TokenType::ASSIGN && _tokens->GetCurrentToken()->GetType() != TokenType::ASSIGN_DECLARATION && _tokens->GetCurrentToken()->GetType() != TokenType::LPAR)
+			else if (_tokens->GetCurrentToken()->GetType() != TokenType::ASSIGN && 
+				_tokens->GetCurrentToken()->GetType() != TokenType::ASSIGN_DECLARATION && 
+				_tokens->GetCurrentToken()->GetType() != TokenType::LPAR)
 			{
-				Error("Not Assign");
+				Error("P13");
 			}
 
 			break;
@@ -209,7 +218,7 @@ Node* QueueVariableNode::GetType()
 	}
 	if (_tokens->GetCurrentToken()->IsVar() == false)
 	{
-		Error("Not type");
+		Error("P14");
 	}
 	type = new Node(NodeType::VAR_TYPE, _tokens->GetCurrentToken()->GetValue(), expr);
 

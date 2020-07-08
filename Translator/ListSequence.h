@@ -11,5 +11,6 @@ public:
 	void RemoveBack();
 	bool IsVariable(const string& name);
 	Variable* GetVariable(const string& name);
+	bool IsVariableInOnlyLast(const string& name);
 };
 

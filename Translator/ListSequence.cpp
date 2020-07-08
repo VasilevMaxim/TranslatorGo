@@ -40,3 +40,20 @@ Variable* ListSequence::GetVariable(const string& name)
 
 	return nullptr;
 }
+
+bool ListSequence::IsVariableInOnlyLast(const string& name)
+{
+
+	for (int i = _listSequence.size() - 1; i >= 0; i--)
+	{
+		if (_listSequence[i]->LocalVariables._vars.size() > 0)
+		{
+			if(_listSequence[i]->LocalVariables.IsVariable(name) == true)
+				return _listSequence[i]->LocalVariables.GetNameVariable(name);
+			else
+				return nullptr;
+		}
+	}
+
+	return nullptr;
+}

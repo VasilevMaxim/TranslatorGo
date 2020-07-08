@@ -13,11 +13,11 @@ void TableVariable::Add(Variable* var)
 
 Variable* TableVariable::GetNameVariable(const string name)
 {
-    for (auto& variable : _vars)
+    for (int i = _vars.size() - 1; i >= 0; i--)
     {
-        if (variable->GetName() == name)
+        if (_vars[i]->GetName() == name)
         {
-            return variable;
+            return _vars[i];
         }
     }
 
@@ -26,9 +26,9 @@ Variable* TableVariable::GetNameVariable(const string name)
 
 bool TableVariable::ContainsVariable(const string name)
 {
-    for (auto& variable : _vars)
+    for (int i = _vars.size() - 1; i >= 0; i--)
     {
-        if (variable->GetName() == name)
+        if (_vars[i]->GetName() == name)
         {
             return true;
         }

@@ -24,3 +24,21 @@ bool Node::IsValueNull()
 {
 	return _value == "null";
 }
+
+bool Node::IsComparisonOperator() const
+{
+	return Node::IsComparisonOperator(this->_type);
+}
+
+
+bool Node::IsComparisonOperator(NodeType type)
+{
+	return type == NodeType::LESS ||
+		type == NodeType::MORE ||
+		type == NodeType::LESS_EQUAL ||
+		type == NodeType::MORE_EQUAL ||
+		type == NodeType::EQUAL ||
+		type == NodeType::NOT_EQUAL ||
+		type == NodeType::AND ||
+		type == NodeType::OR;
+}

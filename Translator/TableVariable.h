@@ -7,11 +7,13 @@ using std::vector;
 class TableVariable
 {
 private:
-	vector<Variable*> _vars;
+	
 	int _volumeVariables = 0;
 public:
 	TableVariable() = default;
 	~TableVariable();
+
+	vector<Variable*> _vars;
 
 	void Add(Variable* var);
 	Variable* GetNameVariable(const string name);

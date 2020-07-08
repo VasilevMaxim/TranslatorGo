@@ -1,4 +1,5 @@
 Key,Russian,English,German,French,Portuguese,Spanish,Italian,Romanian,Turkish,Polish,Czech,Korean,Chinese
+ASTName,ОШИБКА СЕМАНТИЧЕСКОГО АНАЛИЗА,,,,,,,,,,,,
 AST1,Не существует переменной с именем {0}.,You need to name the function correctly.{0},Sie müssen die Funktion richtig benennen.{0},,,,,,,,,,
 AST2,Не существует функции с именем {0}.,No parentheses after the function name.{0},Es gibt keine Klammern nach dem Funktionsnamen.{0},,,,,,,,,,
 AST3,Необходимо правильно указать аргументы функции.,You must specify the function arguments correctly.,Sie müssen die Argumente der Funktion korrekt angeben.,,,,,,,,,,
@@ -7,3 +8,4 @@ AST5,Неправильно указан тип.,The type is incorrect.,Der Typ 
 AST6,Неверно указаны аргументы функции.,Incorrect function arguments are specified.,Die Funktionsargumente sind falsch angegeben.,,,,,,,,,,
 AST7,Неверно указаны типы возвращаемых значений функции.,The return value types of the function are not specified correctly.,Die Rückgabetypen der Funktion sind falsch angegeben.,,,,,,,,,,
 AST8,Неверно задана конструкция if.,The if construction is set incorrectly.,Das if-Konstrukt ist falsch.,,,,,,,,,,
+AST9,Повторно объявлена переменная {0} в одном блоке.,,,,,,,,,,,
