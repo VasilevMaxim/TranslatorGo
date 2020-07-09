@@ -55,9 +55,6 @@
     <ClCompile Include="Expression.cpp">
       <Filter>Parser\NodeFilter</Filter>
     </ClCompile>
-    <ClCompile Include="VariableInit.cpp">
-      <Filter>Parser</Filter>
-    </ClCompile>
     <ClCompile Include="Variable.cpp">
       <Filter>AST</Filter>
     </ClCompile>
@@ -117,6 +114,9 @@
     </ClCompile>
     <ClCompile Include="Import.cpp">
       <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="QueueVariableNode.cpp">
+      <Filter>Parser</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

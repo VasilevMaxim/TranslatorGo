@@ -9,3 +9,5 @@ AST6,Неверно указаны аргументы функции.,Incorrect 
 AST7,Неверно указаны типы возвращаемых значений функции.,The return value types of the function are not specified correctly.,Die Rückgabetypen der Funktion sind falsch angegeben.,,,,,,,,,,
 AST8,Неверно задана конструкция if.,The if construction is set incorrectly.,Das if-Konstrukt ist falsch.,,,,,,,,,,
 AST9,Повторно объявлена переменная {0} в одном блоке.,,,,,,,,,,,
+AST10,Нет точки входа в программу. Добавьте функцию main.,,,,,,,,,,,
+AST11,В программе есть одинаковое название у функций.,,,,,,,,,,,

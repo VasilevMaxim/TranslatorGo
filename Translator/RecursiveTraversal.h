@@ -15,7 +15,7 @@ private:
 	Function* _functionCurrent;
 	int _indexCurrentFunction = 0;
 	int _levelCurrentSequence = 0;
-
+	bool _isVarSignature;
 
 public:
 	TableFunction _allFunction;
@@ -23,11 +23,10 @@ public:
 
 	RecursiveTraversal(Node* currentNode);
     void Traversal(Node* currentNode);
-	bool IsTraversalExprDouble(Node* currentNode);
+	bool IsTraversalExprDouble(Node* currentNode); 
+	bool IsSetLeftNodeTypeString(Node* currentNode);
     VariableType GetTypeVariable(string type);
 	
 	int GetVolumeGlobalVariables();
-
-	void Show();
 };
 

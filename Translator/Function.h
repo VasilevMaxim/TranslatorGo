@@ -17,7 +17,7 @@ private:
 	TableVariable* _globalVariables;
 
 public:
-	Function(const string& name, vector<VariableType>* types, TableVariable* globalVariables);
+	Function(const string& name, vector<VariableType>* types);
 
 	TableVariable LocalVariables;
 	TableVariable ArgVariables;
@@ -25,6 +25,7 @@ public:
 	string GetName();
 	vector<VariableType>* GetTypes();
 
+	int GetVolumeReturn();
 	int GetVolumeTotal();
 };
 

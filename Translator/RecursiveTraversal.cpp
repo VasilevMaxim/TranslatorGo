@@ -21,13 +21,24 @@ RecursiveTraversal::RecursiveTraversal(Node* headNode)
 				tempTypes = tempTypes->Operand1;
 			}
 
-			Function* newfunc = new Function(name, types, &_globalVariable);
+			Function* newfunc = new Function(name, types);
+			
+			if (_allFunction.IsVariable(name) == true)
+				Error("AST11");
+
 			_allFunction.Add(newfunc);
 		}
 
 		if (tempNode->Operand1->GetType() == NodeType::IMPORT)
 		{
-			_allImport.Add(new Import(tempNode->Operand1->GetValue()));
+			
+			Node* tempImport = tempNode->Operand1;
+			
+			while (tempImport != nullptr)
+			{
+				_allImport.Add(new Import(tempImport->GetValue()));
+				tempImport = tempImport->Operand1;
+			}
 		}
 
 		
@@ -35,7 +46,18 @@ RecursiveTraversal::RecursiveTraversal(Node* headNode)
 	}
 
 	_allImport.GetImport("fmt")->AddKey("Println");
+	_allImport.GetImport("fmt")->AddKey("Scan");
 	_allImport.GetImport("math")->AddKey("Sqrt");
+
+	bool isMain = false;
+	for (int i = 0; i < _allFunction.GetSize(); i++)
+		if (_allFunction.GetFunction(i)->GetName() == "main")
+			isMain = true;
+
+	if (isMain == false)
+	{
+		Error("AST10");
+	}
 
  	Traversal(headNode);
 }
@@ -73,6 +95,11 @@ void RecursiveTraversal::Traversal(Node* currentNode)
 	{
 		_levelCurrentSequence++;
 		_listSequence.Add(new Sequence(_levelCurrentSequence));
+		_isVarSignature = false;
+	}
+	else if (currentNode->GetType() == NodeType::SIGNATURE)
+	{
+		_isVarSignature = true;
 	}
 	else if (currentNode->GetType() == NodeType::ARRAY_ACCESS)
 	{
@@ -118,6 +145,10 @@ void RecursiveTraversal::Traversal(Node* currentNode)
 				Error("AST2", name);
 			}
 		}
+		else
+		{
+			currentNode->Function = _allFunction.GetFunction(name);
+		}
 	}
 	else if (currentNode->GetType() == NodeType::FUNC)
 	{
@@ -162,6 +193,10 @@ void RecursiveTraversal::Traversal(Node* currentNode)
 				{
 					varLeft->Operand1 = new Node(NodeType::VAR_TYPE, "float64");
 				}
+				else if (IsSetLeftNodeTypeString(currentNode->Operand2) == true)
+				{
+					varLeft->Operand1 = new Node(NodeType::VAR_TYPE, "string");
+				}
 				else
 				{
 					varLeft->Operand1 = new Node(NodeType::VAR_TYPE, "int");
@@ -176,12 +211,12 @@ void RecursiveTraversal::Traversal(Node* currentNode)
 		VariableType type = GetTypeVariable(currentNode->Operand1->GetValue());
 		Variable* newVar = new Variable(name, type);
 
-		auto lastVar = _listSequence.GetVariable(name);
+		Variable* lastVar = _listSequence.GetVariable(name);
 		Variable* nVar = nullptr;
 
 		for (int i = _allFunction.GetSize() - 1; i >= 0 ; i--)
 		{
-			if (_allFunction.GetFunction(i)->LocalVariables.ContainsVariable(name) == true)
+			if (_allFunction.GetFunction(i)->LocalVariables.IsVariable(name) == true)
 			{
 				nVar = _allFunction.GetFunction(i)->LocalVariables.GetNameVariable(name);
 			}
@@ -217,7 +252,15 @@ void RecursiveTraversal::Traversal(Node* currentNode)
 		if (_functionCurrent == nullptr)
 			_globalVariable.Add(newVar);
 		else
+		{
 			_functionCurrent->LocalVariables.Add(newVar);
+
+			if (_isVarSignature == true)
+			{
+				newVar->IsArgument = true;
+				_functionCurrent->ArgVariables.Add(newVar);
+			}
+		}
 
 		if(lastVar == nullptr)
 			currentNode->Variable = newVar;
@@ -265,6 +308,11 @@ bool RecursiveTraversal::IsTraversalExprDouble(Node* currentNode)
 		IsTraversalExprDouble(currentNode->Operand4);
 }
 
+bool RecursiveTraversal::IsSetLeftNodeTypeString(Node* currentNode)
+{
+	return currentNode->GetValue()[0] == '"' && currentNode->GetValue()[currentNode->GetValue().size() - 1] == '"';
+}
+
 VariableType RecursiveTraversal::GetTypeVariable(string type)
 {
     if (type == "int")
@@ -283,6 +331,10 @@ VariableType RecursiveTraversal::GetTypeVariable(string type)
     {
         return VariableType::FLOAT;
     }
+	else  if (type == "string")
+	{
+		return VariableType::STRING;
+	}
 	else  if (type == "null")
 	{
 		return VariableType::UNDEFINED;
@@ -293,11 +345,4 @@ VariableType RecursiveTraversal::GetTypeVariable(string type)
 int RecursiveTraversal::GetVolumeGlobalVariables()
 {
 	return _globalVariable.GetVolumeVariables();
-}
-
-
-
-void RecursiveTraversal::Show()
-{
-	
 }

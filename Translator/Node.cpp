@@ -15,6 +15,26 @@ string Node::GetValue()
 	return _value;
 }
 
+void Node::RemoveNewLineWrap()
+{
+	int positionSl = _value.find('\\');
+	
+	while (positionSl != string::npos)
+	{
+
+		if (_value.size() > positionSl + 1)
+		{
+			if (_value[positionSl + 1] == 'n')
+			{
+				_value.erase(positionSl, 2);
+				_value.insert(positionSl, 1, ' ');
+			}
+		}
+
+		positionSl = _value.find('\\');
+	}
+}
+
 NodeType Node::GetType()
 {
 	return _type;

@@ -25,37 +25,40 @@ private:
 	ListTokens* _tokens;
 	QueueVariableNode* _variableNodes;
 
-	Node* Cast();
-	Node* Inversion();
-	Node* GetListParametersAccess();
+	// Parser
+	Node* Parse();
 	Node* Statements();
-	Node* GetSignatureFunc();
-	Node* GetResultFunc();
-	Node* GetNodeArray();
+	Node* Statement();
+	Node* GetSignatureFunc();	
 	Node* GetListParameters();
-	Node* RezultParameters();
+	Node* GetResultFunc();
 	Node* ApplyTypeParameters();
-	Node* Parameters();
+	Node* RezultParameters();
+	Node* Parameter();
 
 	Node* GetTypeParams();
 
-	Node* Parse();
-	Node* Statement();
+	void InitializationArray(Node* x, string type);
+	
+	
+	// ParentExprSBra
 	Node* ParentExpr();
-
-	Node* Unar();
-	Node* Compare();
-	Node* Ymnog();
-	Node* Summa();
+	// Expr
 	Node* LogOr();
 	Node* LogAnd();
 	Node* LogUnarOr();
 	Node* LogUnarAnd();
+	Node* Compare();
+	Node* Add();
+	Node* Mul();
+	Node* Unar();
+	Node* Inversion();
+
 	Node* GetNodeValue();
 
-	Node* _head;
+	Node* GetListParametersAccess();
 
-	void InitializationArray(Node* x, string type);
+	Node* _head;
 public:
 
 	Node* ParentExprSBra();

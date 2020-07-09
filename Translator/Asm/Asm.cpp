@@ -16,24 +16,44 @@ Asm::Asm(Node* headNode, TableFunction* functions, TableImport* imports)
 	_writing += AsmHeader;
 	_writing += "\n";
 
-	_writing += dataBegin;
-	_writing += PrintFormat_d;
-	_writing += SqrtResult;
-	_writing += divOperands;
-	_writing += dataEnd;	
-	_writing += "\n";
+	_dataWriting += dataBegin;
+	_dataWriting += PrintFormat_d;
+	_dataWriting += PrintFormat_s;
+	_dataWriting += InputFormat;
+	_dataWriting += SqrtResult;
+	_dataWriting += divOperands;
+
+	InitStringConstants(headNode);
+	
+	_dataWriting += dataEnd;
+	_dataWriting += "\n";
+
+	_writing += _dataWriting;
 
 	_writing += textBegin;
 	_writing += "\n";
 
 	InitLocalVariables();
+	InitArgumentVariables();
+	_writing += "\n";
 
 	_writing += ProcPrint_d;
+	_writing += "\n";
+
+	_writing += ProcPrint_s;
 	_writing += "\n";
 
 	_writing += ProcSqrt;
 	_writing += "\n";
 
+	_writing += ProcInput;
+	_writing += "\n";
+
+	// functions
+	RecursiveTraversal(headNode);
+
+	// main function
+	_isMainFuncTraversal = true;
 	RecursiveTraversal(headNode);
 
 	_writing.append(functionEpilogue);
@@ -67,17 +87,55 @@ void Asm::InitLocalVariables()
 		int currentSize = 0;
 		for (auto variable : func->LocalVariables._vars)
 		{
-			vars += tab;
-			vars += variable->GetName() + std::to_string(variable->Postfix);
-			vars += " = ";
-			currentSize -= (int)variable->GetType();
-			vars += to_string(currentSize);
-			vars += "\n";
+			if (variable->IsArgument == false)
+			{
+				vars += tab;
+				vars += variable->GetName() + std::to_string(variable->Postfix);
+				vars += " = ";
+				currentSize -= (int)variable->GetType();
+				vars += to_string(currentSize);
+				vars += "\n";
+			}
 		}
 
 		_writing += vars;
 	}
 	
+}
+
+void Asm::InitArgumentVariables()
+{
+	for (int i = 0; i < _functions->GetSize(); i++)
+	{
+		_byteArguments = 8;
+		auto vars = _functions->GetFunction(i)->ArgVariables._vars;
+
+		for (int j = vars.size() - 1; j >= 0; j--)
+		{
+			_writing +=	GetArgument(vars[j]);
+			_writing += "\n";
+			_byteArguments += 4;
+		}
+	}
+}
+
+void Asm::InitArgumentsOnStack(Node* node) // 1 operand in signature
+{
+	if (node == nullptr)
+		return;
+
+
+	RecursiveTraversal(node);
+
+	InitArgumentsOnStack(node->Operand2);
+	return;
+	
+
+
+	InitArgumentsOnStack(node->Operand1);
+	InitArgumentsOnStack(node->Operand2);
+	InitArgumentsOnStack(node->Operand3);
+	InitArgumentsOnStack(node->Operand4);
 }
 
 Node* Asm::RecursiveTraversal(Node* node)
@@ -87,23 +145,32 @@ Node* Asm::RecursiveTraversal(Node* node)
 
 	if (node->GetType() == NodeType::FUNC)
 	{
-		if (_isFirstFunc == false)
+		if ((node->Function->GetName() != "main" && _isMainFuncTraversal == false) || 
+			(node->Function->GetName() == "main" && _isMainFuncTraversal == true))
 		{
-			_writing.append(functionEpilogue);
-			_writing.append(functionReturn);
-			_writing += "end __" + _lastFunc + "\n";
-		}
+			if (_isFirstFunc == false)
+			{
+				_writing += functionEpilogue;
+				Ret(std::to_string(_functionLast->ArgVariables.GetVolumeVariables()));
+				_writing += _lastFunctionName + " ENDP\n\n";
+			}
 
-		InitTextSegment(node);
-		_lastFunc = node->GetValue();
-		_isFirstFunc = false;
+			_functionLast = node->Function;
+			InitTextSegment(node);
+			_lastFunctionName = node->GetValue();
+			_isFirstFunc = false;
+		}
+		else
+		{
+			return nullptr;
+		}
 	}
 	else if (node->GetType() == NodeType::FOR)
 	{
 		ForBlockAsm(node);
 		return nullptr;
 	}
-	else if (node->GetType() == NodeType::IF)
+	else if (node->GetType() == NodeType::IF || node->GetType() == NodeType::IF_ELSE)
 	{
 		IfBlockAsm(node);
 		return nullptr;
@@ -112,6 +179,20 @@ Node* Asm::RecursiveTraversal(Node* node)
 	{
 		SetBlockAsm(node->Operand2);
 		Pop(GetLocalVar(node->Operand1->Variable->GetNameWithPostfix()));
+		return nullptr;
+	}
+	else if (node->GetType() == NodeType::RETURN)
+	{
+		InitReturn(node);
+		return nullptr;
+	}
+	else if (node->GetType() == NodeType::STATEMENT || node->GetType() == NodeType::SEQ)
+	{
+		RecursiveTraversal(node->Operand1);
+		
+		if(node->Operand2 != nullptr)
+			RecursiveTraversal(node->Operand2);
+
 		return nullptr;
 	}
 	else if (node->GetType() == NodeType::FUNC_ACCESS)
@@ -123,7 +204,31 @@ Node* Asm::RecursiveTraversal(Node* node)
 			
 			if (nameFunc == "Println")
 			{
-				Println_d(GetLocalVar(node->Operand1->Variable->GetNameWithPostfix()));
+				string var;
+				Node* tempArgument = node->Operand1;
+				bool newLine = false;
+				while (tempArgument != nullptr)
+				{
+					if (tempArgument->GetType() == NodeType::CONST_STRING)
+					{
+						var = tempArgument->GetValue();
+						Println_s(_stringsConst[var]);
+						newLine = false;
+					}
+					else
+					{
+						if (tempArgument->Variable != nullptr)
+							var = GetLocalVar(tempArgument->Variable->GetNameWithPostfix());
+						else if (tempArgument->GetType() == NodeType::CONST)
+							var = tempArgument->GetValue();
+
+						Println_d(var);
+					}
+
+					tempArgument = tempArgument->Operand4;
+				}
+
+
 			}
 
 			if (nameFunc == "Sqrt")
@@ -131,6 +236,16 @@ Node* Asm::RecursiveTraversal(Node* node)
 				Sqrt(GetLocalVar(node->Operand1->Variable->GetNameWithPostfix()));
 				Mov(GetLocalVar(node->Operand1->Variable->GetNameWithPostfix()), eax);
 			}
+
+			if (nameFunc == "Scan")
+			{
+				Scan(GetLocalVar(node->Operand1->Variable->GetNameWithPostfix()));
+				Mov(GetLocalVar(node->Operand1->Variable->GetNameWithPostfix()), eax);
+			}
+		}
+		else
+		{
+			FunctionCallToAsm(node, false);
 		}
 		
 		return nullptr;
@@ -321,11 +436,50 @@ void Asm::RecursiveRelationExpressionToAsm(Node* node)
 	}
 }
 
-Node* Asm::IfBlockAsm(Node* node)
+void Asm::IfBlockAsm(Node* node)
 {
-	ExprAsm(node->Operand1);
-	RecursiveTraversal(node->Operand2);
-	return nullptr;
+	const auto conditionNode = node->Operand1;
+	const auto statementNode = node->Operand2;
+	const auto elseStatementNode = node->Operand3;
+
+	auto randomName = Random::GetTimeNanoSecondsString();
+
+	const auto startLabel = "__if_start_" + randomName;
+	const auto endLabel = "__if_end_" + randomName;
+	const auto elseLabel = "__if_else_" + randomName;
+
+	// обрабатываем поддерево с условием
+	ExprAsm(conditionNode);
+
+	if (elseStatementNode != nullptr)
+	{
+		Pop(eax);
+		Cmp(eax, null);
+	}
+
+	auto endOrElseLabel = elseLabel;
+
+	if (elseStatementNode != nullptr)
+		Je(endOrElseLabel);
+
+
+	if (node->GetType() == NodeType::IF || node->GetType() == NodeType::IF_ELSE)
+	{
+		// label:
+		_writing += GetLableColon(startLabel);
+		RecursiveTraversal(statementNode);
+
+		// jmp label
+		Jmp(endLabel);
+
+		// label:
+		_writing += GetLableColon(elseLabel);
+		RecursiveTraversal(elseStatementNode);
+
+		// label:
+		_writing += GetLableColon(endLabel);
+
+	}
 }
 
 Node* Asm::ForBlockAsm(Node* node)
@@ -388,6 +542,30 @@ Node* Asm::ForBlockAsm(Node* node)
 	return nullptr;
 }
 
+void Asm::FunctionCallToAsm(Node* node, bool inExpr)
+{
+	const auto function = node->Function;
+	const auto& functionName = function->GetName();
+
+	_writing += "\n";
+
+	auto tempVar = node->Operand1;
+	while (tempVar != nullptr)
+	{
+		ExprAsm(tempVar);
+		tempVar = tempVar->Operand4;
+	}
+	
+
+
+	Call(functionName);
+
+	if (function->GetVolumeReturn() != 0 && inExpr == true)
+	{
+		Push(eax);
+	}
+}
+
 Node* Asm::SetBlockAsm(Node* node)
 {
 	if (node == nullptr)
@@ -396,6 +574,44 @@ Node* Asm::SetBlockAsm(Node* node)
 	ExprAsm(node);
 }
 
+
+void Asm::InitStringConstants(Node* node)
+{
+	if (node == nullptr)
+		return;
+	
+	if (node->GetType() == NodeType::CONST_STRING)
+	{
+		bool isNewLine = false;
+
+		int positionSl = node->GetValue().find('\\');
+		if (positionSl != string::npos)
+		{
+			if (node->GetValue().size() > positionSl + 1)
+			{
+				if (node->GetValue()[positionSl + 1] == 'n')
+				{
+					isNewLine = true;
+				}
+			}
+		}
+
+		node->RemoveNewLineWrap();
+		_dataWriting += GetStringConst(node->GetValue(), isNewLine);
+		
+
+
+		_stringsConst[node->GetValue()] = "string_const_" + std::to_string(_numStringConst);
+		
+		node->Id = _numStringConst;
+		_numStringConst++;
+	}
+
+	InitStringConstants(node->Operand1);
+	InitStringConstants(node->Operand2);
+	InitStringConstants(node->Operand3);
+	InitStringConstants(node->Operand4);
+}
 
 Node* Asm::InitTextSegment(Node* node)
 {
@@ -412,7 +628,7 @@ void Asm::InitFunc(Node* func)
 	if (func->GetValue() == "main")
 		newFunc += mainBegin;
 	else
-		newFunc += "__" + func->GetValue() + ":\n";
+		newFunc += func->GetValue() + " PROC\n";
 
 	newFunc.append(functionProlog);
 	newFunc.append(std::to_string(volumeTotal));
@@ -420,6 +636,15 @@ void Asm::InitFunc(Node* func)
 	
 	_writing += newFunc;
 
+}
+
+void Asm::InitReturn(Node* node)
+{
+	if (node->Operand1 != nullptr)
+	{
+		ExprAsm(node->Operand1);
+		Pop(eax);
+	}
 }
 
 void Asm::ExprAsm(Node* currentNode)
@@ -494,7 +719,7 @@ void Asm::ExprAsm(Node* currentNode)
 		// Указатели на вершину стека, и под
 		Fdiv("st(0)", "st(1)");
 		
-		// 
+		// Достает из стека
 		Fist("div_operand_1");
 		
 		Push("div_operand_1");
@@ -503,9 +728,19 @@ void Asm::ExprAsm(Node* currentNode)
 	{
 		Push(currentNode->GetValue());
 	}
+	else if (currentNode->GetType() == NodeType::CONST_STRING)
+	{
+		const auto id = currentNode->Id;
+		const auto stringAccess = "string_const_" + to_string(id);
+		Push(GetOffset(stringAccess));
+	}
 	else if (currentNode->GetType() == NodeType::VAR)
 	{	
 		Push(GetLocalVar(currentNode->Variable->GetNameWithPostfix()));
+	}
+	else if (currentNode->GetType() == NodeType::FUNC_ACCESS)
+	{
+		FunctionCallToAsm(currentNode, true);
 	}
 	else
 	{
@@ -599,6 +834,14 @@ void Asm::ExprAsm(Node* currentNode)
 			_writing += GetLableColon(labelCompareEnd);
 		}
 	}
+}
+
+string Asm::GetArgument(Variable* variable)
+{
+	const auto variableName = variable->GetNameWithPostfix();
+	const auto variableSize = 4;
+
+	return tab + variableName + " = " + std::to_string(_byteArguments);
 }
 
 
@@ -703,9 +946,19 @@ string Asm::GetAnd(const string& value1, const string& value2)
 	return tab + "and " + value1 + ", " + value2 + "\n";
 }
 
+string Asm::GetOffset(const string& value)
+{
+	return "offset " + value;
+}
+
 void Asm::Call(const string& value)
 {
 	_writing += tab + "call " + value + "\n";
+}
+
+void Asm::Ret(const string& value)
+{
+	_writing += tab + "ret " + value + "\n";
 }
 
 void Asm::Println_d(const string& value)
@@ -715,11 +968,22 @@ void Asm::Println_d(const string& value)
 	Call(print_d);
 }
 
+void Asm::Println_s(const string& value)
+{
+	Push(GetOffset(value));
+	Call(print_s);
+}
+
 void Asm::Sqrt(const string& value)
 {
 	Mov(eax, value);
 	Push(eax);
 	Call(stc::sqrt);
+}
+
+void Asm::Scan(const string& value)
+{
+	Call(scan);
 }
 
 
@@ -732,5 +996,13 @@ string Asm::GetLocalVar(const string& value)
 string Asm::GetLableColon(const string& value)
 {
 	return value + ":\n";
+}
+
+string Asm::GetStringConst(const string& value, bool isNewLine)
+{
+	if(isNewLine == true)
+		return tab + "string_const_" + std::to_string(_numStringConst) + " db " + value + ", 13,10,0\n";
+	else
+		return tab + "string_const_" + std::to_string(_numStringConst) + " db " + value + ", 0\n";
 }
 

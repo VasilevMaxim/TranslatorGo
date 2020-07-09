@@ -2,6 +2,9 @@
 #include "../Node.h"
 #include "../TableFunction.h"
 #include "../TableImport.h"
+#include <map>
+
+using std::map;
 
 class Asm
 {
@@ -11,32 +14,50 @@ public:
 	string GetWritingAsm();
 private:
 	string _writing;
+	string _dataWriting;
+
+
+	int _byteArguments = 0;
 
 	bool _isFirstFunc = true;
+	bool _isMainFuncTraversal = false;
+	
+	map<string, string> _stringsConst;
+	int _numStringConst = 0;
 
-	string _lastFunc;
+	Function* _functionLast;
+	string _lastFunctionName;
+
 	TableFunction* _functions;
 	TableImport* _imports;
 	string GetTextFuncVariable();
 
 
 	void InitLocalVariables();
+	void InitArgumentVariables();
+	void InitArgumentsOnStack(Node* node);
+
 	Node* RecursiveTraversal(Node* nodeHead);
 	void RecursiveRelationExpressionToAsm(Node* node);
 
 	// ------- Helper methods.---------
+	void InitStringConstants(Node* node);
 	Node* InitTextSegment(Node* node);
 	void InitFunc(Node* func);
+	void InitReturn(Node* node);
 	void ExprAsm(Node* node);
+
+	string GetArgument(Variable* variable);
 
 	string GetLocalVar(const string& value);
 	string GetLableColon(const string& value);
+	string GetStringConst(const string& value, bool isNewLine);
 
 	Node* SetBlockAsm(Node* node);
-	Node* IfBlockAsm(Node* node);
+	void IfBlockAsm(Node* node);
 	Node* ForBlockAsm(Node* node);
 
-
+	void FunctionCallToAsm(Node* node, bool inExpr);
 	//////////
 
 	void Push(const string& value);
@@ -66,13 +87,14 @@ private:
 	string GetOr(const string& value1, const string& value2);
 	string GetAnd(const string& value1, const string& value2);
 
-	/////////
+	string GetOffset(const string& value);
 
 	void Call(const string& value);
-
-	/////////
+	void Ret(const string& value);
 
 	void Println_d(const string& value);
+	void Println_s(const string& value);
 	void Sqrt(const string& value);
+	void Scan(const string& value);
 };
 

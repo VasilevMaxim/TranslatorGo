@@ -178,7 +178,7 @@
     <ClCompile Include="TokenBreaking.cpp" />
     <ClCompile Include="Translator.cpp" />
     <ClCompile Include="Variable.cpp" />
-    <ClCompile Include="VariableInit.cpp" />
+    <ClCompile Include="QueueVariableNode.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AbstractSyntaxTree.h" />

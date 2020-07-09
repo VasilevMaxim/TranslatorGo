@@ -40,6 +40,9 @@ void AbstractSyntaxTree::ShowPartTree(Node* sub, size_t level)
 	case NodeType::CONST:
 		cout << "Const ";
 		break;
+	case NodeType::CONST_STRING:
+		cout << "StringConst ";
+		break;
 	case NodeType::ADD:
 		cout << "Add ";
 		break;
@@ -153,6 +156,7 @@ void AbstractSyntaxTree::ShowPartTree(Node* sub, size_t level)
 		cout << "Package ";
 		break;
 	case NodeType::RETURN:
+		cout << "Return ";
 		break;
 	}
 

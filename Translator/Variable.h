@@ -13,6 +13,7 @@ private:
 public:
 	bool IsConst = false;
 	bool IsArray = false;
+	bool IsArgument = false;
 
 	int Postfix = 0;
 	

@@ -13,11 +13,17 @@ namespace stc
         "includelib <\\masm32\\lib\\msvcrt.lib>\n"
         "includelib <\\masm32\\lib\\kernel32.lib>\n";
 
-    const string PrintFormat_d = "   print_format db \"%d\", 0\n";
+    const string PrintFormat_d = "   printd_format db \"%d\", 0\n";
+    const string PrintFormat_s = "   prints_format db \"%s\", 0\n";
+    const string InputFormat = "   input_format db \"%d\", 0\n"
+                               "   input_result dd 0\n";
+        
     const string SqrtResult = "   sqrt_result dd 0\n";
 
     const string print_d = "printD";
+    const string print_s = "printS";
     const string sqrt = "sqrt";
+    const string scan = "input";
 
 // DATA
     const string dataBegin = "data segment\n";
@@ -68,10 +74,26 @@ namespace stc
     const string ProcPrint_d = "printD PROC\n"
         "   enter 0, 0\n"
         "   mov eax, [ebp + 8]\n"
-        "   invoke crt_printf, offset print_format, eax\n"
+        "   invoke crt_printf, offset printd_format, eax\n"
         "   leave\n"
         "   ret 4\n"
         "printD ENDP\n";
+
+    const string ProcPrint_s = "printS PROC\n"
+        "   enter 0, 0\n"
+        "   push eax\n"
+        "   push ebx\n"
+        "   push ecx\n"
+        "   push edx\n"
+        "   mov eax, [ebp + 8]\n"
+        "   invoke crt_printf, offset prints_format, eax\n"
+        "   pop eax\n"
+        "   pop ebx\n"
+        "   pop ecx\n"
+        "   pop edx\n"
+        "   leave\n"
+        "   ret 4\n"
+        "printS ENDP\n";
 
     const string ProcSqrt =
         "sqrt PROC\n"
@@ -92,4 +114,18 @@ namespace stc
         "   leave\n"
         "   ret 4\n"
         "sqrt ENDP\n";
+    
+    const string ProcInput ="input PROC\n"
+        "   enter 16, 0\n"
+        "   push ebx\n"
+        "   push ecx\n"
+        "   push edx\n"
+        "   invoke crt_scanf, offset input_format, offset input_result\n"
+        "   mov eax, input_result\n"
+        "   pop ebx\n"
+        "   pop ecx\n"
+        "   pop edx\n"
+        "   leave\n"
+        "   ret \n"
+        "input ENDP\n";
 }

@@ -19,11 +19,13 @@ public:
 
 	Function* Function;
 	Variable* Variable;
+	int Id = 0;
 
 	Node(NodeType type, string value = "", Node* operand1_ = nullptr, Node* operand2_ = nullptr,
 		Node* operand3_ = nullptr, Node* operand4_ = nullptr);
 
 	string GetValue();
+	void RemoveNewLineWrap();
 	NodeType GetType();
 	bool IsValueNull();
 

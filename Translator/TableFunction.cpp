@@ -52,6 +52,17 @@ Function* TableFunction::GetFunction(int index)
 	return _functions[index];
 }
 
+Function* TableFunction::GetFunction(string name)
+{
+	for (auto& func : _functions)
+	{
+		if (func->GetName() == name)
+			return func;
+	}
+
+	return nullptr;
+}
+
 int TableFunction::GetSize()
 {
 	return _functions.size();

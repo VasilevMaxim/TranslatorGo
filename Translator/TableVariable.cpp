@@ -8,7 +8,7 @@ TableVariable::~TableVariable()
 void TableVariable::Add(Variable* var)
 {
 	_vars.push_back(var);
-    _volumeVariables += (int) var->GetType();
+	_volumeVariables += (int) var->GetType();
 }
 
 Variable* TableVariable::GetNameVariable(const string name)
@@ -24,18 +24,6 @@ Variable* TableVariable::GetNameVariable(const string name)
     // error
 }
 
-bool TableVariable::ContainsVariable(const string name)
-{
-    for (int i = _vars.size() - 1; i >= 0; i--)
-    {
-        if (_vars[i]->GetName() == name)
-        {
-            return true;
-        }
-    }
-
-    return false;
-}
 bool TableVariable::IsVariable(const string& name)
 {
 	for (int i = 0; i < _vars.size(); i++)

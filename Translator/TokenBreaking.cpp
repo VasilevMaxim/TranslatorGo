@@ -30,12 +30,20 @@ void TokenBreaking::SplitIntoTokens()
 
 				if (_text[index] == '-' && (IsSymLit(_text[index - 1]) == false && IsSymNumber(_text[index - 1]) == false))
 				{
-					tempLexems += _text[index];
-					if (index > 0 && _text[index - 1] == '-')
+					if (IsSymLit(_text[index + 1]) == true)
 					{
-						_tokens.push_back(GetToken(tempLexems.substr(0, tempLexems.length() - 2)));
-						_tokens.push_back(GetToken(tempLexems.substr(tempLexems.length() - 2, 2)));
-						tempLexems.clear();
+						_tokens.push_back(GetToken("0"));
+						_tokens.push_back(GetToken("-"));
+					}
+					else
+					{
+						tempLexems += _text[index];
+						if (index > 0 && _text[index - 1] == '-')
+						{
+							_tokens.push_back(GetToken(tempLexems.substr(0, tempLexems.length() - 2)));
+							_tokens.push_back(GetToken(tempLexems.substr(tempLexems.length() - 2, 2)));
+							tempLexems.clear();
+						}
 					}
 					continue;
 				}

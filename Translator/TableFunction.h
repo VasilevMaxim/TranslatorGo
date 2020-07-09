@@ -16,7 +16,9 @@ public:
 	Function* GetNameVariable(const string name);
 	bool ContainsVariable(const string name);
 	bool IsVariable(const string& name);
+	
 	Function* GetFunction(int index);
+	Function* GetFunction(string name);
 	int GetSize();
 };
 

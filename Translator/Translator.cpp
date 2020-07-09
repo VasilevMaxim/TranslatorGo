@@ -60,7 +60,6 @@ void OnCompilation(string pathFile)
 	tree.ShowTree();
 
 	RecursiveTraversal recursiveTraversal(parser.GetNodeHead());
-	recursiveTraversal.Show();
 
 	tree.ShowTree();
 
