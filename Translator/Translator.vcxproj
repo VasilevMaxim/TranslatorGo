@@ -212,7 +212,7 @@
     <ClInclude Include="TokenBreaking.h" />
     <ClInclude Include="TokenType.h" />
     <ClInclude Include="Variable.h" />
-    <ClInclude Include="VariableInit.h" />
+    <ClInclude Include="QueueVariableNode.h" />
     <ClInclude Include="VariableType.h" />
   </ItemGroup>
   <ItemGroup>

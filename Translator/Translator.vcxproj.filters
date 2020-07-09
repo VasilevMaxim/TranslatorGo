@@ -144,7 +144,6 @@
     <ClInclude Include="AbstractSyntaxTree.h">
       <Filter>AST</Filter>
     </ClInclude>
-    <ClInclude Include="VariableInit.h" />
     <ClInclude Include="ListTokens.h" />
     <ClInclude Include="Expression.h" />
     <ClInclude Include="IControl.h">
@@ -207,6 +206,7 @@
       <Filter>AST</Filter>
     </ClInclude>
     <ClInclude Include="Import.h" />
+    <ClInclude Include="QueueVariableNode.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="progGo.go" />

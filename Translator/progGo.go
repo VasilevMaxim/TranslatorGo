@@ -6,12 +6,22 @@ import(
 )
 
 func main(){ 
-var n int = 3
-var x int = SqrEq(2,3,5)
 
+var a,b,c int
+
+fmt.Println("a = ")
+fmt.Scan(a)
+
+fmt.Println("b = ")
+fmt.Scan(b)
+
+fmt.Println("c = ")
+fmt.Scan(c)
+
+SqrEq(a,b,c)
 }
 
-func SqrEq(a,b,c int)int {
+func SqrEq(a,b,c int) {
 
 	fmt.Println(a, "x^2", " + ", b, "x", " + ", c, " = 0; \n")
 
@@ -39,6 +49,4 @@ func SqrEq(a,b,c int)int {
 		fmt.Println("x2 = ")
 		fmt.Println(x2)
 	}
-
-	return 2
 }

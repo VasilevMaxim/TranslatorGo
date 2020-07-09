@@ -1,7 +1,7 @@
 #pragma once
 #include "Node.h"
 #include "TokenBreaking.h"
-#include "VariableInit.h"
+#include "QueueVariableNode.h"
 
 using std::vector;
 using std::cout;

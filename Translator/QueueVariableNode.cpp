@@ -1,4 +1,4 @@
-#include "VariableInit.h"
+#include "QueueVariableNode.h"
 #include "BaseTokenTypes.h"
 
 QueueVariableNode::QueueVariableNode()

@@ -45,6 +45,7 @@ RecursiveTraversal::RecursiveTraversal(Node* headNode)
 		tempNode = tempNode->Operand2;
 	}
 
+	// TODO
 	_allImport.GetImport("fmt")->AddKey("Println");
 	_allImport.GetImport("fmt")->AddKey("Scan");
 	_allImport.GetImport("math")->AddKey("Sqrt");
@@ -100,20 +101,6 @@ void RecursiveTraversal::Traversal(Node* currentNode)
 	else if (currentNode->GetType() == NodeType::SIGNATURE)
 	{
 		_isVarSignature = true;
-	}
-	else if (currentNode->GetType() == NodeType::ARRAY_ACCESS)
-	{
-		string name = currentNode->GetValue();
-
-		if (_listSequence.IsVariable(name) == false)
-		{
-			Error("AST1", name);
-		}
-
-		if (IsTraversalExprDouble(currentNode->Operand1) == true)
-		{
-			Error("AST1", name);
-		}
 	}
 	else if (currentNode->GetType() == NodeType::FUNC_ACCESS)
 	{
@@ -211,6 +198,7 @@ void RecursiveTraversal::Traversal(Node* currentNode)
 		VariableType type = GetTypeVariable(currentNode->Operand1->GetValue());
 		Variable* newVar = new Variable(name, type);
 
+		// TODO
 		Variable* lastVar = _listSequence.GetVariable(name);
 		Variable* nVar = nullptr;
 

@@ -37,6 +37,7 @@ void TokenBreaking::SplitIntoTokens()
 					}
 					else
 					{
+						// TODO
 						tempLexems += _text[index];
 						if (index > 0 && _text[index - 1] == '-')
 						{
@@ -48,11 +49,6 @@ void TokenBreaking::SplitIntoTokens()
 					continue;
 				}
 
-
-				if (_tokens.size() > 0 && _text[index] == '\n' && _tokens.back()->GetType() == TokenType::LBRA)
-				{
-					//continue;
-				}
 
 				string forSym;
 				forSym += _text[index];
