@@ -19,7 +19,7 @@ In order to translate the code, specify the path to the file in the main functio
 
 ## Already done.
 :white_check_mark: Lexer    
-:white_check_mark: Parser
+:white_check_mark: Parser    
 :white_check_mark: Semantic analyzer   
 :white_check_mark: Code generation in Assembler   
 
